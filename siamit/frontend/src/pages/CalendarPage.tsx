@@ -151,14 +151,14 @@ const CalendarPage = () => {
       // Listen for new leave requests
       socket.on('newLeaveRequest', (data) => {
         console.log('Received new leave request:', data);
-        
+
         // Show toast notification
         toast({
           title: t('notifications.newLeaveRequest'),
           description: `${data.userName} - ${data.leaveType}`,
           variant: 'default'
         });
-        
+
         // Refresh calendar data by triggering the fetchData effect
         setYear(prevYear => prevYear);
       });
@@ -166,14 +166,14 @@ const CalendarPage = () => {
       // Listen for leave request status changes
       socket.on('leaveRequestStatusChanged', (data) => {
         console.log('Received leave request status change:', data);
-        
+
         // Show toast notification
         toast({
           title: t('notifications.leaveStatusChanged'),
           description: `${t('notifications.request')} ${data.requestId} ${t('notifications.hasBeen')} ${data.status === 'approved' ? t('notifications.approved') : t('notifications.rejected')}`,
           variant: data.status === 'approved' ? 'default' : 'destructive'
         });
-        
+
         // Refresh calendar data by triggering the fetchData effect
         setYear(prevYear => prevYear);
       });
@@ -181,14 +181,14 @@ const CalendarPage = () => {
       // Listen for new company events
       socket.on('newCompanyEvent', (data) => {
         console.log('Received new company event:', data);
-        
+
         // Show toast notification
         toast({
           title: t('notifications.newCompanyEvent'),
           description: data.title,
           variant: 'default'
         });
-        
+
         // Refresh calendar data by triggering the fetchData effect
         setYear(prevYear => prevYear);
       });
@@ -231,7 +231,7 @@ const CalendarPage = () => {
   // Get all events (company + Thai holidays + employee leaves) for a specific month
   const getEventsByMonth = (year: number, month: number): CalendarEvent[] => {
     const allEvents: CalendarEvent[] = [];
-    
+
     // Add company events if enabled
     if (showCompanyHolidays && Array.isArray(companyEvents)) {
       const monthCompanyEvents = companyEvents.filter(event => {
@@ -244,7 +244,7 @@ const CalendarPage = () => {
         isThaiHoliday: false
       })));
     }
-    
+
     // Add Thai holidays if enabled
     if (showAnnualHolidays && Array.isArray(thaiHolidays)) {
       const monthThaiHolidays = thaiHolidays.filter(holiday => {
@@ -262,7 +262,7 @@ const CalendarPage = () => {
         isThaiHoliday: true
       })));
     }
-    
+
     // Add employee leaves if enabled
     if (showEmployeeLeaves && Array.isArray(employeeLeaves)) {
       // กรอง leave เฉพาะ user ที่ล็อกอิน ถ้าไม่ใช่ admin/superadmin
@@ -275,16 +275,16 @@ const CalendarPage = () => {
         const startDate = new Date(leave.startDate);
         const endDate = new Date(leave.endDate);
         return (startDate.getFullYear() === year && startDate.getMonth() === month) ||
-               (endDate.getFullYear() === year && endDate.getMonth() === month) ||
-               (startDate <= new Date(year, month + 1, 0) && endDate >= new Date(year, month, 1));
+          (endDate.getFullYear() === year && endDate.getMonth() === month) ||
+          (startDate <= new Date(year, month + 1, 0) && endDate >= new Date(year, month, 1));
       });
-      
+
       // Create events for each day of the leave period
       monthEmployeeLeaves.forEach(leave => {
         const startDate = new Date(leave.startDate);
         const endDate = new Date(leave.endDate);
         const currentDate = new Date(startDate);
-        
+
         while (currentDate <= endDate) {
           if (currentDate.getFullYear() === year && currentDate.getMonth() === month) {
             allEvents.push({
@@ -309,7 +309,7 @@ const CalendarPage = () => {
         }
       });
     }
-    
+
     return allEvents;
   };
 
@@ -329,10 +329,10 @@ const CalendarPage = () => {
       const { userName, leaveType, startDate, endDate, duration, durationType } = event.employeeInfo;
       const start = new Date(startDate).toLocaleDateString(i18n.language.startsWith('th') ? 'th-TH' : 'en-US');
       const end = new Date(endDate).toLocaleDateString(i18n.language.startsWith('th') ? 'th-TH' : 'en-US');
-      const durationText = durationType === 'day' ? 
+      const durationText = durationType === 'day' ?
         (i18n.language.startsWith('th') ? `${duration} วัน` : `${duration} days`) :
         (i18n.language.startsWith('th') ? `${duration} ชั่วโมง` : `${duration} hours`);
-      
+
       return `${userName}\n${leaveType}\n${i18n.language.startsWith('th') ? '' : 'Period'}: ${start} - ${end}\n${i18n.language.startsWith('th') ? '' : 'Duration'}: ${durationText}`;
     }
     return event.title;
@@ -353,18 +353,18 @@ const CalendarPage = () => {
             </defs>
           </svg>
         </div>
-        
+
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
           <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
         </div>
-        
-        <div className="relative z-10 flex flex-col items-center justify-center py-10 md:py-16">
-          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-24 h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
-          <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-3">
+
+        <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-16 px-4">
+          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
+          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-2 md:gap-3 text-center">
             {t('calendar.title')}
           </h1>
-          <p className="text-lg md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl">
+          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl">
             {t('calendar.subtitle')}
           </p>
         </div>
@@ -382,63 +382,65 @@ const CalendarPage = () => {
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>
-        
+
         {/* Filter Switches and Legend */}
-        <div className="flex items-center justify-center gap-6 flex-wrap md:flex-nowrap mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
-          <div className="flex items-center gap-3">
-            <Switch 
-              checked={showAnnualHolidays}
-              onCheckedChange={setShowAnnualHolidays}
-              className="data-[state=checked]:bg-red-500"
-            />
-            <span className="text-sm font-medium text-red-700">{t('calendar.annualHolidays')}</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Switch 
-              checked={showCompanyHolidays}
-              onCheckedChange={setShowCompanyHolidays}
-              className="data-[state=checked]:bg-blue-500"
-            />
-            <span className="text-sm font-medium text-blue-700">{t('calendar.companyHolidays')}</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Switch 
-              checked={showEmployeeLeaves}
-              onCheckedChange={setShowEmployeeLeaves}
-              className="data-[state=checked]:bg-green-500"
-            />
-            <span className="text-sm font-medium text-green-700">
-              {isAdmin ? t('calendar.employeeLeaves') : t('calendar.myLeaves')}
-            </span>
-          </div>
-          
-          {/* Legend (hidden on small/portrait screens) */}
-          <div className="hidden md:flex items-center gap-4 ml-6 pl-6 border-l border-gray-300">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <span className="text-xs text-red-700">{t('calendar.legend.annualHoliday')}</span>
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg w-full max-w-5xl">
+          <div className="flex flex-wrap justify-center gap-3 md:gap-6">
+            <div className="flex items-center gap-2 md:gap-3 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+              <Switch
+                checked={showAnnualHolidays}
+                onCheckedChange={setShowAnnualHolidays}
+                className="data-[state=checked]:bg-red-500 scale-90 md:scale-100"
+              />
+              <span className="text-xs md:text-sm font-medium text-red-700">{t('calendar.annualHolidays')}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span className="text-xs text-blue-700">{t('calendar.legend.companyHoliday')}</span>
+            <div className="flex items-center gap-2 md:gap-3 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+              <Switch
+                checked={showCompanyHolidays}
+                onCheckedChange={setShowCompanyHolidays}
+                className="data-[state=checked]:bg-blue-500 scale-90 md:scale-100"
+              />
+              <span className="text-xs md:text-sm font-medium text-blue-700">{t('calendar.companyHolidays')}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-xs text-green-700">
+            <div className="flex items-center gap-2 md:gap-3 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+              <Switch
+                checked={showEmployeeLeaves}
+                onCheckedChange={setShowEmployeeLeaves}
+                className="data-[state=checked]:bg-green-500 scale-90 md:scale-100"
+              />
+              <span className="text-xs md:text-sm font-medium text-green-700">
+                {isAdmin ? t('calendar.employeeLeaves') : t('calendar.myLeaves')}
+              </span>
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div className="flex hidden md:flex flex-wrap justify-center items-center gap-3 md:gap-4 mt-2 lg:mt-0 pt-3 lg:pt-0 border-t lg:border-t-0 lg:border-l border-gray-300 lg:pl-6 w-full lg:w-auto">
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-red-500 rounded-full"></div>
+              <span className="text-[10px] md:text-xs text-red-700">{t('calendar.legend.annualHoliday')}</span>
+            </div>
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-blue-500 rounded-full"></div>
+              <span className="text-[10px] md:text-xs text-blue-700">{t('calendar.legend.companyHoliday')}</span>
+            </div>
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-green-500 rounded-full"></div>
+              <span className="text-[10px] md:text-xs text-green-700">
                 {isAdmin ? t('calendar.legend.employeeLeave') : t('calendar.legend.myLeave')}
               </span>
             </div>
 
           </div>
         </div>
-        
+
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             <span className="ml-3 text-blue-600">{t('calendar.loading')}</span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 w-full max-w-6xl">
             {monthNames.map((month, mIdx) => {
               const days = getDaysInMonth(year, mIdx);
               const firstDay = new Date(year, mIdx, 1).getDay();
@@ -453,18 +455,18 @@ const CalendarPage = () => {
                 }
               }
               if (week.length > 0) weeks.push([...week, ...Array(7 - week.length).fill(null)]);
-              
+
               // Get all events for this month
               const events = getEventsByMonth(year, mIdx);
               const eventDates = events.map(e => e.date);
               const eventMap: Record<string, CalendarEvent> = {};
               const eventCountMap: Record<string, number> = {};
-              
+
               // Create event map
-              events.forEach(e => { 
+              events.forEach(e => {
                 eventMap[e.date] = e;
               });
-              
+
               return (
                 <div key={month} className="bg-white/80 rounded-2xl shadow-xl p-4 flex flex-col items-center">
                   <div className="flex items-center gap-2 mb-2">
@@ -493,15 +495,15 @@ const CalendarPage = () => {
                         <tr key={wIdx}>
                           {week.map((d, dIdx) => {
                             if (!d) return <td key={dIdx} className="py-1"> </td>;
-                            const dateStr = `${year}-${(mIdx+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
-                            
+                            const dateStr = `${year}-${(mIdx + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+
                             // Check for events using multiple date formats
-                            const event = eventMap[dateStr] || 
-                                         eventMap[`${year}-${mIdx+1}-${d}`] ||
-                                         eventMap[`${year}-${(mIdx+1).toString().padStart(2,'0')}-${d}`] ||
-                                         eventMap[`${dateStr} 00:00:00`] ||
-                                         eventMap[`${year}-${(mIdx+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')} 00:00:00`];
-                            
+                            const event = eventMap[dateStr] ||
+                              eventMap[`${year}-${mIdx + 1}-${d}`] ||
+                              eventMap[`${year}-${(mIdx + 1).toString().padStart(2, '0')}-${d}`] ||
+                              eventMap[`${dateStr} 00:00:00`] ||
+                              eventMap[`${year}-${(mIdx + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')} 00:00:00`];
+
                             return (
                               <td
                                 key={dIdx}
@@ -509,7 +511,7 @@ const CalendarPage = () => {
                               >
                                 {event ? (
                                   <div className="relative group">
-                                    <span 
+                                    <span
                                       className={`${getEventColor(event)} text-white rounded-full w-7 h-7 flex items-center justify-center mx-auto font-bold shadow cursor-pointer hover:scale-110 transition-transform`}
                                       title={getEventTooltip(event)}
                                     >
@@ -540,21 +542,20 @@ const CalendarPage = () => {
                       const eventType = e.type || 'company';
                       return (
                         <li key={e.id || `event-${e.date}`} className="flex items-center gap-2 mb-1">
-                          <span className={`inline-block w-2 h-2 rounded-full ${
-                            eventType === 'annual' 
-                              ? 'bg-red-500' 
+                          <span className={`inline-block w-2 h-2 rounded-full ${eventType === 'annual'
+                              ? 'bg-red-500'
                               : eventType === 'employee'
                                 ? 'bg-green-500'
                                 : 'bg-blue-500'
-                          }`}></span>
+                            }`}></span>
                           <span className={
-                            eventType === 'annual' 
-                              ? 'text-red-600' 
+                            eventType === 'annual'
+                              ? 'text-red-600'
                               : eventType === 'employee'
                                 ? 'text-green-600'
                                 : 'text-blue-600'
                           }>
-                            {eventType === 'employee' && e.employeeInfo 
+                            {eventType === 'employee' && e.employeeInfo
                               ? `${e.employeeInfo.userName} (${e.employeeInfo.leaveType})`
                               : e.title
                             } ({day}/{monthNum})
@@ -573,7 +574,7 @@ const CalendarPage = () => {
             })}
           </div>
         )}
-        
+
       </div>
     </div>
   );

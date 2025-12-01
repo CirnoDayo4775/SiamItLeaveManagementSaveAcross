@@ -57,14 +57,14 @@ const AnnouncementsFeedPage = () => {
       // Listen for new announcements
       socket.on('newAnnouncement', (data) => {
         console.log('Received new announcement:', data);
-        
+
         // Show toast notification
         toast({
           title: t('notification.newAnnouncement'),
           description: data.subject,
           variant: 'default'
         });
-        
+
         // Add new announcement to the list with createdByName
         const newAnnouncement = {
           ...data,
@@ -77,17 +77,17 @@ const AnnouncementsFeedPage = () => {
       // Listen for announcement updates
       socket.on('announcementUpdated', (data) => {
         console.log('Received announcement update:', data);
-        
+
         // Show toast notification
         toast({
           title: t('notifications.announcementUpdated'),
           description: data.subject,
           variant: 'default'
         });
-        
+
         // Update announcement in the list
-        setAnnouncements(prev => 
-          prev.map(announcement => 
+        setAnnouncements(prev =>
+          prev.map(announcement =>
             announcement.id === data.id ? { ...data, createdByName: announcement.createdByName } : announcement
           )
         );
@@ -96,16 +96,16 @@ const AnnouncementsFeedPage = () => {
       // Listen for announcement deletions
       socket.on('announcementDeleted', (data) => {
         console.log('Received announcement deletion:', data);
-        
+
         // Show toast notification
         toast({
           title: t('notifications.announcementDeleted'),
           description: data.subject,
           variant: 'destructive'
         });
-        
+
         // Remove announcement from the list
-        setAnnouncements(prev => 
+        setAnnouncements(prev =>
           prev.filter(announcement => announcement.id !== data.id)
         );
       });
@@ -147,13 +147,13 @@ const AnnouncementsFeedPage = () => {
 
   const handleCreateAnnouncement = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // ตรวจสอบว่ามีไฟล์ที่เลือกและไฟล์นั้นไม่ถูกต้อง
     if (selectedFile && !isValidFile) {
       setError(t('announcementsFeed.invalidImageFile'));
       return;
     }
-    
+
     setCreateLoading(true);
     setError(null);
     try {
@@ -181,7 +181,7 @@ const AnnouncementsFeedPage = () => {
               undefined,
               showSessionExpiredDialog
             );
-            
+
             if (response.status === 'success') {
               setAnnouncements(response.data);
             }
@@ -206,7 +206,7 @@ const AnnouncementsFeedPage = () => {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 w-[350px] h-[350px] rounded-full bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-100 opacity-30 blur-2xl animate-float-slow" />
         <div className="absolute bottom-0 right-0 w-[250px] h-[250px] rounded-full bg-gradient-to-tr from-purple-200 via-blue-100 to-indigo-100 opacity-20 blur-xl animate-float-slow2" />
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse-slow" style={{transform:'translate(-50%,-50%)'}} />
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse-slow" style={{ transform: 'translate(-50%,-50%)' }} />
       </div>
 
       {/* Hero Section */}
@@ -222,29 +222,29 @@ const AnnouncementsFeedPage = () => {
             </defs>
           </svg>
         </div>
-        
+
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
           <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
         </div>
-        
-        <div className="relative z-10 flex flex-col items-center justify-center py-10 md:py-16">
-          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-24 h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
-          <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-3">
-            <Newspaper className="w-10 h-10 text-blue-600" />
+
+        <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-16">
+          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
+          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-2 md:gap-3">
+            <Newspaper className="w-6 h-6 md:w-10 md:h-10 text-blue-600" />
             {t('announcementsFeed.title')}
           </h1>
-          <p className="text-lg md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl">
+          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl px-4">
             {t('announcementsFeed.subtitle')}
           </p>
           {/* Management Buttons for Admin/SuperAdmin */}
           {(user?.role === 'admin' || user?.role === 'superadmin') && (
-            <div className="mt-4 flex gap-3">
-              <Link to="/announcements/manage-post">
-                <Button 
-                  size="lg" 
+            <div className="mt-4 flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-4 sm:px-0">
+              <Link to="/announcements/manage-post" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
                   variant="outline"
-                  className="bg-white/90 hover:bg-white text-blue-600 border-blue-200 hover:border-blue-300 shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+                  className="w-full sm:w-auto bg-white/90 hover:bg-white text-blue-600 border-blue-200 hover:border-blue-300 shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                 >
                   <Settings className="w-5 h-5 mr-2" />
                   {t('announcementsFeed.managePosts')}
@@ -252,18 +252,18 @@ const AnnouncementsFeedPage = () => {
               </Link>
               <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button 
-                    size="lg" 
-                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                   >
                     <Plus className="w-5 h-5 mr-2" />
                     {t('announcementsFeed.createPost')}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl w-[95vw] sm:w-full">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-blue-900 mb-2 flex items-center gap-2">
-                      <Plus className="w-6 h-6 text-blue-600" />
+                    <DialogTitle className="text-xl md:text-2xl font-bold text-blue-900 mb-2 flex items-center gap-2">
+                      <Plus className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
                       {t('announcementsFeed.createPost')}
                     </DialogTitle>
                   </DialogHeader>
@@ -311,14 +311,14 @@ const AnnouncementsFeedPage = () => {
                             />
                           </label>
                           {selectedFile && (
-                            <div className="flex items-center gap-2">
-                              <span className={`text-sm font-medium ${isValidFile ? 'text-green-600' : 'text-red-600'}`}>
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              <span className={`text-sm font-medium truncate max-w-[150px] md:max-w-xs ${isValidFile ? 'text-green-600' : 'text-red-600'}`}>
                                 {isValidFile ? '✓' : '✗'} {selectedFile.name}
                               </span>
                               <button
                                 type="button"
                                 onClick={() => removeSelectedFile(setSelectedFile, setImagePreview, setFileError, setIsValidFile, fileInputRef)}
-                                className="text-red-500 hover:text-red-700 text-sm font-medium"
+                                className="text-red-500 hover:text-red-700 text-sm font-medium shrink-0"
                               >
                                 {t('common.delete')}
                               </button>
@@ -372,7 +372,7 @@ const AnnouncementsFeedPage = () => {
       </div>
 
       {/* Content Section */}
-      <div className="relative z-10 p-6">
+      <div className="relative z-10 p-4 md:p-6">
         <div className="max-w-4xl mx-auto">
           {loading ? (
             <div className="flex items-center justify-center py-20">
@@ -391,14 +391,14 @@ const AnnouncementsFeedPage = () => {
               <p className="text-gray-500">{t('announcementsFeed.noAnnouncementsDesc')}</p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {announcements.map((announcement, index) => (
                 <Card key={index} className="w-full shadow-xl bg-white/80 backdrop-blur-lg border-0 rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start gap-4">
-                      <Avatar className="h-16 w-16 border-3 border-blue-200 shadow-lg">
-                        <AvatarImage 
-                                                     src={announcement.avatar ? getImageUrl(announcement.avatar, import.meta.env.VITE_API_BASE_URL) : '/placeholder-avatar.png'} 
+                  <CardHeader className="pb-3 md:pb-4">
+                    <div className="flex items-start gap-3 md:gap-4">
+                      <Avatar className="h-12 w-12 md:h-16 md:w-16 border-3 border-blue-200 shadow-lg shrink-0">
+                        <AvatarImage
+                          src={announcement.avatar ? getImageUrl(announcement.avatar, import.meta.env.VITE_API_BASE_URL) : '/placeholder-avatar.png'}
                           alt={announcement.createdByName}
                           className="object-cover"
                           onError={(e) => {
@@ -412,32 +412,32 @@ const AnnouncementsFeedPage = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-xl font-bold text-gray-800 mb-2 truncate">
+                        <CardTitle className="text-lg md:text-xl font-bold text-gray-800 mb-1 md:mb-2 truncate">
                           {announcement.createdByName}
                         </CardTitle>
-                        <div className="flex items-center gap-1 text-sm text-gray-500">
-                          <Calendar className="w-4 h-4" />
+                        <div className="flex items-center gap-1 text-xs md:text-sm text-gray-500">
+                          <Calendar className="w-3 h-3 md:w-4 md:h-4" />
                           <span className="truncate">{formatDate(announcement.createdAt, i18n.language)}</span>
                         </div>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <div className="space-y-4">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-3 line-clamp-2">
+                    <div className="space-y-3 md:space-y-4">
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 md:mb-3 line-clamp-2">
                         {announcement.subject}
                       </h3>
                       <div className="max-h-32 overflow-y-auto">
-                        <p className="text-gray-700 leading-relaxed whitespace-pre-wrap break-all overflow-wrap-anywhere max-w-full">
+                        <p className="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-wrap break-all overflow-wrap-anywhere max-w-full">
                           {announcement.detail}
                         </p>
                       </div>
-                                            {announcement.Image && (
+                      {announcement.Image && (
                         <div className="relative">
                           <img
                             src={getImageUrl(announcement.Image, import.meta.env.VITE_API_BASE_URL)}
                             alt={announcement.subject}
-                            className="w-full h-auto rounded-lg object-contain max-h-[500px] shadow-md bg-gray-50 cursor-pointer hover:opacity-90 transition-opacity"
+                            className="w-full h-auto rounded-lg object-contain max-h-[300px] md:max-h-[500px] shadow-md bg-gray-50 cursor-pointer hover:opacity-90 transition-opacity"
                             onError={(e) => handleImageError(e, announcement.Image, import.meta.env.VITE_API_BASE_URL)}
                             onClick={() => handleAnnouncementImageClick(announcement.Image)}
                           />
@@ -475,11 +475,11 @@ const AnnouncementsFeedPage = () => {
               <X className="w-4 h-4" />
             </Button>
           </div>
-          
+
           {previewImageUrl && (
             <div className="flex items-center justify-center h-full p-4">
-              <img 
-                src={previewImageUrl} 
+              <img
+                src={previewImageUrl}
                 alt={previewImageName}
                 style={{ maxWidth: '100vw', maxHeight: '100vh' }}
                 className="object-contain rounded-lg shadow-2xl"

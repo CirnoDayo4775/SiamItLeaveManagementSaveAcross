@@ -205,7 +205,7 @@ const CompanyCalendarPage = () => {
         </div>
         
         {/* Filter Switches */}
-        <div className="flex items-center justify-center gap-6 flex-wrap md:flex-nowrap mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
+        <div className="flex items-center justify-center gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
           <div className="flex items-center gap-3">
             <Switch 
               checked={showAnnualHolidays}
@@ -224,8 +224,8 @@ const CompanyCalendarPage = () => {
           </div>
         </div>
         
-        {/* Legend (hidden on small/portrait screens) */}
-        <div className="hidden md:flex items-center justify-center gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
+        {/* Legend */}
+        <div className="flex items-center justify-center gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-red-500"></span>
             <span className="text-sm text-red-700">{t('calendar.annualHolidays')}</span>

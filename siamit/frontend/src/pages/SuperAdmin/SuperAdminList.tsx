@@ -68,9 +68,9 @@ const SuperAdminList: React.FC = () => {
         // Fetch positions
         const posData = await apiService.get(apiEndpoints.positions);
         if (posData && posData.data && Array.isArray(posData.data)) {
-          const pos = posData.data.map((p: any) => ({ 
-            id: p.id, 
-            position_name_th: p.position_name_th, 
+          const pos = posData.data.map((p: any) => ({
+            id: p.id,
+            position_name_th: p.position_name_th,
             position_name_en: p.position_name_en,
             require_enddate: !!p.require_enddate
           }));
@@ -101,7 +101,7 @@ const SuperAdminList: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-    
+
     // Password strength checker
     if (name === 'password') {
       const hasLower = /[a-z]/.test(value);
@@ -109,7 +109,7 @@ const SuperAdminList: React.FC = () => {
       const hasNumber = /\d/.test(value);
       const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
       const length = value.length;
-      
+
       if (length >= 8 && hasLower && hasUpper && hasNumber && hasSpecial) {
         setPasswordStrength('strong');
       } else if (length >= 6 && ((hasLower && hasUpper) || (hasNumber && hasSpecial))) {
@@ -152,54 +152,54 @@ const SuperAdminList: React.FC = () => {
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError({});
-    
+
     // Validation    
     if (!form.full_name.trim()) {
       showToastMessage.validation.requiredField('fullName', t);
       return;
     }
-    
+
     if (!form.email.trim()) {
       showToastMessage.validation.requiredField('email', t);
       return;
     }
-    
+
     if (!form.phone_number.trim()) {
       showToastMessage.validation.requiredField('phoneNumber', t);
       return;
     }
-    
+
     if (!form.department) {
       showToastMessage.validation.requiredField('department', t);
       return;
     }
-    
+
     if (!form.position) {
       showToastMessage.validation.requiredField('position', t);
       return;
     }
-    
+
     if (form.password.length < 6) {
       showToastMessage.validation.passwordTooShort(t);
       return;
     }
-    
+
     if (form.password !== form.confirmPassword) {
       showToastMessage.validation.passwordMismatch(t);
       return;
     }
-    
+
     if (!form.role) {
       showToastMessage.validation.requiredField('role', t);
       return;
     }
-    
+
     // Check if end_work is required based on position's require_enddate
     if (selectedPositionRequireEnddate && !form.end_work) {
       showToastMessage.validation.requiredField('endWork', t);
       return;
     }
-    
+
     setLoading(true);
     try {
       // Map frontend role to backend role
@@ -208,7 +208,7 @@ const SuperAdminList: React.FC = () => {
         'admin': 'admin',
         'superadmin': 'superadmin'
       };
-      
+
       const payload = {
         role: roleMapping[form.role] || form.role,
         name: form.full_name,
@@ -222,7 +222,7 @@ const SuperAdminList: React.FC = () => {
         end_work: selectedPositionRequireEnddate ? form.end_work : null,
         phone_number: form.phone_number,
       };
-      
+
       const data = await apiService.post('/api/create-user-with-role', payload);
       if (data && (data.success || data.token)) {
         showToastMessage.crud.createSuccess('user', t);
@@ -315,57 +315,56 @@ const SuperAdminList: React.FC = () => {
             </defs>
           </svg>
         </div>
-        
+
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
           <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
         </div>
-        
-        <div className="relative z-10 flex flex-col items-center justify-center py-12 md:py-20 animate-slide-down">
+
+        <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-20 animate-slide-down">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
-            <img 
-              src="/lovable-uploads/siamit.png" 
-              alt="Logo" 
-              className="relative w-28 h-28 rounded-full bg-white/90 shadow-2xl border-4 border-white mb-6 hover:scale-110 transition-all duration-500 hover:shadow-3xl" 
+            <img
+              src="/lovable-uploads/siamit.png"
+              alt="Logo"
+              className="relative w-20 h-20 md:w-28 md:h-28 rounded-full bg-white/90 shadow-2xl border-4 border-white mb-4 md:mb-6 hover:scale-110 transition-all duration-500 hover:shadow-3xl"
             />
           </div>
-          <h2 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 drop-shadow mb-3 flex items-center gap-3 animate-fade-in-up">
+          <h2 className="text-3xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 drop-shadow mb-2 md:mb-3 flex items-center gap-2 md:gap-3 animate-fade-in-up text-center px-4">
             {t('admin.createUser')}
           </h2>
-          <p className="text-xl md:text-2xl text-blue-900/80 mb-2 font-medium text-center max-w-3xl animate-fade-in-up-delay">
+          <p className="text-base md:text-2xl text-blue-900/80 mb-2 font-medium text-center max-w-3xl animate-fade-in-up-delay px-4">
             {t('main.onlineLeaveSystemCompany', 'Siam IT Leave Management System')}
           </p>
           <div className="flex items-center gap-2 text-blue-700/70 animate-fade-in-up-delay">
-            <Info className="w-5 h-5" />
-            <span className="text-sm">{t('admin.selectUserType')}</span>
+            <Info className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="text-xs md:text-sm">{t('admin.selectUserType')}</span>
           </div>
         </div>
       </div>
-      
-      <div className="w-full max-w-6xl mx-auto px-6 pb-8 animate-fade-in-up-slow">
+
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 pb-8 animate-fade-in-up-slow">
         {/* Enhanced Role Selection Tabs */}
-        <div className="mb-8 animate-fade-in-up-delay-1">
-          <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-3 flex gap-3 border border-white/20">
+        <div className="mb-6 md:mb-8 animate-fade-in-up-delay-1">
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-3 flex flex-col md:flex-row gap-3 border border-white/20">
             {TABS.map((tab) => {
               const config = getTabConfig(tab);
               const IconComponent = config.icon;
               const isActive = activeTab === tab;
-              
+
               return (
                 <button
                   key={tab}
                   onClick={() => handleTabChange(tab)}
-                  className={`flex-1 flex items-center justify-center gap-4 py-6 px-8 rounded-2xl transition-all duration-500 transform hover:scale-105 relative overflow-hidden ${
-                    isActive 
-                      ? `bg-gradient-to-r ${config.gradient} ${config.activeTextColor}  shadow-lg` 
+                  className={`flex-1 flex items-center justify-center gap-3 md:gap-4 py-4 px-6 md:py-6 md:px-8 rounded-2xl transition-all duration-500 transform hover:scale-105 relative overflow-hidden ${isActive
+                      ? `bg-gradient-to-r ${config.gradient} ${config.activeTextColor}  shadow-lg`
                       : `${config.bgColor} ${config.textColor} ${config.hoverColor} ${config.borderColor} border hover:shadow-lg`
-                  }`}
+                    }`}
                 >
                   {isActive && (
                     <div className="absolute inset-0 bg-white/10 animate-pulse-slow"></div>
                   )}
-                  <IconComponent className={`w-6 h-6 transition-all duration-300 ${isActive ? 'animate-bounce' : ''}`} />
+                  <IconComponent className={`w-5 h-5 md:w-6 md:h-6 transition-all duration-300 ${isActive ? 'animate-bounce' : ''}`} />
                   <span className="font-bold text-base md:text-lg">{config.title}</span>
                 </button>
               );
@@ -374,321 +373,320 @@ const SuperAdminList: React.FC = () => {
         </div>
 
         {/* Enhanced Form Container */}
-        <div className={`bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-10 animate-slide-up hover:shadow-3xl transition-all duration-500 hover:scale-[1.01] border-2 ${currentConfig.borderColor} relative overflow-hidden max-w-3xl mx-auto`}>  
+        <div className={`bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-5 md:p-10 animate-slide-up hover:shadow-3xl transition-all duration-500 hover:scale-[1.01] border-2 ${currentConfig.borderColor} relative overflow-hidden max-w-3xl mx-auto`}>
           {/* Section: ข้อมูลส่วนตัว */}
-          <h4 className="text-xl font-bold mb-4 text-blue-700">{t('admin.personalInfo')}</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <h4 className="text-lg md:text-xl font-bold mb-4 text-blue-700">{t('admin.personalInfo')}</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-6 md:mb-8">
             {/* Full Name */}
-            <div className="space-y-3 animate-fade-in-up-delay-3">
-                <Label htmlFor="full_name" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <User className="w-5 h-5" />
-                  {t('auth.fullName')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative group">
-                  <Input
-                    id="full_name"
-                    name="full_name"
-                    type="text"
-                    placeholder={t('admin.enterFullName')}
-                    value={form.full_name}
-                    onChange={handleChange}
-                    className={`pl-6 py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
-                    required
-                    autoComplete="name"
-                  />
-                  {form.full_name && (
-                    <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500" />
-                  )}
-                </div>
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-3">
+              <Label htmlFor="full_name" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <User className="w-4 h-4 md:w-5 md:h-5" />
+                {t('auth.fullName')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative group">
+                <Input
+                  id="full_name"
+                  name="full_name"
+                  type="text"
+                  placeholder={t('admin.enterFullName')}
+                  value={form.full_name}
+                  onChange={handleChange}
+                  className={`pl-6 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  required
+                  autoComplete="name"
+                />
+                {form.full_name && (
+                  <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500" />
+                )}
               </div>
+            </div>
 
-              {/* Email */}
-              <div className="space-y-3 animate-fade-in-up-delay-4">
-                <Label htmlFor="email" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Mail className="w-5 h-5" />
-                  {t('auth.email')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative group">
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder={t('admin.enterEmail')}
-                    value={form.email}
-                    onChange={handleChange}
-                    className={`pl-6 py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
-                    required
-                    autoComplete="email"
-                  />
-                  {form.email && (
-                    <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500" />
-                  )}
-                </div>
+            {/* Email */}
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-4">
+              <Label htmlFor="email" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Mail className="w-4 h-4 md:w-5 md:h-5" />
+                {t('auth.email')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative group">
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder={t('admin.enterEmail')}
+                  value={form.email}
+                  onChange={handleChange}
+                  className={`pl-6 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  required
+                  autoComplete="email"
+                />
+                {form.email && (
+                  <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500" />
+                )}
               </div>
-              {/* Phone Number */}
-              <div className="space-y-3 animate-fade-in-up-delay-4">
-                <Label htmlFor="phone_number" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Phone className="w-5 h-5" />
-                  {t('admin.phoneNumber')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative group">
-                  <Input
-                    id="phone_number"
-                    name="phone_number"
-                    type="tel"
-                    placeholder={t('admin.enterPhoneNumber')}
-                    value={form.phone_number}
-                    onChange={handleChange}
-                    className={`pl-6 py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
-                    required
-                    autoComplete="tel"
-                  />
-                </div>
-              </div>
-
-              {/* Gender */}
-              <div className="space-y-3 animate-fade-in-up-delay-7">
-                <Label htmlFor="gender" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <User className="w-5 h-5" />
-                  {t('admin.gender')} 
-                </Label>
-                <Select value={form.gender} onValueChange={value => setForm(f => ({ ...f, gender: value }))}>
-                  <SelectTrigger id="gender" className={`rounded-xl shadow-sm text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-4`}>
-                    <SelectValue placeholder={t('admin.selectGender')} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
-                    {genders && genders.length > 0 ? (
-                      genders.map((g: any) => (
-                        <SelectItem key={g.id || g.value || g.gender_name_th} value={g.gender_name_th || g.value} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
-                          {lang === 'th' ? (g.gender_name_th || g.label || g.value) : (g.gender_name_en || g.label || g.value)}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <>
-                        <SelectItem value="male">{t('admin.male')}</SelectItem>
-                        <SelectItem value="female">{t('admin.female')}</SelectItem> 
-                        <SelectItem value="other">{t('admin.other')}</SelectItem>
-                      </>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Date of Birth */}
-              <div className="space-y-3 animate-fade-in-up-delay-6">
-                <Label htmlFor="date_of_birth" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Calendar className="w-5 h-5" />
-                  {t('admin.dateOfBirth')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <DatePicker
-                  date={form.date_of_birth}
-                  onDateChange={(date) => setForm(f => ({ ...f, date_of_birth: date }))}
-                  placeholder={t('admin.enterDateOfBirth')}
-                  className={`py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+            </div>
+            {/* Phone Number */}
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-4">
+              <Label htmlFor="phone_number" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Phone className="w-4 h-4 md:w-5 md:h-5" />
+                {t('admin.phoneNumber')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative group">
+                <Input
+                  id="phone_number"
+                  name="phone_number"
+                  type="tel"
+                  placeholder={t('admin.enterPhoneNumber')}
+                  value={form.phone_number}
+                  onChange={handleChange}
+                  className={`pl-6 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  required
+                  autoComplete="tel"
                 />
               </div>
+            </div>
+
+            {/* Gender */}
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
+              <Label htmlFor="gender" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <User className="w-4 h-4 md:w-5 md:h-5" />
+                {t('admin.gender')}
+              </Label>
+              <Select value={form.gender} onValueChange={value => setForm(f => ({ ...f, gender: value }))}>
+                <SelectTrigger id="gender" className={`rounded-xl shadow-sm text-base md:text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-3 md:py-4`}>
+                  <SelectValue placeholder={t('admin.selectGender')} />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
+                  {genders && genders.length > 0 ? (
+                    genders.map((g: any) => (
+                      <SelectItem key={g.id || g.value || g.gender_name_th} value={g.gender_name_th || g.value} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
+                        {lang === 'th' ? (g.gender_name_th || g.label || g.value) : (g.gender_name_en || g.label || g.value)}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <>
+                      <SelectItem value="male">{t('admin.male')}</SelectItem>
+                      <SelectItem value="female">{t('admin.female')}</SelectItem>
+                      <SelectItem value="other">{t('admin.other')}</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Date of Birth */}
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-6">
+              <Label htmlFor="date_of_birth" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+                {t('admin.dateOfBirth')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <DatePicker
+                date={form.date_of_birth}
+                onDateChange={(date) => setForm(f => ({ ...f, date_of_birth: date }))}
+                placeholder={t('admin.enterDateOfBirth')}
+                className={`py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+              />
+            </div>
           </div>
           <hr className="my-6" />
           {/* Section: ข้อมูลการทำงาน */}
-          <h4 className="text-xl font-bold mb-4 text-purple-700">{t('admin.workInfo')}</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <h4 className="text-lg md:text-xl font-bold mb-4 text-purple-700">{t('admin.workInfo')}</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-6 md:mb-8">
             {/* Department */}
-            <div className="space-y-3 animate-fade-in-up-delay-6">
-                <Label htmlFor="department" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Building className="w-5 h-5" />
-                  {t('auth.department')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <Select value={form.department} onValueChange={value => setForm(f => ({ ...f, department: value }))}>
-                  <SelectTrigger id="department" className={`rounded-xl shadow-sm text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-4`}>
-                    <SelectValue placeholder={t('admin.selectDepartment')} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
-                    {departments.map((dep) => (
-                      <SelectItem key={dep.id} value={dep.id} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
-                        {lang === 'th' ? dep.department_name_th : dep.department_name_en}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-6">
+              <Label htmlFor="department" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Building className="w-4 h-4 md:w-5 md:h-5" />
+                {t('auth.department')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <Select value={form.department} onValueChange={value => setForm(f => ({ ...f, department: value }))}>
+                <SelectTrigger id="department" className={`rounded-xl shadow-sm text-base md:text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-3 md:py-4`}>
+                  <SelectValue placeholder={t('admin.selectDepartment')} />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
+                  {departments.map((dep) => (
+                    <SelectItem key={dep.id} value={dep.id} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
+                      {lang === 'th' ? dep.department_name_th : dep.department_name_en}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              {/* Position */}
-              <div className="space-y-3 animate-fade-in-up-delay-5">
-                <Label htmlFor="position" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Building className="w-5 h-5" />
-                  {t('auth.position')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <Select value={form.position} onValueChange={handlePositionChange}>
-                  <SelectTrigger id="position" className={`rounded-xl shadow-sm text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-4`}>
-                    <SelectValue placeholder={t('admin.selectPosition')} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
-                    {positions.map((pos) => (
-                      <SelectItem key={pos.id} value={pos.id} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
-                        {lang === 'th' ? pos.position_name_th : pos.position_name_en}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* Position */}
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-5">
+              <Label htmlFor="position" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Building className="w-4 h-4 md:w-5 md:h-5" />
+                {t('auth.position')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <Select value={form.position} onValueChange={handlePositionChange}>
+                <SelectTrigger id="position" className={`rounded-xl shadow-sm text-base md:text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-3 md:py-4`}>
+                  <SelectValue placeholder={t('admin.selectPosition')} />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
+                  {positions.map((pos) => (
+                    <SelectItem key={pos.id} value={pos.id} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
+                      {lang === 'th' ? pos.position_name_th : pos.position_name_en}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              {/* Start Work */}
-              <div className="space-y-3 animate-fade-in-up-delay-7">
-                <Label htmlFor="start_work" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Calendar className="w-5 h-5" />
-                  {t('admin.startWork')}
+            {/* Start Work */}
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
+              <Label htmlFor="start_work" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+                {t('admin.startWork')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <DatePicker
+                date={form.start_work}
+                onDateChange={(date) => setForm(f => ({ ...f, start_work: date }))}
+                placeholder={t('admin.enterStartWork')}
+                className={`py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+              />
+            </div>
+            {/* End Work (conditionally rendered) */}
+            {selectedPositionRequireEnddate && (
+              <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
+                <Label htmlFor="end_work" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                  <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+                  {t('admin.endWork')}
                   <span className="text-red-500">*</span>
                 </Label>
                 <DatePicker
-                  date={form.start_work}
-                  onDateChange={(date) => setForm(f => ({ ...f, start_work: date }))}
-                  placeholder={t('admin.enterStartWork')}
-                  className={`py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  date={form.end_work}
+                  onDateChange={(date) => setForm(f => ({ ...f, end_work: date }))}
+                  placeholder={t('admin.enterEndWork')}
+                  className={`py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
                 />
               </div>
-              {/* End Work (conditionally rendered) */}
-              {selectedPositionRequireEnddate && (
-                <div className="space-y-3 animate-fade-in-up-delay-7">
-                  <Label htmlFor="end_work" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                    <Calendar className="w-5 h-5" />
-                    {t('admin.endWork')}
-                    <span className="text-red-500">*</span>
-                  </Label>
-                  <DatePicker
-                    date={form.end_work}
-                    onDateChange={(date) => setForm(f => ({ ...f, end_work: date }))}
-                    placeholder={t('admin.enterEndWork')}
-                    className={`py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
-                  />
-                </div>
-              )}
+            )}
           </div>
           <hr className="my-6" />
           {/* Section: ข้อมูลเข้าสู่ระบบ */}
-          <h4 className="text-xl font-bold mb-4 text-indigo-700">{t('admin.loginInfo')}</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <h4 className="text-lg md:text-xl font-bold mb-4 text-indigo-700">{t('admin.loginInfo')}</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-6 md:mb-8">
             {/* Password */}
-            <div className="space-y-3 animate-fade-in-up-delay-7">
-                <Label htmlFor="password" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Lock className="w-5 h-5" />
-                  {t('auth.password')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative group">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={form.password}
-                    onChange={handleChange}
-                    className={`pl-6 pr-12 py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
-                    required
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} hover:scale-110 transition-all duration-300`}
-                  >
-                    {showPassword ? <EyeOff /> : <Eye />}
-                  </button>
-                </div>
-                {/* Password Strength Indicator */}
-                {form.password && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className={getPasswordStrengthColor()}>
-                      {t(`admin.passwordStrength.${passwordStrength}`)}
-                    </span>
-                    <div className="flex gap-1">
-                      {[1, 2, 3].map((level) => (
-                        <div
-                          key={level}
-                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                            passwordStrength === 'weak' && level === 1
-                              ? 'bg-red-500'
-                              : passwordStrength === 'medium' && level <= 2
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
+              <Label htmlFor="password" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Lock className="w-4 h-4 md:w-5 md:h-5" />
+                {t('auth.password')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative group">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  className={`pl-6 pr-12 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  required
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} hover:scale-110 transition-all duration-300`}
+                >
+                  {showPassword ? <EyeOff /> : <Eye />}
+                </button>
+              </div>
+              {/* Password Strength Indicator */}
+              {form.password && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className={getPasswordStrengthColor()}>
+                    {t(`admin.passwordStrength.${passwordStrength}`)}
+                  </span>
+                  <div className="flex gap-1">
+                    {[1, 2, 3].map((level) => (
+                      <div
+                        key={level}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${passwordStrength === 'weak' && level === 1
+                            ? 'bg-red-500'
+                            : passwordStrength === 'medium' && level <= 2
                               ? 'bg-yellow-500'
                               : passwordStrength === 'strong' && level <= 3
-                              ? 'bg-green-500'
-                              : 'bg-gray-300'
+                                ? 'bg-green-500'
+                                : 'bg-gray-300'
                           }`}
-                        />
-                      ))}
-                    </div>
+                      />
+                    ))}
                   </div>
-                )}
-              </div>
-
-              {/* Confirm Password */}
-              <div className="space-y-3 animate-fade-in-up-delay-8">
-                <Label htmlFor="confirmPassword" className={`mb-3 block ${currentConfig.textColor} font-bold text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
-                  <Lock className="w-5 h-5" />
-                  {t('auth.confirmPassword')}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative group">
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    className={`pl-6 pr-12 py-4 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
-                    required
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} hover:scale-110 transition-all duration-300`}
-                  >
-                    {showConfirmPassword ? <EyeOff /> : <Eye />}
-                  </button>
                 </div>
-                {/* Password Match Indicator */}
-                {form.confirmPassword && (
-                  <div className="flex items-center gap-2 text-sm">
-                    {form.password === form.confirmPassword ? (
-                      <>
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span className="text-green-600">{t('admin.passwordMatch')}</span>
-                      </>
-                    ) : (
-                      <>
-                        <AlertCircle className="w-4 h-4 text-red-500" />
-                        <span className="text-red-600">{t('admin.passwordMismatch')}</span>
-                      </>
-                    )}
-                  </div>
-                )}
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-8">
+              <Label htmlFor="confirmPassword" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Lock className="w-4 h-4 md:w-5 md:h-5" />
+                {t('auth.confirmPassword')}
+                <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative group">
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  className={`pl-6 pr-12 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  required
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} hover:scale-110 transition-all duration-300`}
+                >
+                  {showConfirmPassword ? <EyeOff /> : <Eye />}
+                </button>
               </div>
+              {/* Password Match Indicator */}
+              {form.confirmPassword && (
+                <div className="flex items-center gap-2 text-sm">
+                  {form.password === form.confirmPassword ? (
+                    <>
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span className="text-green-600">{t('admin.passwordMatch')}</span>
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle className="w-4 h-4 text-red-500" />
+                      <span className="text-red-600">{t('admin.passwordMismatch')}</span>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           {/* Enhanced Submit Button */}
-          <div className="flex justify-center mt-8 animate-fade-in-up-delay-9">
-            <Button 
-              type="button" 
-              className={`w-full md:w-1/2 py-6 text-xl font-bold rounded-2xl shadow-2xl bg-gradient-to-r ${currentConfig.gradient} hover:shadow-3xl text-white transition-all duration-500 hover:scale-105 active:scale-95 transform relative overflow-hidden group`}
+          <div className="flex justify-center mt-6 md:mt-8 animate-fade-in-up-delay-9">
+            <Button
+              type="button"
+              className={`w-full md:w-1/2 py-4 md:py-6 text-lg md:text-xl font-bold rounded-2xl shadow-2xl bg-gradient-to-r ${currentConfig.gradient} hover:shadow-3xl text-white transition-all duration-500 hover:scale-105 active:scale-95 transform relative overflow-hidden group`}
               disabled={loading}
               onClick={() => setShowConfirmModal(true)}
             >
               {loading ? (
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-4"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 md:h-6 md:w-6 border-b-2 border-white mr-3 md:mr-4"></div>
                   <span>{t('admin.creatingUser')}</span>
                 </div>
               ) : (
                 <>
                   <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  <span className="flex items-center justify-center gap-3 relative z-10">
-                    <Plus className="w-6 h-6" />
+                  <span className="flex items-center justify-center gap-2 md:gap-3 relative z-10">
+                    <Plus className="w-5 h-5 md:w-6 md:h-6" />
                     {t('admin.createUser')}
                   </span>
                 </>
@@ -718,24 +716,24 @@ const SuperAdminList: React.FC = () => {
           </Dialog>
         </div>
       </div>
-      
+
       {/* Enhanced Footer */}
-      <footer className="w-full mt-20 py-12 bg-gradient-to-r from-blue-50 via-indigo-50 to-white text-center text-gray-500 text-base font-medium shadow-inner flex flex-col items-center gap-4 animate-fade-in-up-slow">
+      <footer className="w-full mt-10 md:mt-20 py-8 md:py-12 bg-gradient-to-r from-blue-50 via-indigo-50 to-white text-center text-gray-500 text-base font-medium shadow-inner flex flex-col items-center gap-3 md:gap-4 animate-fade-in-up-slow">
         <div className="flex items-center gap-3">
-          <img 
-            src="/lovable-uploads/siamit.png" 
-            alt="Logo" 
-            className="w-12 h-12 rounded-full hover:scale-110 transition-all duration-300" 
+          <img
+            src="/lovable-uploads/siamit.png"
+            alt="Logo"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full hover:scale-110 transition-all duration-300"
           />
-          <span className="text-lg font-semibold text-gray-700">
+          <span className="text-base md:text-lg font-semibold text-gray-700">
             {t('footer.systemName')}
           </span>
         </div>
-        <span className="transition-all duration-300 hover:text-indigo-600 text-sm">
+        <span className="transition-all duration-300 hover:text-indigo-600 text-xs md:text-sm">
           {t('footer.copyright')}
         </span>
       </footer>
-      
+
       <style>{`
         @keyframes fade-in {
           from { opacity: 0; }

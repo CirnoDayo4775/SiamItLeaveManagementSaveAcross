@@ -35,7 +35,7 @@ const LeaveSystemSettings: React.FC = () => {
   const lang = i18n.language.startsWith('th') ? 'th' : 'en';
   // Position state
   const [positions, setPositions] = useState<any[]>([]);
-      const [positionForm, setPositionForm] = useState<{ name_en: string; name_th: string; quotas: Record<string, number>; require_enddate: boolean }>({ name_en: '', name_th: '', quotas: {}, require_enddate: false });
+  const [positionForm, setPositionForm] = useState<{ name_en: string; name_th: string; quotas: Record<string, number>; require_enddate: boolean }>({ name_en: '', name_th: '', quotas: {}, require_enddate: false });
   const [editingPositionId, setEditingPositionId] = useState<string | null>(null);
   const [positionError, setPositionError] = useState<string | null>(null);
 
@@ -59,7 +59,7 @@ const LeaveSystemSettings: React.FC = () => {
     name_en: string;
     name_th: string;
     quotas: Record<string, number>;
-  }> (null);
+  }>(null);
   // Quota tab state removed along with reset functionality
 
   const handleToggleNewYearQuota = async (pos: any) => {
@@ -73,7 +73,7 @@ const LeaveSystemSettings: React.FC = () => {
         position_name_th: pos.position_name_th,
         quotas: quotasForBackend,
         new_year_quota: nextValue,
-                        require_enddate: pos.require_enddate,
+        require_enddate: pos.require_enddate,
       });
       if (!data || !data.success) throw new Error('Failed to update');
       // Refresh positions
@@ -93,7 +93,7 @@ const LeaveSystemSettings: React.FC = () => {
   // Department handlers
   const [inlineDepartmentEdit, setInlineDepartmentEdit] = useState<null | { id: string; name_en: string; name_th: string }>(null);
   const [inlineDepartmentError, setInlineDepartmentError] = useState<string | null>(null);
-  
+
   // Delete confirmation states
   const [deletePositionDialog, setDeletePositionDialog] = useState<{ open: boolean; position: any | null }>({ open: false, position: null });
   const [deleteDepartmentDialog, setDeleteDepartmentDialog] = useState<{ open: boolean; department: any | null }>({ open: false, department: null });
@@ -101,11 +101,11 @@ const LeaveSystemSettings: React.FC = () => {
   // Manual reset quota state
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [manualResetLoading, setManualResetLoading] = useState(false);
-  
+
   // Employee search and filter state
   const [employeeSearch, setEmployeeSearch] = useState('');
   const [showSelectedOnly, setShowSelectedOnly] = useState(false);
-  
+
   // Cleanup old records state
   const [cleanupLoading, setCleanupLoading] = useState(false);
   const handleDepartmentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,7 +163,7 @@ const LeaveSystemSettings: React.FC = () => {
 
   const confirmDeleteDepartment = async () => {
     if (!deleteDepartmentDialog.department) return;
-    
+
     try {
       await apiService.delete(`${apiEndpoints.departments}/${deleteDepartmentDialog.department.id}`);
       await fetchDepartments();
@@ -198,7 +198,7 @@ const LeaveSystemSettings: React.FC = () => {
 
   const confirmDeleteLeaveType = async () => {
     if (!deleteLeaveTypeDialog.leaveType) return;
-    
+
     try {
       await apiService.delete(`${apiEndpoints.leaveTypes}/${deleteLeaveTypeDialog.leaveType.id}`);
       // Refresh leave types
@@ -354,7 +354,7 @@ const LeaveSystemSettings: React.FC = () => {
 
   // Toggle Require End Date switch for a position
   const handleToggleRequestQuote = async (pos: any) => {
-            const newValue = !pos.require_enddate;
+    const newValue = !pos.require_enddate;
     try {
       // Build quotas payload from current row
       const quotasForBackend: Record<string, number> = {};
@@ -363,7 +363,7 @@ const LeaveSystemSettings: React.FC = () => {
         position_name_en: pos.position_name_en,
         position_name_th: pos.position_name_th,
         quotas: quotasForBackend,
-                    require_enddate: newValue
+        require_enddate: newValue
       });
       if (!data || !data.success) throw new Error('Failed to update');
       // Refresh positions
@@ -514,7 +514,7 @@ const LeaveSystemSettings: React.FC = () => {
           position_name_en: positionForm.name_en,
           position_name_th: positionForm.name_th,
           quotas: quotasForBackend,
-                      require_enddate: positionForm.require_enddate
+          require_enddate: positionForm.require_enddate
         });
         if (!data || !data.success) {
           setPositionError(data?.message || 'Unknown error');
@@ -540,7 +540,7 @@ const LeaveSystemSettings: React.FC = () => {
         name_en: pos.position_name_en,
         name_th: pos.position_name_th,
         quotas: pos.quotas,
-                        require_enddate: !!pos.require_enddate
+        require_enddate: !!pos.require_enddate
       });
       setEditingPositionId(id);
     }
@@ -554,7 +554,7 @@ const LeaveSystemSettings: React.FC = () => {
 
   const confirmDeletePosition = async () => {
     if (!deletePositionDialog.position) return;
-    
+
     try {
       await apiService.delete(`${apiEndpoints.positionsWithQuotas}/${deletePositionDialog.position.id}`);
       // Refresh positions
@@ -715,36 +715,36 @@ const LeaveSystemSettings: React.FC = () => {
             </defs>
           </svg>
         </div>
-        
+
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
           <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
         </div>
-        
-        <div className="relative z-10 flex flex-col items-center justify-center py-10 md:py-16">
-          <img src={config.assets.logo} alt="Logo" className="w-24 h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
-          <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-3">
+
+        <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-16">
+          <img src={config.assets.logo} alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
+          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-3">
             {t('navigation.manageAll')}
           </h1>
-          <p className="text-lg md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl">
+          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl px-4">
             {t('main.manageAllDesc')}
           </p>
         </div>
       </div>
-      <div className="w-full max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-8">
+      <div className="w-full max-w-7xl mx-auto px-4 py-4 md:py-8">
+        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-4 md:p-8">
           <Tabs defaultValue="positions" className="w-full" >
-            <TabsList className="mb-10 bg-indigo-50 rounded-2xl shadow-inner grid grid-cols-2 gap-4 justify-center py-3 px-4 h-auto" >
-              <TabsTrigger value="positions" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-xl py-3 px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
+            <TabsList className="mb-6 md:mb-10 bg-indigo-50 rounded-2xl shadow-inner grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-center py-3 px-4 h-auto" >
+              <TabsTrigger value="positions" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-lg md:text-xl py-3 px-4 md:px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
                 <span role="img" aria-label="positions">🧑‍💼</span> {t('positions.positions')}
               </TabsTrigger>
-              <TabsTrigger value="departments" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-xl py-3 px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
+              <TabsTrigger value="departments" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-lg md:text-xl py-3 px-4 md:px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
                 <span role="img" aria-label="departments">🏢</span> {t('departments.departments')}
               </TabsTrigger>
-              <TabsTrigger value="leaveTypes" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-xl py-3 px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
+              <TabsTrigger value="leaveTypes" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-lg md:text-xl py-3 px-4 md:px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
                 <span role="img" aria-label="leaveTypes">📝</span> {t('leave.leaveType')}
               </TabsTrigger>
-              <TabsTrigger value="quota" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-xl py-3 px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
+              <TabsTrigger value="quota" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-lg md:text-xl py-3 px-4 md:px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
                 <span role="img" aria-label="quota">📊</span> {t('leave.quota')}
               </TabsTrigger>
             </TabsList>
@@ -759,9 +759,9 @@ const LeaveSystemSettings: React.FC = () => {
                       <Input name="name_en" value={positionForm.name_en} onChange={handlePositionChange} placeholder="Position (EN)" required className="flex-1" />
                       <Input name="name_th" value={positionForm.name_th} onChange={handlePositionChange} placeholder="Position (TH)" required className="flex-1" />
                     </div>
-                    <div className="flex flex-col md:flex-row gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {filteredLeaveTypes.map(lt => (
-                        <div key={lt.id} className="flex flex-col flex-1">
+                        <div key={lt.id} className="flex flex-col">
                           <label className="text-sm font-medium text-gray-700 mb-1">{lang === 'th' ? lt.leave_type_th : lt.leave_type_en}</label>
                           <Input
                             type="number"
@@ -775,12 +775,12 @@ const LeaveSystemSettings: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <label className="flex items-center gap-3 ml-1">
+                    <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4">
+                      <label className="flex items-center gap-3 w-full sm:w-auto">
                         <input
                           type="checkbox"
-                                              name="require_enddate"
-                    checked={positionForm.require_enddate}
+                          name="require_enddate"
+                          checked={positionForm.require_enddate}
                           onChange={handlePositionChange}
                           className="accent-blue-600 h-5 w-5 rounded border-gray-300 focus:ring-2 focus:ring-blue-400 transition-all"
                         />
@@ -788,8 +788,8 @@ const LeaveSystemSettings: React.FC = () => {
                           {t('positions.requestQuote')}
                         </span>
                       </label>
-                      
-                      <Button type="submit" className="btn-primary w-24">{editingPositionId ? t('common.update') : t('common.add')}</Button>
+
+                      <Button type="submit" className="btn-primary w-full sm:w-auto min-w-[100px]">{editingPositionId ? t('common.update') : t('common.add')}</Button>
                     </div>
                     {positionError && (
                       <div className="text-red-600 font-semibold mt-2">{positionError}</div>
@@ -890,22 +890,22 @@ const LeaveSystemSettings: React.FC = () => {
                   <div className="bg-white rounded-xl p-4 shadow-sm">
                     <h3 className="text-blue-900 font-semibold mb-3">{t('leave.manualReset')}</h3>
                     {/* Controls */}
-                    <div className="flex flex-col md:flex-row md:items-center gap-3 mb-3">
-                      <div className="flex-1 flex gap-2">
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-3">
+                      <div className="flex-1 flex flex-col sm:flex-row gap-2">
                         <Input
                           value={employeeSearch}
                           onChange={e => setEmployeeSearch(e.target.value)}
                           placeholder={t('common.searchEmployee', 'Search employee by name or id')}
-                          className="md:w-80"
+                          className="w-full md:w-80"
                         />
-                        <label className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded border bg-blue-50 text-blue-900">
+                        <label className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded border bg-blue-50 text-blue-900 whitespace-nowrap">
                           <input type="checkbox" checked={showSelectedOnly} onChange={e => setShowSelectedOnly(e.target.checked)} className="accent-blue-600" />
                           {t('common.showSelectedOnly', 'Show selected only')}
                         </label>
                       </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" onClick={selectAllFiltered}>{t('common.selectAllFiltered', 'Select all (filtered)')}</Button>
-                        <Button variant="outline" onClick={clearFilteredSelection}>{t('common.clearFiltered', 'Clear (filtered)')}</Button>
+                      <div className="flex gap-2 w-full sm:w-auto">
+                        <Button variant="outline" className="flex-1 sm:flex-none" onClick={selectAllFiltered}>{t('common.selectAllFiltered', 'Select all (filtered)')}</Button>
+                        <Button variant="outline" className="flex-1 sm:flex-none" onClick={clearFilteredSelection}>{t('common.clearFiltered', 'Clear (filtered)')}</Button>
                       </div>
                     </div>
                     {/* Counter */}
@@ -934,27 +934,27 @@ const LeaveSystemSettings: React.FC = () => {
                       <Button onClick={openConfirmReset} disabled={manualResetLoading || selectedUserIds.length === 0} className="btn-primary">
                         {manualResetLoading ? t('common.loading') : t('leave.resetNow')}
                       </Button>
-                      
+
                     </div>
                   </div>
                   <div className="bg-white rounded-xl p-4 shadow-sm">
                     <h3 className="text-blue-900 font-semibold mb-3">{t('leave.note')}</h3>
                     <p className="text-sm text-gray-700">{t('leave.noteDetail')}</p>
                   </div>
-                  
+
                   {/* Cleanup old records section */}
-                          <div className="bg-white rounded-xl p-4 shadow-sm">
-          <h3 className="text-blue-900 font-semibold mb-3">{t('common.cleanupTitle')}</h3>
-          <p className="text-sm text-gray-700 mb-3">{t('common.cleanupDescription')}</p>
-          <Button
-            onClick={openConfirmCleanup}
-            disabled={cleanupLoading}
-            variant="outline"
-            className="border-orange-300 text-orange-700 hover:bg-orange-50"
-          >
-            {cleanupLoading ? t('common.cleanupButtonLoading') : t('common.cleanupButton')}
-          </Button>
-        </div>
+                  <div className="bg-white rounded-xl p-4 shadow-sm">
+                    <h3 className="text-blue-900 font-semibold mb-3">{t('common.cleanupTitle')}</h3>
+                    <p className="text-sm text-gray-700 mb-3">{t('common.cleanupDescription')}</p>
+                    <Button
+                      onClick={openConfirmCleanup}
+                      disabled={cleanupLoading}
+                      variant="outline"
+                      className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                    >
+                      {cleanupLoading ? t('common.cleanupButtonLoading') : t('common.cleanupButton')}
+                    </Button>
+                  </div>
                   <div className="bg-white rounded-xl p-4 shadow-sm">
                     <h3 className="text-blue-900 font-semibold mb-3">{t('positions.positions')}</h3>
                     <div className="overflow-x-auto rounded-xl">
@@ -999,11 +999,11 @@ const LeaveSystemSettings: React.FC = () => {
                 <div className="bg-blue-600 px-6 py-3">
                   <h2 className="text-lg font-bold text-white">{t('departments.departments')}</h2>
                 </div>
-                <div className="p-6">
-                  <form onSubmit={handleDepartmentSubmit} className="mb-6 flex gap-2 items-end bg-blue-50 rounded-xl p-6 shadow-sm">
-                    <Input name="name_en" value={departmentForm.name_en} onChange={handleDepartmentChange} placeholder="Department Name (EN)" required className="md:w-64" />
-                    <Input name="name_th" value={departmentForm.name_th} onChange={handleDepartmentChange} placeholder="Department Name (TH)" required className="md:w-64" />
-                    <Button type="submit" className="btn-primary">{editingDepartmentId ? t('common.update') : t('common.add')}</Button>
+                <div className="p-4 md:p-6">
+                  <form onSubmit={handleDepartmentSubmit} className="mb-6 flex flex-col md:flex-row gap-4 items-end bg-blue-50 rounded-xl p-4 md:p-6 shadow-sm">
+                    <Input name="name_en" value={departmentForm.name_en} onChange={handleDepartmentChange} placeholder="Department Name (EN)" required className="w-full md:w-64" />
+                    <Input name="name_th" value={departmentForm.name_th} onChange={handleDepartmentChange} placeholder="Department Name (TH)" required className="w-full md:w-64" />
+                    <Button type="submit" className="btn-primary w-full md:w-auto">{editingDepartmentId ? t('common.update') : t('common.add')}</Button>
                   </form>
                   <div className="overflow-x-auto rounded-xl shadow">
                     <table className="w-full table-auto bg-white rounded-xl">
@@ -1035,8 +1035,8 @@ const LeaveSystemSettings: React.FC = () => {
                                 <td className="p-3 font-medium">{dep.department_name_en}</td>
                                 <td className="p-3 font-medium">{dep.department_name_th}</td>
                                 <td className="p-3 flex gap-2 justify-center">
-                                                                  <Button variant="outline" onClick={() => startInlineDepartmentEdit(dep)}>{t('common.edit')}</Button>
-                                <Button variant="destructive" onClick={() => handleDeleteDepartment(dep.id)}>{t('common.delete')}</Button>
+                                  <Button variant="outline" onClick={() => startInlineDepartmentEdit(dep)}>{t('common.edit')}</Button>
+                                  <Button variant="destructive" onClick={() => handleDeleteDepartment(dep.id)}>{t('common.delete')}</Button>
                                 </td>
                               </>
                             )}
@@ -1056,12 +1056,12 @@ const LeaveSystemSettings: React.FC = () => {
                 <div className="bg-blue-600 px-6 py-3">
                   <h2 className="text-lg font-bold text-white">{t('leave.leaveType')}</h2>
                 </div>
-                <div className="p-6">
-                  <form onSubmit={handleLeaveTypeSubmit} className="mb-6 flex items-end bg-blue-50 rounded-xl p-6 shadow-sm">
-                    <div className="flex flex-1 gap-2 items-end">
-                      <Input name="name_en" value={leaveTypeForm.name_en} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (EN)" required className="md:w-64" />
-                      <Input name="name_th" value={leaveTypeForm.name_th} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (TH)" required className="md:w-64" />
-                      <div className="flex items-center gap-3 ml-2">
+                <div className="p-4 md:p-6">
+                  <form onSubmit={handleLeaveTypeSubmit} className="mb-6 flex flex-col md:flex-row items-start md:items-end bg-blue-50 rounded-xl p-4 md:p-6 shadow-sm gap-4">
+                    <div className="flex flex-col md:flex-row flex-1 gap-4 items-start md:items-end w-full">
+                      <Input name="name_en" value={leaveTypeForm.name_en} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (EN)" required className="w-full md:w-64" />
+                      <Input name="name_th" value={leaveTypeForm.name_th} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (TH)" required className="w-full md:w-64" />
+                      <div className="flex items-center gap-3 ml-0 md:ml-2 mb-0 md:mb-2 h-10">
                         <input
                           type="checkbox"
                           name="require_attachment"
@@ -1075,8 +1075,8 @@ const LeaveSystemSettings: React.FC = () => {
                         </label>
                       </div>
                     </div>
-                    <div className="flex-1 flex justify-end">
-                      <Button type="submit" className="btn-primary">{editingLeaveTypeId ? t('common.update') : t('common.add')}</Button>
+                    <div className="flex-1 flex justify-end w-full md:w-auto">
+                      <Button type="submit" className="btn-primary w-full md:w-auto">{editingLeaveTypeId ? t('common.update') : t('common.add')}</Button>
                     </div>
                   </form>
                   <div className="overflow-x-auto rounded-xl shadow">
@@ -1190,8 +1190,8 @@ const LeaveSystemSettings: React.FC = () => {
                                 </td>
                                 <td className="p-3 text-center">
                                   <div className="flex gap-2 justify-center">
-                                                                    <Button variant="outline" onClick={() => startInlineLeaveTypeEdit(lt)}>{t('common.edit')}</Button>
-                                <Button variant="destructive" onClick={() => handleDeleteLeaveType(lt.id)}>{t('common.delete')}</Button>
+                                    <Button variant="outline" onClick={() => startInlineLeaveTypeEdit(lt)}>{t('common.edit')}</Button>
+                                    <Button variant="destructive" onClick={() => handleDeleteLeaveType(lt.id)}>{t('common.delete')}</Button>
                                   </div>
                                 </td>
                               </>
@@ -1263,7 +1263,7 @@ const LeaveSystemSettings: React.FC = () => {
 
 
       {/* Delete Confirmation Dialogs */}
-      
+
       {/* Position Delete Confirmation */}
       <AlertDialog open={deletePositionDialog.open} onOpenChange={(open) => setDeletePositionDialog({ open, position: null })}>
         <AlertDialogContent>

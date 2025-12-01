@@ -35,35 +35,37 @@ const AdminLeaveRequest = () => {
               className="w-16 h-16 rounded-full bg-white/80 shadow-2xl border-4 border-white"
             />
           </div>
-
-          <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-3">
-            <Send className="w-10 h-10 text-blue-600" aria-hidden="true" />
-            {t('leave.adminLeaveRequest')}
-          </h1>
-          <p className="text-lg md:text-xl text-blue-900/70 font-medium text-center max-w-3xl leading-relaxed">
-            {t('leave.adminLeaveRequestDesc')}
-          </p>
+          
+<div className="flex flex-col items-center w-full px-4">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-4 flex flex-col md:flex-row items-center justify-center gap-3 text-center md:text-left">
+    <Send className="w-10 h-10 md:w-12 md:h-12 text-blue-600 mb-2 md:mb-0" aria-hidden="true" />
+    <span>{t('leave.adminLeaveRequest')}</span>
+  </h1>
+         <p className="text-base md:text-xl text-blue-900/70 font-medium text-center max-w-3xl leading-relaxed mb-6">
+    {t('leave.adminLeaveRequestDesc')}
+  </p>
 
           {/* Feature Icons */}
-          <div className="flex items-center gap-8 mt-6">
-            <div className="flex items-center gap-2 text-blue-900/70">
-              <Users className="w-5 h-5" />
-              <span className="text-sm font-medium">{t('leave.employeeSelection')}</span>
-            </div>
-            <div className="flex items-center gap-2 text-blue-900/70">
-              <Calendar className="w-5 h-5" />
-              <span className="text-sm font-medium">{t('leave.dateManagement')}</span>
-            </div>
-            <div className="flex items-center gap-2 text-blue-900/70">
-              <FileText className="w-5 h-5" />
-              <span className="text-sm font-medium">{t('leave.approvalControl')}</span>
-            </div>
-          </div>
+<div className="flex items-center gap-2 mb-2 text-blue-900/80 bg-white/50 px-3 py-1.5 rounded-full shadow-sm backdrop-blur-sm">
+      <Users className="w-4 h-4 md:w-5 md:h-5" />
+      <span className="text-xs md:text-sm font-medium whitespace-nowrap">{t('leave.employeeSelection')}</span>
+    </div>
+
+    <div className="flex items-center gap-2 mb-2 text-blue-900/80 bg-white/50 px-3 py-1.5 rounded-full shadow-sm backdrop-blur-sm">
+      <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+      <span className="text-xs md:text-sm font-medium whitespace-nowrap">{t('leave.dateManagement')}</span>
+    </div>
+
+    <div className="flex items-center gap-2 mb-2 text-blue-900/80 bg-white/50 px-3 py-1.5 rounded-full shadow-sm backdrop-blur-sm">
+      <FileText className="w-4 h-4 md:w-5 md:h-5" />
+      <span className="text-xs md:text-sm font-medium whitespace-nowrap">{t('leave.approvalControl')}</span>
+    </div>
+        </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="w-full max-w-6xl mx-auto px-4 py-8 md:py-12">
+      <div className="w-full max-w-6xl mx-auto px-2 py-8 md:py-12">
         <div className="relative">
           
           <AdminLeaveForm mode="create" />

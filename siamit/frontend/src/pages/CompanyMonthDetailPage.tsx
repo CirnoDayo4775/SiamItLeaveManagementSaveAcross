@@ -424,7 +424,7 @@ const CompanyMonthDetailPage = () => {
       
       <div className="flex flex-col items-center py-6">
         {/* Filter Switches */}
-        <div className="flex items-center justify-center gap-6 flex-wrap md:flex-nowrap mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
+        <div className="flex items-center justify-center gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
           <div className="flex items-center gap-3">
             <Switch 
               checked={showAnnualHolidays}
@@ -452,8 +452,8 @@ const CompanyMonthDetailPage = () => {
             </span>
           </div>
           
-          {/* Legend (hidden on small/portrait screens) */}
-          <div className="hidden md:flex items-center gap-4 ml-6 pl-6 border-l border-gray-300">
+          {/* Legend */}
+          <div className="flex items-center gap-4 ml-6 pl-6 border-l border-gray-300">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-red-500 rounded-full"></div>
               <span className="text-xs text-red-700">{t('calendar.annualHolidays')}</span>

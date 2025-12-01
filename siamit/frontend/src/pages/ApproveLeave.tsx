@@ -82,7 +82,7 @@ const ApproveLeave = () => {
   const [historyStatusFilter, setHistoryStatusFilter] = useState('all'); // default เป็น all (All status)
   // รายชื่อเดือนรองรับ i18n
   const currentMonthNames = monthNames[i18n.language === 'th' ? 'th' : 'en'];
-  
+
   // กำหนด locale สำหรับปฏิทินตามภาษาที่เลือก
   const calendarLocale = i18n.language.startsWith('th') ? th : enUS;
 
@@ -114,7 +114,7 @@ const ApproveLeave = () => {
   // เพิ่ม state สำหรับ month/year - เริ่มต้นด้วยเดือนและปีปัจจุบัน
   const [pendingPendingMonth, setPendingPendingMonth] = useState<number | ''>('');
   const [pendingPendingYear, setPendingPendingYear] = useState<number | ''>(new Date().getFullYear());
-  
+
   // เพิ่ม state สำหรับ pending filter ที่ยังไม่ได้ apply
   const [pendingPendingFilterLeaveType, setPendingPendingFilterLeaveType] = useState('');
   const [pendingPendingDateRange, setPendingPendingDateRange] = useState(pendingDateRange);
@@ -167,10 +167,10 @@ const ApproveLeave = () => {
   const confirmApprove = () => {
     if (!approvingRequest) return;
     const approverName = localStorage.getItem('user_name');
-    
-    apiService.put(apiEndpoints.leave.status(approvingRequest.id), { 
-      status: 'approved', 
-      statusby: approverName 
+
+    apiService.put(apiEndpoints.leave.status(approvingRequest.id), {
+      status: 'approved',
+      statusby: approverName
     }, undefined, showSessionExpiredDialog)
       .then(data => {
         if (data.success) {
@@ -199,10 +199,10 @@ const ApproveLeave = () => {
 
   const confirmReject = () => {
     if (!rejectingRequest) return;
-    
-    apiService.put(apiEndpoints.leave.status(rejectingRequest.id), { 
-      status: 'rejected', 
-      rejectedReason: rejectReason 
+
+    apiService.put(apiEndpoints.leave.status(rejectingRequest.id), {
+      status: 'rejected',
+      rejectedReason: rejectReason
     }, undefined, showSessionExpiredDialog)
       .then(data => {
         if (data.success) {
@@ -252,7 +252,7 @@ const ApproveLeave = () => {
   // ปรับ fetchHistoryRequests
   const fetchHistoryRequests = () => {
     setLoading(true);
-            let url = `${apiEndpoints.admin.leaveHistory}?page=${historyPage}&limit=${historyLimit}`;
+    let url = `${apiEndpoints.admin.leaveHistory}?page=${historyPage}&limit=${historyLimit}`;
     if (filterMonth) url += `&month=${filterMonth}`;
     if (filterYear) url += `&year=${filterYear}`;
     // ในการสร้าง url ให้ส่ง status=approved,rejected ถ้าเลือก all
@@ -270,7 +270,7 @@ const ApproveLeave = () => {
       if (dateRange.to) url += `&endDate=${format(dateRange.to, 'yyyy-MM-dd')}`;
     }
     if (historyFilterLeaveType) url += `&leaveType=${historyFilterLeaveType}`;
-    
+
     apiService.get(url, undefined, showSessionExpiredDialog)
       .then(data => {
         if (data.status === "success") {
@@ -349,7 +349,7 @@ const ApproveLeave = () => {
   // ตั้งค่าเริ่มต้นของ filter เดือนและปี
   useEffect(() => {
     const currentYear = new Date().getFullYear();
-    
+
     // ตั้งค่าเริ่มต้นสำหรับ pending tab - เริ่มต้นเป็น all (ค่าว่าง)
     if (!pendingPendingMonth) {
       setPendingPendingMonth('');
@@ -357,7 +357,7 @@ const ApproveLeave = () => {
     if (!pendingPendingYear) {
       setPendingPendingYear(currentYear);
     }
-    
+
     // ตั้งค่าเริ่มต้นสำหรับ history tab - เริ่มต้นเป็น all (ค่าว่าง)
     if (!pendingFilterMonth) {
       setPendingFilterMonth('');
@@ -365,7 +365,7 @@ const ApproveLeave = () => {
     if (!pendingFilterYear) {
       setPendingFilterYear(currentYear);
     }
-    
+
     // ตั้งค่าเริ่มต้นสำหรับ filter จริง - เริ่มต้นเป็น all (ค่าว่าง)
     if (!filterMonth) {
       setFilterMonth('');
@@ -380,7 +380,7 @@ const ApproveLeave = () => {
   }, [t, historyPage, filterMonth, filterYear, historyLimit, historyStatusFilter, dateRange, recentSingleDate, historyBackdatedFilter, historyFilterLeaveType]);
 
   useEffect(() => {
-            let url = apiEndpoints.admin.dashboardStats;
+    let url = apiEndpoints.admin.dashboardStats;
     const params = [];
     if (filterMonth) params.push(`month=${filterMonth}`);
     if (filterYear) params.push(`year=${filterYear}`);
@@ -398,7 +398,7 @@ const ApproveLeave = () => {
     const fetchDepartments = async () => {
       try {
         const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
+        const token = currentUser?.token;
         if (!token) {
           showSessionExpiredDialog();
           return;
@@ -407,7 +407,7 @@ const token = currentUser?.token;
         if (data.status === 'success' && Array.isArray(data.data)) {
           setDepartments(data.data);
         }
-      } catch {}
+      } catch { }
     };
     // ดึง position
     const fetchPositions = async () => {
@@ -416,7 +416,7 @@ const token = currentUser?.token;
         if (data.status === 'success' && Array.isArray(data.data)) {
           setPositions(data.data);
         }
-      } catch {}
+      } catch { }
     };
     fetchDepartments();
     fetchPositions();
@@ -540,7 +540,7 @@ const token = currentUser?.token;
   // Helper function for AdminDashboard specific leave type display
   const getAdminLeaveTypeDisplay = (typeIdOrName: string) => {
     if (!typeIdOrName) return '';
-    
+
     // First, try to find in pendingLeaveTypes (active leave types)
     const found = pendingLeaveTypes.find(
       lt => lt.id === typeIdOrName || lt.leave_type === typeIdOrName || lt.leave_type_th === typeIdOrName || lt.leave_type_en === typeIdOrName
@@ -548,13 +548,13 @@ const token = currentUser?.token;
     if (found) {
       return i18n.language.startsWith('th') ? found.leave_type_th : found.leave_type_en;
     }
-    
+
     // If not found in active types, check if it's a UUID (inactive/deleted leave type)
     if (typeIdOrName.length > 20) {
       // This is likely a UUID of an inactive/deleted leave type
       return i18n.language.startsWith('th') ? t('leaveTypes.deletedLeaveType') : t('leaveTypes.deletedLeaveType');
     }
-    
+
     // Fallback to translation or original value
     return String(t('leaveTypes.' + typeIdOrName, typeIdOrName));
   };
@@ -563,7 +563,7 @@ const token = currentUser?.token;
   const handleViewDetailsWithFetch = async (request: any) => {
     setSelectedRequest(request); // Set the request data immediately
     setShowDetailDialog(true);
-    
+
     // Optionally fetch additional details from API
     try {
       const data = await apiService.get(apiEndpoints.leave.detail(request.id), undefined, showSessionExpiredDialog);
@@ -613,14 +613,14 @@ const token = currentUser?.token;
       // Listen for leave request status changes
       socket.on('leaveRequestStatusChanged', (data) => {
         console.log('Received leave request status change:', data);
-        
+
         // Show toast notification
         toast({
           title: t('notifications.statusChanged'),
           description: `${t('notifications.request')} ${data.requestId} ${t('notifications.hasBeen')} ${data.status === 'approved' ? t('notifications.approved') : t('notifications.rejected')}`,
           variant: 'default'
         });
-        
+
         // Refresh dashboard data
         refreshLeaveRequests();
         fetchHistoryRequests();
@@ -914,15 +914,15 @@ const token = currentUser?.token;
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 w-[350px] h-[350px] rounded-full bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-100 opacity-30 blur-2xl animate-float" />
         <div className="absolute bottom-0 right-0 w-[250px] h-[250px] rounded-full bg-gradient-to-tr from-purple-200 via-blue-100 to-indigo-100 opacity-20 blur-xl animate-float" />
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse" style={{transform:'translate(-50%,-50%)'}} />
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse" style={{ transform: 'translate(-50%,-50%)' }} />
       </div>
       {/* Topbar */}
       <div className="border-b bg-white/80 backdrop-blur-sm z-10 relative shadow-lg animate-fade-in-up">
         <div className="flex h-16 items-center px-4 gap-4">
           <SidebarTrigger />
           <div className="flex-1">
-            <h1 className="text-3xl font-extrabold text-blue-900 tracking-tight drop-shadow-lg animate-slide-in-left">{t('navigation.adminDashboard')}</h1>
-            <p className="text-sm text-blue-500 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>{t('admin.dashboardDesc')}</p>
+            <h1 className="text-xl md:text-3xl font-extrabold text-blue-900 tracking-tight drop-shadow-lg animate-slide-in-left">{t('navigation.adminDashboard')}</h1>
+            <p className="text-xs md:text-sm text-blue-500 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>{t('admin.dashboardDesc')}</p>
 
           </div>
           {/* Language Switcher at top right */}
@@ -935,10 +935,10 @@ const token = currentUser?.token;
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <Card 
-                  key={stat.title} 
+                <Card
+                  key={stat.title}
                   className={`glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift`}
-                  style={{ animationDelay: `${(index+1) * 0.1}s` }}
+                  style={{ animationDelay: `${(index + 1) * 0.1}s` }}
                 >
                   <CardContent className="p-7 flex items-center gap-4">
                     <div className={`w-16 h-16 ${stat.bgColor} rounded-full flex items-center justify-center shadow-lg`}>
@@ -963,13 +963,13 @@ const token = currentUser?.token;
             {/* Pending Requests */}
             <TabsContent value="pending" className="space-y-4">
               {/* --- Filter UI --- */}
-              <div className="flex flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <div className="flex flex-col md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
 
                 {/* Leave Type Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.leaveType')}</label>
                   <select
-                    className="border border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingPendingFilterLeaveType}
                     onChange={e => setPendingPendingFilterLeaveType(e.target.value)}
                   >
@@ -980,17 +980,16 @@ const token = currentUser?.token;
                   </select>
                 </div>
                 {/* Date Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.4s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.4s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.date')}</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className={`w-full justify-start text-left font-normal border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${
-                          pendingPendingMonth !== '' && !pendingPendingSingleDate
+                        className={`w-full md:w-auto justify-start text-left font-normal border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingMonth !== '' && !pendingPendingSingleDate
                             ? 'opacity-50 cursor-not-allowed bg-gray-100'
                             : 'hover:bg-blue-50 hover:border-blue-300'
-                        }`}
+                          }`}
                         disabled={pendingPendingMonth !== '' && !pendingPendingSingleDate}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -1020,14 +1019,13 @@ const token = currentUser?.token;
                   </Popover>
                 </div>
                 {/* Month Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.month')}</label>
                   <select
-                    className={`border border-blue-200 rounded-xl px-3 py-2 w-32 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${
-                      pendingPendingSingleDate 
-                        ? 'opacity-50 cursor-not-allowed bg-gray-100' 
+                    className={`w-full md:w-32 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingSingleDate
+                        ? 'opacity-50 cursor-not-allowed bg-gray-100'
                         : 'hover:bg-blue-50 hover:border-blue-300'
-                    }`}
+                      }`}
                     value={pendingPendingMonth}
                     onChange={e => handleMonthChange(e.target.value ? Number(e.target.value) : '')}
                     disabled={!!pendingPendingSingleDate}
@@ -1039,17 +1037,16 @@ const token = currentUser?.token;
                   </select>
                 </div>
                 {/* Year Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.6s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.6s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.year')}</label>
                   <input
                     type="number"
                     min={2000}
                     max={2100}
-                    className={`border border-blue-200 rounded-xl px-3 py-2 w-28 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${
-                      pendingPendingSingleDate 
-                        ? 'opacity-50 cursor-not-allowed bg-gray-100' 
+                    className={`w-full md:w-28 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingSingleDate
+                        ? 'opacity-50 cursor-not-allowed bg-gray-100'
                         : 'hover:bg-blue-50 hover:border-blue-300'
-                    }`}
+                      }`}
                     value={pendingPendingYear}
                     onChange={e => handleYearChange(e.target.value ? Number(e.target.value) : '')}
                     placeholder="YYYY"
@@ -1057,10 +1054,10 @@ const token = currentUser?.token;
                   />
                 </div>
                 {/* Backdated Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.backdatedFilter')}</label>
                   <select
-                    className="border border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingPendingBackdatedFilter}
                     onChange={e => setPendingPendingBackdatedFilter(e.target.value)}
                   >
@@ -1070,16 +1067,16 @@ const token = currentUser?.token;
                   </select>
                 </div>
                 {/* Buttons */}
-                <div className="flex gap-3 mt-2 animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
+                <div className="flex gap-3 mt-2 w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
                   <button
-                    className="bg-gradient-to-r from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 text-blue-900 dark:text-white px-6 py-2 rounded-xl shadow-lg hover:from-gray-300 hover:to-gray-400 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
+                    className="flex-1 md:flex-none bg-gradient-to-r from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 text-blue-900 dark:text-white px-6 py-2 rounded-xl shadow-lg hover:from-gray-300 hover:to-gray-400 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
                     onClick={clearPendingFilters}
                     type="button"
                   >
                     {t('common.reset')}
                   </button>
                   <button
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
+                    className="flex-1 md:flex-none bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
                     onClick={applyPendingFilters}
                     type="button"
                   >
@@ -1110,7 +1107,7 @@ const token = currentUser?.token;
                         </div>
                       )}
                       {pendingRequests.map((request, idx) => (
-                        <div 
+                        <div
                           key={request.id}
                           className={`glass bg-gradient-to-br from-white/80 via-blue-50/80 to-indigo-100/80 border-0 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all flex flex-col md:flex-row md:items-center md:justify-between gap-4 animate-fade-in-up hover-lift`}
                           style={{ animationDelay: `${0.1 + idx * 0.07}s` }}
@@ -1124,7 +1121,7 @@ const token = currentUser?.token;
                             </div>
                             {/* ประเภทการลา (leaveType) */}
                             <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-1 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                              {request.leaveTypeName_th && request.leaveTypeName_en 
+                              {request.leaveTypeName_th && request.leaveTypeName_en
                                 ? (i18n.language.startsWith('th') ? request.leaveTypeName_th : request.leaveTypeName_en)
                                 : getAdminLeaveTypeDisplay(request.leaveType || request.leaveTypeName)
                               }
@@ -1139,23 +1136,23 @@ const token = currentUser?.token;
                             )}
                             <div className="text-sm text-gray-700 mb-1 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>{t('leave.date')}: {request.startDate} - {request.endDate}</div>
                           </div>
-                          <div className="flex gap-2 flex-shrink-0">
-                            <Button 
-                              size="sm" 
-                              className="rounded-full px-4 py-2 font-bold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow hover:scale-105 transition animate-bounce-in btn-press hover-glow"
+                          <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0 w-full md:w-auto">
+                            <Button
+                              size="sm"
+                              className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow hover:scale-105 transition animate-bounce-in btn-press hover-glow"
                               onClick={() => handleApprove(request.id, typeof request.user === "string" ? JSON.parse(request.user).name : request.user?.name || "")}
                             >
                               <CheckCircle className="w-4 h-4 mr-1" />{t('admin.approve')}
                             </Button>
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="destructive"
-                              className="rounded-full px-4 py-2 font-bold shadow hover:scale-105 transition animate-bounce-in btn-press hover-glow"
+                              className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold shadow hover:scale-105 transition animate-bounce-in btn-press hover-glow"
                               onClick={() => handleReject(request.id, typeof request.user === "string" ? JSON.parse(request.user).name : request.user?.name || "")}
                             >
                               <XCircle className="w-4 h-4 mr-1" />{t('admin.reject')}
                             </Button>
-                            <Button size="sm" variant="outline" className="rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetails(request)}>
+                            <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetails(request)}>
                               <Eye className="w-4 h-4 mr-1" />{t('admin.viewDetails')}
                             </Button>
                           </div>
@@ -1293,13 +1290,13 @@ const token = currentUser?.token;
             {/* History Requests */}
             <TabsContent value="recent" className="space-y-4">
               {/* --- Filter UI สำหรับประวัติการอนุมัติล่าสุด --- */}
-              <div className="flex flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <div className="flex flex-col md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
 
                 {/* Leave Type Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.leaveType')}</label>
                   <select
-                    className="border border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingHistoryFilterLeaveType}
                     onChange={e => setPendingHistoryFilterLeaveType(e.target.value)}
                   >
@@ -1310,10 +1307,10 @@ const token = currentUser?.token;
                   </select>
                 </div>
                 {/* Month Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.month')}</label>
                   <select
-                    className="border border-blue-200 rounded-xl px-3 py-2 w-32 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-32 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingFilterMonth}
                     onChange={e => setPendingFilterMonth(e.target.value ? Number(e.target.value) : '')}
                   >
@@ -1324,23 +1321,23 @@ const token = currentUser?.token;
                   </select>
                 </div>
                 {/* Year Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.6s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.6s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.year')}</label>
                   <input
                     type="number"
                     min={2000}
                     max={2100}
-                    className="border border-blue-200 rounded-xl px-3 py-2 w-28 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-28 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingFilterYear}
                     onChange={e => setPendingFilterYear(e.target.value ? Number(e.target.value) : '')}
                     placeholder="YYYY"
                   />
                 </div>
                 {/* Backdated Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.backdatedFilter')}</label>
                   <select
-                    className="border border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingHistoryBackdatedFilter}
                     onChange={e => setPendingHistoryBackdatedFilter(e.target.value)}
                   >
@@ -1350,10 +1347,10 @@ const token = currentUser?.token;
                   </select>
                 </div>
                 {/* Status Filter */}
-                <div className="animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
+                <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.status')}</label>
                   <select
-                    className="border border-blue-200 rounded-xl px-3 py-2 min-w-[120px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[120px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingHistoryStatusFilter}
                     onChange={e => setPendingHistoryStatusFilter(e.target.value)}
                   >
@@ -1363,16 +1360,16 @@ const token = currentUser?.token;
                   </select>
                 </div>
                 {/* Buttons */}
-                <div className="flex gap-3 mt-2 animate-slide-in-left" style={{ animationDelay: '0.9s' }}>
+                <div className="flex gap-3 mt-2 w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.9s' }}>
                   <button
-                    className="bg-gradient-to-r from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 text-blue-900 dark:text-white px-6 py-2 rounded-xl shadow-lg hover:from-gray-300 hover:to-gray-400 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
+                    className="flex-1 md:flex-none bg-gradient-to-r from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 text-blue-900 dark:text-white px-6 py-2 rounded-xl shadow-lg hover:from-gray-300 hover:to-gray-400 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
                     onClick={clearHistoryFilters}
                     type="button"
                   >
                     {t('common.reset')}
                   </button>
                   <button
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
+                    className="flex-1 md:flex-none bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
                     onClick={applyHistoryFilters}
                     type="button"
                   >
@@ -1421,21 +1418,21 @@ const token = currentUser?.token;
                                 {request.user?.name === 'deleted_user' ? t('admin.deletedUser') : (request.user?.name || "-")}
                               </div>
                               {/* ประเภทการลา (leaveType) */}
-                                                          <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-1 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                              {request.leaveTypeName_th && request.leaveTypeName_en 
-                                ? (i18n.language.startsWith('th') ? request.leaveTypeName_th : request.leaveTypeName_en)
-                                : getAdminLeaveTypeDisplay(request.leaveType || request.leaveTypeName)
-                              }
-                            </span>
-                            {request.status === "approved" ? (
-                              <Badge className="ml-2 bg-green-100 text-green-800 border-green-200 rounded-full px-3 py-1 text-xs font-bold shadow inline-flex items-center animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
-                                <CheckCircle className="w-3.5 h-3.5 mr-1" /> {t('admin.approved')}
-                              </Badge>
-                            ) : (
-                              <Badge className="ml-2 bg-red-100 text-red-800 border-red-200 rounded-full px-3 py-1 text-xs font-bold shadow inline-flex items-center animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
-                                <XCircle className="w-3.5 h-3.5 mr-1" /> {t('admin.rejected')}
-                              </Badge>
-                            )}
+                              <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-1 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                                {request.leaveTypeName_th && request.leaveTypeName_en
+                                  ? (i18n.language.startsWith('th') ? request.leaveTypeName_th : request.leaveTypeName_en)
+                                  : getAdminLeaveTypeDisplay(request.leaveType || request.leaveTypeName)
+                                }
+                              </span>
+                              {request.status === "approved" ? (
+                                <Badge className="ml-2 bg-green-100 text-green-800 border-green-200 rounded-full px-3 py-1 text-xs font-bold shadow inline-flex items-center animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
+                                  <CheckCircle className="w-3.5 h-3.5 mr-1" /> {t('admin.approved')}
+                                </Badge>
+                              ) : (
+                                <Badge className="ml-2 bg-red-100 text-red-800 border-red-200 rounded-full px-3 py-1 text-xs font-bold shadow inline-flex items-center animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
+                                  <XCircle className="w-3.5 h-3.5 mr-1" /> {t('admin.rejected')}
+                                </Badge>
+                              )}
                               {(request.backdated === 1 || request.backdated === "1" || request.backdated === true) && (
                                 <Badge className="ml-2 bg-purple-100 text-purple-800 border-purple-200 rounded-full px-3 py-1 text-xs font-bold shadow animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                                   {t('leave.backdated')}
@@ -1443,19 +1440,19 @@ const token = currentUser?.token;
                               )}
                               <div className="text-sm text-gray-700 mb-1 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>{t('leave.date')}: {startStr} - {endStr} ({leaveDays} {t('leave.days')})</div>
                               <div className="text-xs text-gray-500 animate-fade-in-up break-words" style={{ animationDelay: '0.4s' }}>
-                                {t('leave.reason')}: {request.reason && request.reason.length > 50 
-                                  ? request.reason.slice(0, 50) + '...' 
+                                {t('leave.reason')}: {request.reason && request.reason.length > 50
+                                  ? request.reason.slice(0, 50) + '...'
                                   : request.reason || '-'
                                 }
                               </div>
                             </div>
                             {/* ปุ่มดูรายละเอียดและลบ */}
-                            <div className="flex gap-2 flex-shrink-0 mt-2 md:mt-0">
-                              <Button size="sm" variant="outline" className="rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetailsWithFetch(request)}>
+                            <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0 mt-2 md:mt-0 w-full md:w-auto">
+                              <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetailsWithFetch(request)}>
                                 <Eye className="w-4 h-4 mr-1" />{t('admin.viewDetails')}
                               </Button>
                               {user?.role === 'superadmin' && (
-                                <Button size="sm" variant="destructive" className="rounded-full px-4 py-2 font-bold shadow hover:scale-105 transition animate-bounce-in btn-press hover-glow" onClick={() => handleDelete(request)}>
+                                <Button size="sm" variant="destructive" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold shadow hover:scale-105 transition animate-bounce-in btn-press hover-glow" onClick={() => handleDelete(request)}>
                                   <XCircle className="w-4 h-4 mr-1" />{t('common.delete')}
                                 </Button>
                               )}
@@ -1609,7 +1606,7 @@ const token = currentUser?.token;
           onClose={() => setPreviewImage(null)}
           imageUrl={previewImage.url}
           imageName={previewImage.name}
-                          title={t('leave.attachmentPreview')}
+          title={t('leave.attachmentPreview')}
         />
       )}
 
@@ -1622,7 +1619,7 @@ const token = currentUser?.token;
           <textarea
             className="w-full border rounded p-2 mt-2 break-all overflow-wrap-anywhere whitespace-pre-wrap"
             rows={3}
-                          placeholder={t('admin.rejectReasonPlaceholder')}
+            placeholder={t('admin.rejectReasonPlaceholder')}
             value={rejectReason}
             onChange={e => setRejectReason(e.target.value)}
           />
