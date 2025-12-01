@@ -25,13 +25,14 @@ export default function SessionExpiredDialog({ open, onOpenChange }: SessionExpi
 
   const handleLogout = async () => {
     try {
-      await logout();
-      navigate('/login', { replace: true });
+    await logout();
+    // Redirect to root (login page for unauthenticated users)
+    navigate('/', { replace: true });
       onOpenChange(false);
     } catch (error) {
       console.error('Logout error:', error);
       // Force redirect even if logout fails
-      navigate('/login', { replace: true });
+      navigate('/', { replace: true });
     }
   };
 

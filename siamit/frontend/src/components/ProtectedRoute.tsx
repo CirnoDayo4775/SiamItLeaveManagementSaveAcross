@@ -22,7 +22,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = f
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    // Redirect unauthenticated users to the root login page
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   if (superadminOnly && user.role !== 'superadmin') {

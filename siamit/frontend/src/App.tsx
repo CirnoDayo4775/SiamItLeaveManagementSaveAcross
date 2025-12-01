@@ -49,8 +49,9 @@ const AppContent = () => {
   if (!user) {
     return (
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Navigate to="/" replace />} />
         {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
       </Routes>
     );
@@ -70,6 +71,8 @@ const AppContent = () => {
         <AppSidebar />
         <main className="flex-1 min-w-0">
           <Routes>
+            {/* Support '/dashboard' as an alias for the root dashboard */}
+            <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Index />

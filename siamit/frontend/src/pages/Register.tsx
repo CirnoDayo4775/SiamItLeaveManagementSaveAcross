@@ -243,7 +243,8 @@ const Register = () => {
         title: t('auth.registerSuccess'),
         description: t('auth.checkEmailVerification'),
       });
-      navigate('/login');
+      // Redirect to root login page (unauthenticated view)
+      navigate('/');
     } catch (error: any) {
       const errMsg = error.message || t('common.error');
       
