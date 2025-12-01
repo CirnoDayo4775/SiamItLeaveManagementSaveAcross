@@ -70,7 +70,7 @@ const AppContent = () => {
         </div>
         <AppSidebar />
         <main className="flex-1 min-w-0">
-          <Routes>
+          <Routes>{/* Test for update if needed */}
             {/* Support '/dashboard' as an alias for the root dashboard */}
             <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/" element={
