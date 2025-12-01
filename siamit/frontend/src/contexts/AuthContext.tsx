@@ -91,7 +91,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem('currentUser');
+    const stored = localStorage.getItem('currentUser');
+    if (!stored) return;
+    let parsedStored;
+    try {
+      parsedStored = JSON.parse(stored);
+    } catch (e) {
+      return;
+    }
+    const token = parsedStored?.token;
     if (!token) return;
 
     const payload = parseJwt(token);
@@ -120,17 +128,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     console.log(email);
     console.log(password);
-          const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
-
-    const response = await fetch(`http://localhost:3001/api/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json',
-
-'Authorization': `Bearer ${token}`
-       },
-      body: JSON.stringify({ email, password }),
-    });
+          const response = await fetch(`http://localhost:3001/api/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
     const data = await response.json();
 
     if (!response.ok || !data.success) {
@@ -142,7 +146,7 @@ const token = currentUser?.token;
       id: data.data?.userId || data.data?.repid || '',
       email: email,
       role: data.data?.role,
-      token:data.data?.token
+      token: data.data?.token
     };
     setUser(userInfo);
     localStorage.setItem('currentUser', JSON.stringify(userInfo));
@@ -150,7 +154,7 @@ const token = currentUser?.token;
     // Fetch profile info after login
     try {
       const profileRes = await fetch(`http://localhost:3001/api/profile`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${data.data?.token}` }
       });
       if (profileRes.ok) {
         const profileData = await profileRes.json();
@@ -174,7 +178,7 @@ const token = currentUser?.token;
     // Fetch avatar URL after login
     try {
       const avatarResponse = await fetch(`http://localhost:3001/api/avatar`, {
-     headers: { 'Authorization': `Bearer ${token}` }
+         headers: { 'Authorization': `Bearer ${data.data?.token}` }
       });
       if (avatarResponse.ok) {
         const avatarData = await avatarResponse.json();
