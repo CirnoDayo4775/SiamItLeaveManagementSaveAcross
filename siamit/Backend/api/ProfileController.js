@@ -690,6 +690,7 @@ module.exports = (AppDataSource) => {
       // เพิ่มเติม: ดึง leave_used ของ user มาด้วย
       const leaveUsedRepo = AppDataSource.getRepository('LeaveUsed');
       const leaveUsedRecords = await leaveUsedRepo.find({ where: { user_id: userId } });
+      console.log(`Leave quota: userId=${userId}, position=${userPosition}, leaveUsedRecordsCount=${leaveUsedRecords.length}`);
 
       // Get user's position to determine leave quotas
       let userPosition = user.position;
@@ -705,6 +706,7 @@ module.exports = (AppDataSource) => {
       
       const quotas = await leaveQuotaRepo.find({ where: { positionId: userPosition } });
       const leaveTypes = await leaveTypeRepo.find();
+      console.log(`Leave quota debug: quotas=${quotas.length}, leaveTypes=${leaveTypes.length}`);
       
       // Get all approved leave requests for this user
       const approvedLeaves = await leaveRequestRepo.find({ 
@@ -726,7 +728,8 @@ module.exports = (AppDataSource) => {
           const quotaDays = quotaRow ? quotaRow.quota : 0;
 
           // ใช้ leave_used ถ้ามี
-          const usedRecord = leaveUsedRecords.find(r => r.leave_type_id === leaveType.id);
+          // The leave_used table uses column name 'leave_type' (not leave_type_id)
+          const usedRecord = leaveUsedRecords.find(r => r.leave_type === leaveType.id);
           let usedDays = 0, usedHours = 0;
           if (usedRecord) {
             usedDays = usedRecord.days || 0;
@@ -737,8 +740,12 @@ module.exports = (AppDataSource) => {
             for (const leave of typeLeaves) {
               if (leave.startTime && leave.endTime) {
                 // Hour-based leave
-                const [sh, sm] = leave.startTime.split(':').map(Number);
-                const [eh, em] = leave.endTime.split(':').map(Number);
+                  const shsm = (leave.startTime || '').split(':').map(Number);
+                  const ehem = (leave.endTime || '').split(':').map(Number);
+                  const sh = shsm[0] || 0;
+                  const sm = shsm[1] || 0;
+                  const eh = ehem[0] || 0;
+                  const em = ehem[1] || 0;
                 const startMinutes = (sh || 0) * 60 + (sm || 0);
                 const endMinutes = (eh || 0) * 60 + (em || 0);
                 let durationHours = (endMinutes - startMinutes) / 60;
