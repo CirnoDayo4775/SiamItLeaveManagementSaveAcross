@@ -25,16 +25,16 @@ const LanguageSwitcher = () => {
           <Globe className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white border shadow-lg">
-        <DropdownMenuItem 
+      <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 border shadow-lg dark:border-gray-700">
+        <DropdownMenuItem
           onClick={() => changeLanguage('th')}
-          className={`cursor-pointer ${i18n.language === 'th' ? 'bg-blue-100 text-blue-700 font-bold' : ''}`}
+          className={`cursor-pointer dark:text-gray-200 dark:focus:bg-gray-700 ${i18n.language === 'th' ? 'bg-blue-100 text-blue-700 font-bold dark:bg-blue-900/30 dark:text-blue-300' : ''}`}
         >
           ไทย {i18n.language === 'th' && '✔️'}
         </DropdownMenuItem>
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => changeLanguage('en')}
-          className={`cursor-pointer ${i18n.language === 'en' ? 'bg-blue-100 text-blue-700 font-bold' : ''}`}
+          className={`cursor-pointer dark:text-gray-200 dark:focus:bg-gray-700 ${i18n.language === 'en' ? 'bg-blue-100 text-blue-700 font-bold dark:bg-blue-900/30 dark:text-blue-300' : ''}`}
         >
           English {i18n.language === 'en' && '✔️'}
         </DropdownMenuItem>

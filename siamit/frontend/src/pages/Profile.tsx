@@ -691,11 +691,11 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       {/* Hero Section (replace old top bar) */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <svg viewBox="0 0 1440 320" className="w-full h-32 md:h-48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1440 320" className="w-full h-24 md:h-32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill="url(#waveGradient)" fillOpacity="1" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,133.3C840,107,960,85,1080,101.3C1200,117,1320,171,1380,197.3L1440,224L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z" />
             <defs>
               <linearGradient id="waveGradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
@@ -707,26 +707,26 @@ const Profile = () => {
         </div>
 
         {/* Sidebar Trigger */}
-        <div className="absolute top-4 left-4 z-20">
-          <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
+        <div className="absolute top-3 left-3 z-20">
+          <SidebarTrigger className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm" />
         </div>
 
-        <div className="relative z-10 flex flex-col items-center justify-center py-6 md:py-16">
-          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-3 md:mb-4" />
-          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-1 md:mb-2 flex items-center gap-2 md:gap-3">
+        <div className="relative z-10 flex flex-col items-center justify-center py-4 md:py-10">
+          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/80 dark:bg-gray-800/80 shadow-2xl border-3 border-white dark:border-gray-700 mb-2 md:mb-3" />
+          <h1 className="text-xl md:text-3xl font-extrabold text-indigo-900 dark:text-indigo-200 drop-shadow mb-1 md:mb-1.5 flex items-center gap-2 md:gap-2">
             {t('navigation.profile')}
           </h1>
-          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl px-4">
+          <p className="text-xs md:text-base text-blue-900/70 dark:text-blue-200/80 mb-1.5 font-medium text-center max-w-2xl px-4">
             {t('profile.profileTitle')}
           </p>
         </div>
       </div>
-      <div className="max-w-3xl mx-auto p-4 md:p-6 space-y-6 md:space-y-10 animate-fade-in">
+      <div className="max-w-3xl xl:max-w-6xl mx-auto p-3 md:p-5 space-y-4 md:space-y-6 animate-fade-in">
         {/* Profile Header */}
-        <div className="flex flex-col items-center -mt-12 md:-mt-16">
+        <div className="flex flex-col items-center -mt-8 md:-mt-10">
           <div className="relative">
 
-            <Avatar key={`${avatarUrl}-${avatarKey}`} className="h-24 w-24 md:h-28 md:w-28 shadow-lg border-4 border-white bg-white/80 backdrop-blur rounded-full">
+            <Avatar key={`${avatarUrl}-${avatarKey}`} className="h-20 w-20 md:h-24 md:w-24 shadow-lg border-4 border-white bg-white/80 backdrop-blur rounded-full">
               <AvatarImage
                 src={avatarUrl ? avatarUrl : undefined}
                 onError={(e) => {
@@ -737,18 +737,18 @@ const Profile = () => {
                 alt="Profile picture"
                 className="object-cover"
               />
-              <AvatarFallback className="text-2xl font-bold bg-blue-200 text-blue-900">
+              <AvatarFallback className="text-xl font-bold bg-blue-200 text-blue-900">
                 {user?.full_name?.split(' ').map(n => n[0]).join('') || 'U'}
               </AvatarFallback>
             </Avatar>
             {/* ปุ่มเปลี่ยนรูป avatar: Always available */}
             <button
               type="button"
-              className="absolute bottom-1 right-1 md:bottom-2 md:right-2 p-1.5 md:p-2 bg-blue-500 text-white rounded-full shadow-md border-2 border-white hover:bg-blue-600 transition-colors"
+              className="absolute bottom-0.5 right-0.5 md:bottom-1 md:right-1 p-1.5 md:p-2 bg-blue-500 text-white rounded-full shadow-md border-2 border-white hover:bg-blue-600 transition-colors"
               onClick={handleCameraClick}
               aria-label="Change avatar"
             >
-              <Camera className="h-4 w-4 md:h-5 md:w-5" />
+              <Camera className="h-3.5 w-3.5 md:h-4 md:w-4" />
             </button>
             <input
               type="file"
@@ -766,9 +766,9 @@ const Profile = () => {
             onOpenChange={setCropDialogOpen}
             onCropped={handleCropped}
           />
-          <div className="mt-3 md:mt-4 text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-blue-900 tracking-tight">{user?.full_name}</h2>
-            <p className="text-gray-500 mb-2 text-sm md:text-base">
+          <div className="mt-2 md:mt-3 text-center">
+            <h2 className="text-lg md:text-xl font-bold text-blue-900 dark:text-blue-200 tracking-tight">{user?.full_name}</h2>
+            <p className="text-gray-500 mb-1.5 text-xs md:text-sm">
               {(() => {
                 // Find position name from positions array
                 if (!formData.position) {
@@ -783,10 +783,10 @@ const Profile = () => {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mt-2">
               <Badge variant={user?.role === 'admin' || user?.role === 'superadmin' ? 'default' : 'secondary'} className={`flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 border shadow-sm text-xs md:text-sm ${user?.role === 'superadmin'
-                  ? 'bg-purple-50 text-purple-700 border-purple-200'
-                  : user?.role === 'admin'
-                    ? 'bg-red-50 text-red-700 border-red-200'
-                    : 'bg-blue-50 text-blue-700 border-blue-200'
+                ? 'bg-purple-50 text-purple-700 border-purple-200'
+                : user?.role === 'admin'
+                  ? 'bg-red-50 text-red-700 border-red-200'
+                  : 'bg-blue-50 text-blue-700 border-blue-200'
                 }`}>
                 {user?.role === 'superadmin' ? (
                   <Crown className="h-3 w-3 md:h-4 md:w-4" />
@@ -823,19 +823,19 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur rounded-3xl shadow-xl p-0 overflow-hidden">
+        <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur rounded-3xl shadow-xl p-0 overflow-hidden border border-white/20 dark:border-gray-700">
           <Tabs defaultValue="personal" className="">
-            <TabsList className="flex w-full bg-transparent border-b border-blue-100 overflow-x-auto">
-              <TabsTrigger value="personal" className="flex-1 min-w-[120px] text-base md:text-lg font-medium py-3 md:py-4 rounded-none data-[state=active]:border-b-4 data-[state=active]:border-blue-500 data-[state=active]:text-blue-700 transition-all">{t('profile.personalInfo')}</TabsTrigger>
-              <TabsTrigger value="leave" className="flex-1 min-w-[120px] text-base md:text-lg font-medium py-3 md:py-4 rounded-none data-[state=active]:border-b-4 data-[state=active]:border-blue-400 data-[state=active]:text-blue-700 transition-all">{t('profile.leaveRights')}</TabsTrigger>
-              <TabsTrigger value="settings" className="flex-1 min-w-[120px] text-base md:text-lg font-medium py-3 md:py-4 rounded-none data-[state=active]:border-b-4 data-[state=active]:border-blue-300 data-[state=active]:text-blue-700 transition-all">{t('profile.settings')}</TabsTrigger>
+            <TabsList className="flex w-full bg-transparent border-b border-blue-100 overflow-x-auto md:overflow-visible">
+              <TabsTrigger value="personal" className="flex-1 min-w-[120px] text-base md:text-lg font-medium py-3 md:py-4 rounded-none data-[state=active]:border-b-4 data-[state=active]:border-blue-500 data-[state=active]:text-blue-700 dark:data-[state=active]:text-blue-300 dark:text-gray-400 transition-all">{t('profile.personalInfo')}</TabsTrigger>
+              <TabsTrigger value="leave" className="flex-1 min-w-[120px] text-base md:text-lg font-medium py-3 md:py-4 rounded-none data-[state=active]:border-b-4 data-[state=active]:border-blue-400 data-[state=active]:text-blue-700 dark:data-[state=active]:text-blue-300 dark:text-gray-400 transition-all">{t('profile.leaveRights')}</TabsTrigger>
+              <TabsTrigger value="settings" className="flex-1 min-w-[120px] text-base md:text-lg font-medium py-3 md:py-4 rounded-none data-[state=active]:border-b-4 data-[state=active]:border-blue-300 data-[state=active]:text-blue-700 dark:data-[state=active]:text-blue-300 dark:text-gray-400 transition-all">{t('profile.settings')}</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="personal" className="p-4 md:p-8 bg-white/90 rounded-3xl">
+            <TabsContent value="personal" className="p-4 md:p-8 bg-white/90 dark:bg-gray-800/90 rounded-3xl">
               <form className="space-y-4 md:space-y-6" onSubmit={e => { e.preventDefault(); handleSave(); }}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
                   <div className="space-y-3">
-                    <Label htmlFor="full_name" className="text-base text-blue-900 font-medium">{t('auth.fullName')}</Label>
+                    <Label htmlFor="full_name" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('auth.fullName')}</Label>
                     <Input
                       id="full_name"
                       value={formData.full_name}
@@ -845,7 +845,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="email" className="text-base text-blue-900 font-medium">{t('auth.email')}</Label>
+                    <Label htmlFor="email" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('auth.email')}</Label>
                     <Input
                       id="email"
                       type="email"
@@ -859,7 +859,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="position" className="text-base text-blue-900 font-medium">{t('auth.position')}</Label>
+                    <Label htmlFor="position" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('auth.position')}</Label>
                     <Select
                       value={formData.position || "not_specified"}
                       onValueChange={(value) => setFormData(prev => ({ ...prev, position: value === "not_specified" ? "" : value }))}
@@ -868,11 +868,11 @@ const Profile = () => {
                       <SelectTrigger className="input-blue">
                         <SelectValue placeholder={t('positions.selectPosition')} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                         {positions
                           .filter(pos => (pos.position_name_th || pos.position_name_en) && (pos.position_name_th?.trim() !== '' || pos.position_name_en?.trim() !== ''))
                           .map((pos) => (
-                            <SelectItem key={pos.id} value={String(pos.id)} className="text-blue-900">
+                            <SelectItem key={pos.id} value={String(pos.id)} className="text-blue-900 dark:text-gray-200 focus:bg-blue-50 dark:focus:bg-gray-700">
                               {i18n.language.startsWith('th') ? pos.position_name_th : pos.position_name_en}
                             </SelectItem>
                           ))}
@@ -880,7 +880,7 @@ const Profile = () => {
                     </Select>
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="department" className="text-base text-blue-900 font-medium">{t('auth.department')}</Label>
+                    <Label htmlFor="department" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('auth.department')}</Label>
                     <Select
                       value={formData.department || "not_specified"}
                       onValueChange={(value) => setFormData(prev => ({ ...prev, department: value === "not_specified" ? "" : value }))}
@@ -889,11 +889,11 @@ const Profile = () => {
                       <SelectTrigger className="input-blue">
                         <SelectValue placeholder={t('departments.selectDepartment')} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                         {departments
                           .filter(dept => (dept.department_name_th || dept.department_name_en) && (dept.department_name_th?.trim() !== '' || dept.department_name_en?.trim() !== ''))
                           .map((dept) => (
-                            <SelectItem key={dept.id} value={String(dept.id)} className="text-blue-900">
+                            <SelectItem key={dept.id} value={String(dept.id)} className="text-blue-900 dark:text-gray-200 focus:bg-blue-50 dark:focus:bg-gray-700">
                               {i18n.language.startsWith('th') ? dept.department_name_th : dept.department_name_en}
                             </SelectItem>
                           ))}
@@ -901,7 +901,7 @@ const Profile = () => {
                     </Select>
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="gender" className="text-base text-blue-900 font-medium">{t('employee.gender')}</Label>
+                    <Label htmlFor="gender" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('employee.gender')}</Label>
                     <Select
                       value={formData.gender || "not_specified"}
                       onValueChange={(value) => setFormData(prev => ({ ...prev, gender: value === "not_specified" ? "" : value }))}
@@ -910,21 +910,21 @@ const Profile = () => {
                       <SelectTrigger className="input-blue">
                         <SelectValue placeholder={t('employee.selectGender')} />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="male" className="text-blue-900">
+                      <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+                        <SelectItem value="male" className="text-blue-900 dark:text-gray-200 focus:bg-blue-50 dark:focus:bg-gray-700">
                           {t('employee.male')}
                         </SelectItem>
-                        <SelectItem value="female" className="text-blue-900">
+                        <SelectItem value="female" className="text-blue-900 dark:text-gray-200 focus:bg-blue-50 dark:focus:bg-gray-700">
                           {t('employee.female')}
                         </SelectItem>
-                        <SelectItem value="other" className="text-blue-900">
+                        <SelectItem value="other" className="text-blue-900 dark:text-gray-200 focus:bg-blue-50 dark:focus:bg-gray-700">
                           {t('employee.other')}
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="dob" className="text-base text-blue-900 font-medium">{t('employee.birthday')}</Label>
+                    <Label htmlFor="dob" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('employee.birthday')}</Label>
                     <DatePicker
                       date={formData.dob}
                       // Prevent selecting future dates: provide max/maxDate for picker and validate on change
@@ -953,7 +953,7 @@ const Profile = () => {
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="phone_number" className="text-base text-blue-900 font-medium">{t('employee.phoneNumber')}</Label>
+                    <Label htmlFor="phone_number" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('employee.phoneNumber')}</Label>
                     <Input
                       id="phone_number"
                       type="tel"
@@ -975,7 +975,7 @@ const Profile = () => {
                     return (
                       <>
                         <div className="space-y-3">
-                          <Label htmlFor="start_work" className="text-base text-blue-900 font-medium">{t('employee.startWorkDate')}</Label>
+                          <Label htmlFor="start_work" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('employee.startWorkDate')}</Label>
                           <DatePicker
                             date={formData.start_work}
                             onDateChange={(date) => setFormData(prev => ({ ...prev, start_work: date }))}
@@ -986,7 +986,7 @@ const Profile = () => {
                         </div>
                         {showEndWorkDate && (
                           <div className="space-y-3">
-                            <Label htmlFor="end_work" className="text-base text-blue-900 font-medium">{t('employee.endWorkDate')}</Label>
+                            <Label htmlFor="end_work" className="text-base text-blue-900 dark:text-blue-200 font-medium">{t('employee.endWorkDate')}</Label>
                             <DatePicker
                               date={formData.end_work}
                               onDateChange={(date) => setFormData(prev => ({ ...prev, end_work: date }))}
@@ -1031,13 +1031,13 @@ const Profile = () => {
               </form>
             </TabsContent>
 
-            <TabsContent value="leave" className="p-4 md:p-8 bg-white/90 rounded-3xl">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+            <TabsContent value="leave" className="p-4 md:p-8 bg-white/90 dark:bg-gray-800/90 rounded-3xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8">
                 {leaveStats.map((stat, index) => (
                   <div key={index} className="space-y-2 md:space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm md:text-base font-medium text-blue-900">{stat.label}</span>
-                      <span className="text-sm md:text-base text-gray-500">
+                      <span className="text-sm md:text-base font-medium text-blue-900 dark:text-blue-200">{stat.label}</span>
+                      <span className="text-sm md:text-base text-gray-500 dark:text-gray-400">
                         {(() => {
                           const usedDays = Number(stat.used.days) || 0;
                           const usedHours = Number(stat.used.hours) || 0;
@@ -1051,7 +1051,7 @@ const Profile = () => {
                         })()}
                       </span>
                     </div>
-                    <div className="w-full bg-blue-100 rounded-full h-2">
+                    <div className="w-full bg-blue-100 dark:bg-gray-700 rounded-full h-2">
                       <div
                         className={`${stat.color} h-2 rounded-full transition-all duration-500`}
                         style={{
@@ -1062,7 +1062,7 @@ const Profile = () => {
                         }}
                       ></div>
                     </div>
-                    <div className="text-xs text-blue-500">
+                    <div className="text-xs text-blue-500 dark:text-blue-400">
                       {(() => {
                         const remainingDays = Number(stat.remaining.days) || 0;
 
@@ -1080,17 +1080,17 @@ const Profile = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="settings" className="p-4 md:p-8 bg-white/90 rounded-3xl">
+            <TabsContent value="settings" className="p-4 md:p-8 bg-white/90 dark:bg-gray-800/90 rounded-3xl">
               <div className="space-y-4 md:space-y-6">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 border rounded-2xl bg-blue-50 shadow-sm gap-4">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 border rounded-2xl bg-blue-50 dark:bg-gray-800 shadow-sm gap-4 border-blue-100 dark:border-gray-700">
                   <div>
-                    <h3 className="font-semibold text-blue-900 flex items-center gap-2 text-sm md:text-base"><Bell className="h-4 w-4 md:h-5 md:w-5 text-blue-400" /> {t('profile.pushNotifications')}</h3>
-                    <p className="text-xs md:text-sm text-gray-500 mt-1">
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-200 flex items-center gap-2 text-sm md:text-base"><Bell className="h-4 w-4 md:h-5 md:w-5 text-blue-400" /> {t('profile.pushNotifications')}</h3>
+                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {pushNotificationEnabled ? t('profile.pushNotificationsEnabled') : t('profile.pushNotificationsDisabled')}
                     </p>
                   </div>
                   <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
-                    <span className="text-sm text-gray-600 md:hidden">
+                    <span className="text-sm text-gray-600 dark:text-gray-400 md:hidden">
                       {pushNotificationEnabled ? t('common.enabled') : t('common.disabled')}
                     </span>
                     <div className="flex items-center gap-3">
@@ -1105,16 +1105,16 @@ const Profile = () => {
                           });
                         }}
                       />
-                      <span className="text-sm text-gray-600 hidden md:inline">
+                      <span className="text-sm text-gray-600 dark:text-gray-400 hidden md:inline">
                         {pushNotificationEnabled ? t('common.enabled') : t('common.disabled')}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 border rounded-2xl bg-blue-50 shadow-sm gap-4">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 border rounded-2xl bg-blue-50 dark:bg-gray-800 shadow-sm gap-4 border-blue-100 dark:border-gray-700">
                   <div>
-                    <h3 className="font-semibold text-blue-900 flex items-center gap-2 text-sm md:text-base"><Lock className="h-4 w-4 md:h-5 md:w-5 text-blue-400" /> {t('profile.changePassword')}</h3>
-                    <p className="text-xs md:text-sm text-gray-500 mt-1">{t('profile.changePasswordDesc')}</p>
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-200 flex items-center gap-2 text-sm md:text-base"><Lock className="h-4 w-4 md:h-5 md:w-5 text-blue-400" /> {t('profile.changePassword')}</h3>
+                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">{t('profile.changePasswordDesc')}</p>
                   </div>
                   <Button variant="outline" size="sm" className="btn-blue-outline w-full md:w-auto" onClick={() => setChangePasswordOpen(true)}>{t('common.change')}</Button>
                 </div>
@@ -1139,6 +1139,16 @@ const Profile = () => {
           border: 1.5px solid #3b82f6;
           box-shadow: 0 0 0 2px #3b82f644;
           outline: none;
+        }
+        /* Dark mode support for input-blue */
+        :global(.dark) .input-blue {
+          background: rgba(31, 41, 55, 0.7);
+          border-color: #374151;
+          color: #f3f4f6;
+        }
+        :global(.dark) .input-blue:focus {
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
         }
         .btn-blue {
           background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);

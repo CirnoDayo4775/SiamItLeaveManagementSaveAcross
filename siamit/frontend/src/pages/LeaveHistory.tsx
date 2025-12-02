@@ -139,37 +139,37 @@ const LeaveHistory = () => {
     setError(null);
     try {
       let url = `${apiEndpoints.leaveHistory.list}?page=${page}&limit=${limit}`;
-      
-      
+
+
       if (filterLeaveType && filterLeaveType !== 'all') {
         url += `&leaveType=${filterLeaveType}`;
       }
-      
+
       // แก้ไขการส่งค่า month และ year ให้ถูกต้อง
       if (filterMonth !== '' && filterMonth !== null && filterMonth !== undefined) {
         url += `&month=${filterMonth}`;
       }
-      
+
       if (filterYear !== '' && filterYear !== null && filterYear !== undefined) {
         url += `&year=${filterYear}`;
       }
-      
+
       if (filterStatus && filterStatus !== 'all') {
         url += `&status=${filterStatus}`;
       }
-      
+
       if (filterRetroactive && filterRetroactive !== 'all') {
         url += `&retroactive=${filterRetroactive}`;
       }
-      
+
       if (singleDate) {
         url += `&date=${format(singleDate, 'yyyy-MM-dd')}`;
       }
-      
-      
+
+
       // Use apiService.get
       const data = await apiService.get(url, undefined, showSessionExpiredDialog);
-      
+
       if (data && data.status === "success") {
         setLeaveHistory(data.data);
         setTotalPages(data.totalPages || 1);
@@ -444,7 +444,7 @@ const LeaveHistory = () => {
     if (leave.status !== 'pending') {
       return false;
     }
-    
+
     // Allow deletion of pending requests regardless of date
     // (Backend will handle any additional date restrictions if needed)
     return true;
@@ -473,26 +473,26 @@ const LeaveHistory = () => {
 
   return (
 
-    <div className="bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 relative overflow-x-hidden">
+    <div className="bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-x-hidden">
 
       {/* Floating/Parallax Background Shapes */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 w-[350px] h-[350px] rounded-full bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-100 opacity-30 blur-2xl animate-float" />
         <div className="absolute bottom-0 right-0 w-[250px] h-[250px] rounded-full bg-gradient-to-tr from-purple-200 via-blue-100 to-indigo-100 opacity-20 blur-xl animate-float" />
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse" style={{transform:'translate(-50%,-50%)'}} />
-        </div>
-        
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse" style={{ transform: 'translate(-50%,-50%)' }} />
+      </div>
+
       {/* Topbar */}
-      <div className="border-b bg-white/80 backdrop-blur-sm z-10 relative shadow-lg animate-fade-in-up">
-        <div className="flex h-16 items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-          <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
-            <div className="flex items-center gap-3">
+      <div className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-10 relative shadow-lg animate-fade-in-up">
+        <div className="flex h-14 items-center justify-between px-4 md:px-6">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm" />
+            <div className="flex items-center gap-2">
               <div>
-                <h1 className="text-xl font-bold text-gray-900">{t('leave.leaveHistory')}</h1>
-                <p className="text-sm text-gray-600">{t('history.leaveHistoryTitle')}</p>
-          </div>
-        </div>
+                <h1 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100">{t('leave.leaveHistory')}</h1>
+                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">{t('history.leaveHistoryTitle')}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -505,7 +505,7 @@ const LeaveHistory = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
 
-            <Card className="glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
+            <Card className="glass shadow-xl border-0 dark:bg-gray-800/80 dark:border-gray-700 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
 
               <CardContent className="p-3 sm:p-4 md:p-5 flex items-center gap-2 sm:gap-3 md:gap-4">
 
@@ -517,9 +517,9 @@ const LeaveHistory = () => {
 
                 <div>
 
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 transition-all duration-300 group-hover:scale-110">{totalLeaveDays}</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 dark:text-blue-200 transition-all duration-300 group-hover:scale-110">{totalLeaveDays}</p>
 
-                  <p className="text-xs sm:text-sm text-blue-600 font-medium leading-tight">{t('history.totalLeaveDays')}</p>
+                  <p className="text-xs sm:text-sm text-blue-600 dark:text-blue-300 font-medium leading-tight">{t('history.totalLeaveDays')}</p>
 
                 </div>
 
@@ -539,9 +539,9 @@ const LeaveHistory = () => {
 
                 <div>
 
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-indigo-800 transition-all duration-300 group-hover:scale-110">{totalLeaveHours}</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-indigo-800 dark:text-indigo-200 transition-all duration-300 group-hover:scale-110">{totalLeaveHours}</p>
 
-                  <p className="text-xs sm:text-sm text-indigo-600 font-medium leading-tight">{t('history.totalLeaveHours')}</p>
+                  <p className="text-xs sm:text-sm text-indigo-600 dark:text-indigo-300 font-medium leading-tight">{t('history.totalLeaveHours')}</p>
 
                 </div>
 
@@ -549,7 +549,7 @@ const LeaveHistory = () => {
 
             </Card>
 
-            <Card className="glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
+            <Card className="glass shadow-xl border-0 dark:bg-gray-800/80 dark:border-gray-700 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
 
               <CardContent className="p-3 sm:p-4 md:p-5 flex items-center gap-2 sm:gap-3 md:gap-4">
 
@@ -561,9 +561,9 @@ const LeaveHistory = () => {
 
                 <div>
 
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-green-700 transition-all duration-300 group-hover:scale-110">{approvedCount}</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-green-700 dark:text-green-200 transition-all duration-300 group-hover:scale-110">{approvedCount}</p>
 
-                  <p className="text-xs sm:text-sm text-green-600 font-medium leading-tight">{t('history.approvedRequests')}</p>
+                  <p className="text-xs sm:text-sm text-green-600 dark:text-green-300 font-medium leading-tight">{t('history.approvedRequests')}</p>
 
                 </div>
 
@@ -571,7 +571,7 @@ const LeaveHistory = () => {
 
             </Card>
 
-            <Card className="glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
+            <Card className="glass shadow-xl border-0 dark:bg-gray-800/80 dark:border-gray-700 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
 
               <CardContent className="p-3 sm:p-4 md:p-5 flex items-center gap-2 sm:gap-3 md:gap-4">
 
@@ -583,9 +583,9 @@ const LeaveHistory = () => {
 
                 <div>
 
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-yellow-700 transition-all duration-300 group-hover:scale-110">{pendingCount}</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-yellow-700 dark:text-yellow-200 transition-all duration-300 group-hover:scale-110">{pendingCount}</p>
 
-                  <p className="text-xs sm:text-sm text-yellow-600 font-medium leading-tight">{t('history.pendingRequests')}</p>
+                  <p className="text-xs sm:text-sm text-yellow-600 dark:text-yellow-300 font-medium leading-tight">{t('history.pendingRequests')}</p>
 
                 </div>
 
@@ -593,7 +593,7 @@ const LeaveHistory = () => {
 
             </Card>
 
-            <Card className="glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
+            <Card className="glass shadow-xl border-0 dark:bg-gray-800/80 dark:border-gray-700 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
 
               <CardContent className="p-3 sm:p-4 md:p-5 flex items-center gap-2 sm:gap-3 md:gap-4">
 
@@ -605,9 +605,9 @@ const LeaveHistory = () => {
 
                 <div>
 
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-red-700 transition-all duration-300 group-hover:scale-110">{rejectedCount}</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-red-700 dark:text-red-200 transition-all duration-300 group-hover:scale-110">{rejectedCount}</p>
 
-                  <p className="text-xs sm:text-sm text-red-600 font-medium leading-tight">{t('history.rejectedRequests')}</p>
+                  <p className="text-xs sm:text-sm text-red-600 dark:text-red-300 font-medium leading-tight">{t('history.rejectedRequests')}</p>
 
                 </div>
 
@@ -615,7 +615,7 @@ const LeaveHistory = () => {
 
             </Card>
 
-            <Card className="glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
+            <Card className="glass shadow-xl border-0 dark:bg-gray-800/80 dark:border-gray-700 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift">
 
               <CardContent className="p-3 sm:p-4 md:p-5 flex items-center gap-2 sm:gap-3 md:gap-4">
 
@@ -627,9 +627,9 @@ const LeaveHistory = () => {
 
                 <div>
 
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-purple-700 transition-all duration-300 group-hover:scale-110">{retroactiveCount}</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-purple-700 dark:text-purple-200 transition-all duration-300 group-hover:scale-110">{retroactiveCount}</p>
 
-                  <p className="text-xs sm:text-sm text-purple-600 font-medium leading-tight">{t('history.retroactiveLeave')}</p>
+                  <p className="text-xs sm:text-sm text-purple-600 dark:text-purple-300 font-medium leading-tight">{t('history.retroactiveLeave')}</p>
 
                 </div>
 
@@ -651,25 +651,21 @@ const LeaveHistory = () => {
 
                 <div className="flex items-center gap-3">
 
-                  <div className={`w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md transition-all duration-300 ${
+                  <div className={`w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md transition-all duration-300 ${showFilters ? 'scale-110' : 'scale-100'
 
-                    showFilters ? 'scale-110' : 'scale-100'
+                    }`}>
 
-                  }`}>
+                    <Filter className={`w-5 h-5 text-white transition-all duration-300 ${showFilters ? 'animate-pulse' : ''
 
-                    <Filter className={`w-5 h-5 text-white transition-all duration-300 ${
-
-                      showFilters ? 'animate-pulse' : ''
-
-                    }`} />
+                      }`} />
 
                   </div>
 
                   <div>
 
-                                      <h3 className="text-xl font-bold text-gray-800">{t('history.filters')}</h3>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">{t('history.filters')}</h3>
 
-                  <p className="text-sm text-gray-600">{t('history.filterDesc')}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('history.filterDesc')}</p>
 
                   </div>
 
@@ -683,35 +679,33 @@ const LeaveHistory = () => {
 
                   onClick={() => setShowFilters(!showFilters)}
 
-                  className={`border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-lg px-4 py-2 font-medium transform hover:scale-105 btn-press hover-glow ${
+                  className={`border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/30 dark:hover:border-blue-600 transition-all duration-300 rounded-lg px-4 py-2 font-medium transform hover:scale-105 btn-press hover-glow ${showFilters ? 'bg-blue-50 border-blue-300 shadow-md dark:bg-blue-900/20 dark:border-blue-600' : ''
 
-                    showFilters ? 'bg-blue-50 border-blue-300 shadow-md' : ''
-
-                  }`}
+                    }`}
 
                 >
 
-                                      {showFilters ? (
+                  {showFilters ? (
 
-                      <>
+                    <>
 
-                        <X className="w-4 h-4 mr-2" />
+                      <X className="w-4 h-4 mr-2" />
 
-                        {t('history.hideFilters')}
+                      {t('history.hideFilters')}
 
-                      </>
+                    </>
 
-                    ) : (
+                  ) : (
 
-                      <>
+                    <>
 
-                        <Filter className="w-4 h-4 mr-2" />
+                      <Filter className="w-4 h-4 mr-2" />
 
-                        {t('history.showFilters')}
+                      {t('history.showFilters')}
 
-                      </>
+                    </>
 
-                    )}
+                  )}
 
                 </Button>
 
@@ -719,11 +713,9 @@ const LeaveHistory = () => {
 
             </CardHeader>
 
-            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${showFilters ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'
 
-              showFilters ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'
-
-            }`}>
+              }`}>
 
               <CardContent className="space-y-6 animate-slide-down filter-toggle">
 
@@ -735,13 +727,13 @@ const LeaveHistory = () => {
 
                   <div className="space-y-3 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
 
-                                            <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
 
-                          <Calendar className="w-4 h-4 text-blue-600" />
+                      <Calendar className="w-4 h-4 text-blue-600" />
 
-                          {t('history.singleDate')}
+                      {t('history.singleDate')}
 
-                        </Label>
+                    </Label>
 
                     <Popover>
 
@@ -751,7 +743,7 @@ const LeaveHistory = () => {
 
                           variant="outline"
 
-                          className="w-full justify-start text-left font-normal bg-white/80 backdrop-blur border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 rounded-lg h-11 text-sm"
+                          className="w-full justify-start text-left font-normal bg-white/80 dark:bg-gray-800/80 backdrop-blur border-blue-200 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-gray-600 dark:text-gray-200 transition-all duration-200 rounded-lg h-11 text-sm"
 
                         >
 
@@ -763,7 +755,7 @@ const LeaveHistory = () => {
 
                       </PopoverTrigger>
 
-                      <PopoverContent className="w-auto p-0 border-0 shadow-xl rounded-xl" align="start">
+                      <PopoverContent className="w-auto p-0 border-0 shadow-xl rounded-xl dark:bg-gray-800 dark:text-gray-100" align="start">
 
                         <CalendarComponent
 
@@ -791,27 +783,27 @@ const LeaveHistory = () => {
 
                   <div className="space-y-3 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
 
-                                            <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
 
-                          <FileText className="w-4 h-4 text-green-600" />
+                      <FileText className="w-4 h-4 text-green-600" />
 
-                          {t('leave.type')}
+                      {t('leave.type')}
 
-                        </Label>
+                    </Label>
 
                     <Select value={filterLeaveType || "all"} onValueChange={v => setFilterLeaveType(v === "all" ? "" : v)} disabled={leaveTypesLoading}>
 
-                      <SelectTrigger className="bg-white/80 backdrop-blur border-green-200 hover:bg-green-50 hover:border-green-300 transition-all duration-200 rounded-lg h-11 text-sm">
+                      <SelectTrigger className="bg-white/80 dark:bg-gray-800/80 backdrop-blur border-green-200 dark:border-gray-700 hover:bg-green-50 dark:hover:bg-gray-700 hover:border-green-300 dark:hover:border-gray-600 dark:text-gray-200 transition-all duration-200 rounded-lg h-11 text-sm">
 
                         <SelectValue placeholder={
 
-                          leaveTypesLoading 
+                          leaveTypesLoading
 
-                            ? t('common.loading') 
+                            ? t('common.loading')
 
-                            : leaveTypesError 
+                            : leaveTypesError
 
-                              ? t('common.error') 
+                              ? t('common.error')
 
                               : t('leaveTypes.all')
 
@@ -819,7 +811,7 @@ const LeaveHistory = () => {
 
                       </SelectTrigger>
 
-                      <SelectContent className="border-0 shadow-xl rounded-xl">
+                      <SelectContent className="border-0 shadow-xl rounded-xl dark:bg-gray-800 dark:text-gray-100">
 
                         <SelectItem value="all" className="rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105">
 
@@ -897,13 +889,13 @@ const LeaveHistory = () => {
 
                     <Select value={filterStatus || "all"} onValueChange={v => setFilterStatus(v === "all" ? "" : v)}>
 
-                      <SelectTrigger className="bg-white/80 backdrop-blur border-yellow-200 hover:bg-yellow-50 hover:border-yellow-300 transition-all duration-200 rounded-lg h-11 text-sm">
+                      <SelectTrigger className="bg-white/80 dark:bg-gray-800/80 backdrop-blur border-yellow-200 dark:border-gray-700 hover:bg-yellow-50 dark:hover:bg-gray-700 hover:border-yellow-300 dark:hover:border-gray-600 dark:text-gray-200 transition-all duration-200 rounded-lg h-11 text-sm">
 
                         <SelectValue placeholder={t('history.allStatuses')} />
 
                       </SelectTrigger>
 
-                      <SelectContent className="border-0 shadow-xl rounded-xl">
+                      <SelectContent className="border-0 shadow-xl rounded-xl dark:bg-gray-800 dark:text-gray-100">
 
                         <SelectItem value="all" className="rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105">{t('leave.statusAll')}</SelectItem>
 
@@ -952,10 +944,10 @@ const LeaveHistory = () => {
 
                     <Select value={filterRetroactive || "all"} onValueChange={v => setFilterRetroactive(v === "all" ? "" : v)}>
 
-                      <SelectTrigger className="bg-white/80 backdrop-blur border-purple-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200 rounded-lg h-11 text-sm">
+                      <SelectTrigger className="bg-white/80 dark:bg-gray-800/80 backdrop-blur border-purple-200 dark:border-gray-700 hover:bg-purple-50 dark:hover:bg-gray-700 hover:border-purple-300 dark:hover:border-gray-600 dark:text-gray-200 transition-all duration-200 rounded-lg h-11 text-sm">
                         <SelectValue placeholder={t('leave.allTypes')} />
                       </SelectTrigger>
-                      <SelectContent className="border-0 shadow-xl rounded-xl">
+                      <SelectContent className="border-0 shadow-xl rounded-xl dark:bg-gray-800 dark:text-gray-100">
                         <SelectItem value="all" className="rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105">
                           {t('leave.allTypes')}
                         </SelectItem>
@@ -986,28 +978,28 @@ const LeaveHistory = () => {
 
                     <div className="flex gap-2">
 
-                      <Select 
-                        value={filterMonth ? filterMonth.toString() : "all"} 
+                      <Select
+                        value={filterMonth ? filterMonth.toString() : "all"}
                         onValueChange={v => {
                           const newValue = v === "all" ? '' : Number(v);
                           setFilterMonth(newValue);
-                        }} 
+                        }}
                         disabled={!!singleDate}
                       >
 
-                        <SelectTrigger className="w-20 bg-white/80 backdrop-blur border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-200 rounded-lg h-11 text-sm">
+                        <SelectTrigger className="w-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur border-indigo-200 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-700 hover:border-indigo-300 dark:hover:border-gray-600 dark:text-gray-200 transition-all duration-200 rounded-lg h-11 text-sm">
 
                           <SelectValue placeholder={t('history.month')} />
 
                         </SelectTrigger>
 
-                        <SelectContent className="border-0 shadow-xl rounded-xl">
+                        <SelectContent className="border-0 shadow-xl rounded-xl dark:bg-gray-800 dark:text-gray-100">
 
                           <SelectItem value="all" className="rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105">{t('history.allMonths')}</SelectItem>
 
                           {allMonths.map(m => (
 
-                            <SelectItem key={m} value={m.toString()} className="rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105">{currentMonthNames[m-1]}</SelectItem>
+                            <SelectItem key={m} value={m.toString()} className="rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105">{currentMonthNames[m - 1]}</SelectItem>
 
                           ))}
 
@@ -1015,22 +1007,22 @@ const LeaveHistory = () => {
 
                       </Select>
 
-                      <Select 
-                        value={filterYear ? filterYear.toString() : "all"} 
+                      <Select
+                        value={filterYear ? filterYear.toString() : "all"}
                         onValueChange={v => {
                           const newValue = v === "all" ? '' : Number(v);
                           setFilterYear(newValue);
-                        }} 
+                        }}
                         disabled={!!singleDate}
                       >
 
-                        <SelectTrigger className="w-20 bg-white/80 backdrop-blur border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-200 rounded-lg h-11 text-sm">
+                        <SelectTrigger className="w-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur border-indigo-200 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-700 hover:border-indigo-300 dark:hover:border-gray-600 dark:text-gray-200 transition-all duration-200 rounded-lg h-11 text-sm">
 
                           <SelectValue placeholder={t('history.year')} />
 
                         </SelectTrigger>
 
-                        <SelectContent className="border-0 shadow-xl rounded-xl">
+                        <SelectContent className="border-0 shadow-xl rounded-xl dark:bg-gray-800 dark:text-gray-100">
 
                           <SelectItem value="all" className="rounded-lg transition-all duration-200 hover:bg-blue-50 hover:scale-105">{t('history.allYears')}</SelectItem>
 
@@ -1068,7 +1060,7 @@ const LeaveHistory = () => {
 
                         onClick={clearAllFilters}
 
-                        className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 transition-all duration-300 rounded-lg px-4 py-2 font-medium transform hover:scale-105 hover:shadow-md btn-press hover-glow"
+                        className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-300 dark:hover:border-red-700 transition-all duration-300 rounded-lg px-4 py-2 font-medium transform hover:scale-105 hover:shadow-md btn-press hover-glow"
 
                       >
 
@@ -1082,7 +1074,7 @@ const LeaveHistory = () => {
 
                     {hasActiveFilters() && (
 
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
 
                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
 
@@ -1248,8 +1240,8 @@ const LeaveHistory = () => {
 
               leaveHistory.map((leave, index) => (
 
-                <Card 
-                  key={leave.id} 
+                <Card
+                  key={leave.id}
                   className="glass shadow-xl border-0 hover:scale-[1.02] transition-all duration-300 hover-lift card-entrance"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
@@ -1260,7 +1252,7 @@ const LeaveHistory = () => {
 
                       <div className={`text-xl font-bold ${getTypeColor(leave.leaveTypeName_th || leave.leaveTypeName_en || leave.type)}`}>
 
-                        {leave.leaveTypeName_th && leave.leaveTypeName_en 
+                        {leave.leaveTypeName_th && leave.leaveTypeName_en
                           ? (i18n.language.startsWith('th') ? leave.leaveTypeName_th : leave.leaveTypeName_en)
                           : (getLeaveTypeLabel(leave.type, leaveTypes, i18n, t) || translateLeaveType(leave.type, leaveTypes, i18n, t))
                         }
@@ -1386,8 +1378,8 @@ const LeaveHistory = () => {
                               {leave.reason && leave.reason.length > 100 ? (
                                 <div>
                                   <p className="text-blue-500 text-sm break-all overflow-wrap-anywhere whitespace-pre-wrap max-w-full">
-                                    {expandedReason === leave.id 
-                                      ? leave.reason 
+                                    {expandedReason === leave.id
+                                      ? leave.reason
                                       : leave.reason.slice(0, 100) + '...'
                                     }
                                   </p>
@@ -1395,8 +1387,8 @@ const LeaveHistory = () => {
                                     onClick={() => setExpandedReason(expandedReason === leave.id ? null : leave.id)}
                                     className="text-blue-600 hover:text-blue-800 text-xs font-medium mt-1 transition-colors"
                                   >
-                                    {expandedReason === leave.id 
-                                      ? t('common.showLess') 
+                                    {expandedReason === leave.id
+                                      ? t('common.showLess')
                                       : t('common.showMore')
                                     }
                                   </button>
@@ -1454,8 +1446,8 @@ const LeaveHistory = () => {
                                     {leave.rejectionReason && leave.rejectionReason.length > 100 ? (
                                       <div>
                                         <span className="text-red-900 leading-relaxed text-sm break-all overflow-wrap-anywhere whitespace-pre-wrap max-w-full">
-                                          {expandedReject === leave.id 
-                                            ? leave.rejectionReason 
+                                          {expandedReject === leave.id
+                                            ? leave.rejectionReason
                                             : leave.rejectionReason.slice(0, 100) + '...'
                                           }
                                         </span>
@@ -1463,10 +1455,10 @@ const LeaveHistory = () => {
                                           onClick={() => setExpandedReject(expandedReject === leave.id ? null : leave.id)}
                                           className="text-red-600 hover:text-red-800 text-xs font-medium mt-1 transition-colors block"
                                         >
-                                                                                  {expandedReject === leave.id 
-                                          ? t('common.showLess') 
-                                          : t('common.showMore')
-                                        }
+                                          {expandedReject === leave.id
+                                            ? t('common.showLess')
+                                            : t('common.showMore')
+                                          }
                                         </button>
                                       </div>
                                     ) : (
@@ -1485,13 +1477,13 @@ const LeaveHistory = () => {
 
                         <div className="flex flex-col sm:flex-row justify-end mt-6 gap-2">
 
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
+                          <Button
+                            size="sm"
+                            variant="outline"
                             onClick={() => handleViewDetails(leave.id)}
                             className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:bg-blue-50 hover:border-blue-300 btn-press hover-glow text-sm px-4 py-2"
                           >
-                              <Eye className="w-4 h-4 mr-1" />
+                            <Eye className="w-4 h-4 mr-1" />
                             {t('common.viewDetails')}
                           </Button>
 
@@ -1500,11 +1492,11 @@ const LeaveHistory = () => {
 
                               <AlertDialogTrigger asChild>
 
-                                <Button 
+                                <Button
 
-                                  size="sm" 
+                                  size="sm"
 
-                                  variant="destructive" 
+                                  variant="destructive"
 
                                   onClick={() => handleDeleteLeave(leave.id)}
 
@@ -1520,52 +1512,52 @@ const LeaveHistory = () => {
 
                               </AlertDialogTrigger>
 
-                            <AlertDialogContent>
+                              <AlertDialogContent>
 
-                              <AlertDialogHeader>
+                                <AlertDialogHeader>
 
-                                <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
+                                  <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
 
-                                <AlertDialogDescription>
+                                  <AlertDialogDescription>
 
-                                  {t('system.deleteConfirmMessage')}
+                                    {t('system.deleteConfirmMessage')}
 
-                                </AlertDialogDescription>
+                                  </AlertDialogDescription>
 
-                              </AlertDialogHeader>
+                                </AlertDialogHeader>
 
-                              <AlertDialogFooter>
+                                <AlertDialogFooter>
 
-                                <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                                  <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
 
-                                <AlertDialogAction 
+                                  <AlertDialogAction
 
-                                  onClick={confirmDeleteLeave}
+                                    onClick={confirmDeleteLeave}
 
-                                  disabled={deleting}
+                                    disabled={deleting}
 
-                                  className="bg-red-600 hover:bg-red-700"
+                                    className="bg-red-600 hover:bg-red-700"
 
-                                >
+                                  >
 
-                                  {deleting ? t('common.deleting') : t('common.delete')}
+                                    {deleting ? t('common.deleting') : t('common.delete')}
 
-                                </AlertDialogAction>
+                                  </AlertDialogAction>
 
-                              </AlertDialogFooter>
+                                </AlertDialogFooter>
 
-                            </AlertDialogContent>
+                              </AlertDialogContent>
 
-                          </AlertDialog>
+                            </AlertDialog>
 
                           )}
 
                           {/* Show disabled delete button with tooltip when deletion is not allowed */}
                           {!canDeleteLeave(leave) && (
                             <div className="relative group">
-                              <Button 
-                                size="sm" 
-                                variant="outline" 
+                              <Button
+                                size="sm"
+                                variant="outline"
                                 disabled
                                 className="transition-all duration-300 transform hover:scale-105 hover:shadow-md btn-press hover-glow text-sm px-4 py-2 opacity-50 cursor-not-allowed"
                               >
@@ -1573,7 +1565,7 @@ const LeaveHistory = () => {
                                 {t('common.delete')}
                               </Button>
                               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                {leave.status !== 'pending' 
+                                {leave.status !== 'pending'
                                   ? t('history.cannotDeleteNonPending')
                                   : t('history.cannotDeleteNearDate')
                                 }

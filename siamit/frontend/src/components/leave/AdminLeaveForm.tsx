@@ -52,11 +52,11 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
   const [positions, setPositions] = useState<{ id: string; position_name_th: string; position_name_en: string }[]>([]);
   const [admins, setAdmins] = useState<{ id: string; name: string; role: string }[]>([]);
   const [superadmins, setSuperadmins] = useState<{ id: string; name: string; role: string }[]>([]);
-  
+
   // Create unique approver list to avoid duplicate keys
   const approverList = React.useMemo(() => {
     const allApprovers = [...admins, ...superadmins];
-    const uniqueApprovers = allApprovers.filter((approver, index, self) => 
+    const uniqueApprovers = allApprovers.filter((approver, index, self) =>
       index === self.findIndex(a => a.id === approver.id)
     );
     return uniqueApprovers;
@@ -303,13 +303,13 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
       const endHour = end.getHours();
       const startMinute = start.getMinutes();
       const endMinute = end.getMinutes();
-      
+
       const startTimeMinutes = startHour * 60 + startMinute;
       const endTimeMinutes = endHour * 60 + endMinute;
-      
+
       const businessStartMinutes = TIME_CONSTANTS.WORKING_START_HOUR * 60; // Business start time
       const businessEndMinutes = TIME_CONSTANTS.WORKING_END_HOUR * 60; // Business end time
-      
+
       if (startTimeMinutes < businessStartMinutes || endTimeMinutes > businessEndMinutes) {
         setTimeError(t('leave.businessHoursError'));
         return;
@@ -322,7 +322,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
       const formData = new FormData();
       formData.append("leaveType", leaveType);
       if (durationType) formData.append("durationType", durationType);
-      
+
       // Handle date fields based on duration type
       if (durationType === 'day') {
         if (startDate) formData.append("startDate", startDate);
@@ -342,10 +342,10 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
       formData.append("contact", contact);
       formData.append("allowBackdated", allowBackdated.toString());
       formData.append("backdated", allowBackdated.toString());
-      
+
       // Handle approval fields
       formData.append("approvalStatus", approvalStatus);
-      
+
       // Only send approver info when status is approved or rejected
       if (approvalStatus === 'approved' || approvalStatus === 'rejected') {
         const selectedApprover = approverList.find(a => a.id === approverId);
@@ -353,7 +353,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
         formData.append('approverName', selectedApprover?.name || '');
         formData.append('statusBy', selectedApprover?.name || ''); // ส่งชื่อผู้อนุมัติไปใน statusBy
         if (approvalNote) formData.append("approvalNote", approvalNote);
-        
+
         // ส่งวันที่ตามสถานะการอนุมัติ
         if (approvalStatus === 'approved' && approvedTime) {
           formData.append("approvedTime", approvedTime);
@@ -361,12 +361,12 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
           formData.append("rejectedTime", approvedTime);
         }
       }
-      
+
       // ส่งเหตุผลไม่อนุมัติ (rejectedReason) เมื่อ rejected - แยกออกมาเพื่อให้แน่ใจว่าส่งเสมอ
       if (approvalStatus === 'rejected' && approvalNote) {
         formData.append('rejectedReason', approvalNote);
       }
-      
+
       // Add selected user ID instead of current user
       formData.append("repid", selectedUserId);
 
@@ -389,7 +389,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
           title: t('leave.submitSuccess'),
           description: t('leave.leaveRequestSuccess'),
         });
-        
+
         if (onSubmit) {
           onSubmit(data);
         } else {
@@ -432,27 +432,27 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
   // Note: getLeaveNotice function moved to src/lib/leaveUtils.ts
 
   return (
-    <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 rounded-2xl p-8 shadow-xl border border-blue-100/50">
+    <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 dark:from-gray-800/90 dark:via-gray-900/90 dark:to-indigo-900/80 rounded-2xl p-8 shadow-xl border border-blue-100/50 dark:border-gray-700">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl">
             <Shield className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">{t('leave.adminLeaveRequest')}</h2>
-            <p className="text-gray-600">{t('leave.adminLeaveRequestDesc')}</p>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t('leave.adminLeaveRequest')}</h2>
+            <p className="text-gray-600 dark:text-gray-400">{t('leave.adminLeaveRequestDesc')}</p>
           </div>
         </div>
       </div>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
         {/* Employee Selection - Always visible */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-gray-800/80 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <User className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/60 rounded-lg">
+              <User className="w-5 h-5 text-blue-600 dark:text-blue-300" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-800">{t('leave.selectEmployee')}</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{t('leave.selectEmployee')}</h3>
           </div>
           <Select value={selectedUserId} onValueChange={setSelectedUserId}>
             <SelectTrigger className={`w-full h-12 ${errors.selectedUserId ? 'border-red-500 ring-red-200' : 'border-gray-200 hover:border-blue-300'}`}>
@@ -460,7 +460,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                 {selectedUserId && (() => {
                   const selectedUser = users.find(u => u.id === selectedUserId);
                   if (!selectedUser) return '';
-                  
+
                   // Get localized role name
                   const getLocalizedRole = (role: string) => {
                     switch (role) {
@@ -478,15 +478,15 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                   };
 
                   // Get localized department and position names
-                  const departmentName = i18n.language === 'th' 
-                    ? selectedUser.department_name_th 
+                  const departmentName = i18n.language === 'th'
+                    ? selectedUser.department_name_th
                     : selectedUser.department_name_en || selectedUser.department_name_th;
-                  const positionName = i18n.language === 'th' 
-                    ? selectedUser.position_name_th 
+                  const positionName = i18n.language === 'th'
+                    ? selectedUser.position_name_th
                     : selectedUser.position_name_en || selectedUser.position_name_th;
-                  
+
                   const localizedRole = getLocalizedRole(selectedUser.role);
-                  
+
                   return `${selectedUser.name} • ${selectedUser.email} • ${localizedRole} • ${departmentName} • ${positionName}`;
                 })()}
               </SelectValue>
@@ -510,13 +510,13 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                 };
 
                 // Get localized department and position names
-                const departmentName = i18n.language === 'th' 
-                  ? user.department_name_th 
+                const departmentName = i18n.language === 'th'
+                  ? user.department_name_th
                   : user.department_name_en || user.department_name_th;
-                const positionName = i18n.language === 'th' 
-                  ? user.position_name_th 
+                const positionName = i18n.language === 'th'
+                  ? user.position_name_th
                   : user.position_name_en || user.position_name_th;
-                
+
                 const localizedRole = getLocalizedRole(user.role);
 
                 return (
@@ -542,18 +542,18 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
 
         {/* Leave Details Section - Show when employee is selected */}
         {selectedUserId && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white dark:bg-gray-800/80 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <ClipboardList className="w-5 h-5 text-green-600" />
+              <div className="p-2 bg-green-100 dark:bg-green-900/60 rounded-lg">
+                <ClipboardList className="w-5 h-5 text-green-600 dark:text-green-300" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">{t('leave.leaveDetails')}</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{t('leave.leaveDetails')}</h3>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Leave Type */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
                   <ClipboardList className="w-4 h-4" />
                   {t('leave.leaveType')}
                 </label>
@@ -586,7 +586,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
 
               {/* Duration Type */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   {t('leave.durationType')}
                 </label>
@@ -609,59 +609,53 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
 
         {/* Date Selection - Show when duration type is selected */}
         {durationType && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white dark:bg-gray-800/80 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <CalendarDays className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/60 rounded-lg">
+                <CalendarDays className="w-5 h-5 text-purple-600 dark:text-purple-300" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">{t('leave.dateTimeSelection')}</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{t('leave.dateTimeSelection')}</h3>
             </div>
 
             {/* Backdated Control - ตัวเลือกการควบคุมการย้อนหลัง */}
-            <div className="mb-6 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm">
+            <div className="mb-6 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl border border-blue-200 dark:border-blue-700 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Clock className="w-5 h-5 text-blue-600" />
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/60 rounded-lg">
+                    <Clock className="w-5 h-5 text-blue-600 dark:text-blue-300" />
                   </div>
-                  <h4 className="text-base font-semibold text-gray-800">{t('leave.backdatedControl')}</h4>
+                  <h4 className="text-base font-semibold text-gray-800 dark:text-gray-100">{t('leave.backdatedControl')}</h4>
                 </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  allowBackdated === 0 
-                    ? 'bg-green-100 text-green-700 border border-green-200' 
+                <div className={`px-3 py-1 rounded-full text-xs font-medium ${allowBackdated === 0
+                    ? 'bg-green-100 text-green-700 border border-green-200'
                     : 'bg-red-100 text-red-700 border border-red-200'
-                }`}>
+                  }`}>
                   {allowBackdated === 0 ? t('leave.disallowBackdated') : t('leave.allowBackdated')}
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* ไม่อนุญาตการย้อนหลัง */}
-                <div 
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                    allowBackdated === 0 
-                      ? 'border-green-400 bg-green-50 shadow-md' 
+                <div
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${allowBackdated === 0
+                      ? 'border-green-400 bg-green-50 shadow-md'
                       : 'border-gray-200 bg-white hover:border-green-300 hover:bg-green-25'
-                  }`}
+                    }`}
                   onClick={() => setAllowBackdated(0)}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`p-1 rounded-full ${
-                      allowBackdated === 0 ? 'bg-green-100' : 'bg-gray-100'
-                    }`}>
-                      <Ban className={`w-4 h-4 ${
-                        allowBackdated === 0 ? 'text-green-600' : 'text-gray-500'
-                      }`} />
+                    <div className={`p-1 rounded-full ${allowBackdated === 0 ? 'bg-green-100' : 'bg-gray-100'
+                      }`}>
+                      <Ban className={`w-4 h-4 ${allowBackdated === 0 ? 'text-green-600' : 'text-gray-500'
+                        }`} />
                     </div>
                     <div className="flex-1">
-                      <span className={`text-sm font-semibold ${
-                        allowBackdated === 0 ? 'text-green-700' : 'text-gray-700'
-                      }`}>
+                      <span className={`text-sm font-semibold ${allowBackdated === 0 ? 'text-green-700' : 'text-gray-700'
+                        }`}>
                         {t('leave.disallowBackdated')}
                       </span>
-                      <p className={`text-xs mt-1 ${
-                        allowBackdated === 0 ? 'text-green-600' : 'text-gray-500'
-                      }`}>
+                      <p className={`text-xs mt-1 ${allowBackdated === 0 ? 'text-green-600' : 'text-gray-500'
+                        }`}>
                         {t('leave.disallowBackdatedDesc')}
                       </p>
                     </div>
@@ -672,31 +666,26 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                 </div>
 
                 {/* อนุญาตการย้อนหลัง */}
-                <div 
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                    allowBackdated === 1 
-                      ? 'border-red-400 bg-red-50 shadow-md' 
+                <div
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${allowBackdated === 1
+                      ? 'border-red-400 bg-red-50 shadow-md'
                       : 'border-gray-200 bg-white hover:border-red-300 hover:bg-red-25'
-                  }`}
+                    }`}
                   onClick={() => setAllowBackdated(1)}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`p-1 rounded-full ${
-                      allowBackdated === 1 ? 'bg-red-100' : 'bg-gray-100'
-                    }`}>
-                      <Clock className={`w-4 h-4 ${
-                        allowBackdated === 1 ? 'text-red-600' : 'text-gray-500'
-                      }`} />
+                    <div className={`p-1 rounded-full ${allowBackdated === 1 ? 'bg-red-100' : 'bg-gray-100'
+                      }`}>
+                      <Clock className={`w-4 h-4 ${allowBackdated === 1 ? 'text-red-600' : 'text-gray-500'
+                        }`} />
                     </div>
                     <div className="flex-1">
-                      <span className={`text-sm font-semibold ${
-                        allowBackdated === 1 ? 'text-red-700' : 'text-gray-700'
-                      }`}>
+                      <span className={`text-sm font-semibold ${allowBackdated === 1 ? 'text-red-700' : 'text-gray-700'
+                        }`}>
                         {t('leave.allowBackdated')}
                       </span>
-                      <p className={`text-xs mt-1 ${
-                        allowBackdated === 1 ? 'text-red-600' : 'text-gray-500'
-                      }`}>
+                      <p className={`text-xs mt-1 ${allowBackdated === 1 ? 'text-red-600' : 'text-gray-500'
+                        }`}>
                         {t('leave.allowBackdatedDesc')}
                       </p>
                     </div>
@@ -748,7 +737,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
             ) : durationType === 'hour' ? (
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
                     <CalendarDays className="w-4 h-4" />
                     {t('leave.leaveDate')}
                   </label>
@@ -757,8 +746,8 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                     onDateChange={setLeaveDate}
                     placeholder={t('leave.selectLeaveDate')}
                     className={errors.leaveDate ? 'border-red-500' : ''}
-                    // จำกัดให้เลือกได้แค่วันเดียว (ไม่ต้องเลือกช่วง)
-                    //range={false}
+                  // จำกัดให้เลือกได้แค่วันเดียว (ไม่ต้องเลือกช่วง)
+                  //range={false}
                   />
                   {errors.leaveDate && (
                     <p className="text-sm text-red-500">{errors.leaveDate}</p>
@@ -1041,28 +1030,28 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
         {/* Submit Button - Show when all required fields are filled */}
         {selectedUserId && leaveType && durationType &&
           ((durationType === 'day' && startDate && endDate) ||
-           (durationType === 'hour' && leaveDate && startTime && endTime)) &&
+            (durationType === 'hour' && leaveDate && startTime && endTime)) &&
           approvalStatus && reason && contact && (
-          <div className="flex justify-end space-x-4 pt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate('/admin')}
-              className="flex items-center gap-2 h-12 px-6 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
-            >
-              <ArrowLeftCircle className="w-4 h-4" />
-              {t('common.cancel')}
-            </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-              className="flex items-center gap-2 h-12 px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-            >
-              <Send className="w-4 h-4" />
-              {loading ? t('leave.submitting') : t('leave.submitLeave')}
-            </Button>
-          </div>
-        )}
+            <div className="flex justify-end space-x-4 pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate('/admin')}
+                className="flex items-center gap-2 h-12 px-6 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+              >
+                <ArrowLeftCircle className="w-4 h-4" />
+                {t('common.cancel')}
+              </Button>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="flex items-center gap-2 h-12 px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <Send className="w-4 h-4" />
+                {loading ? t('leave.submitting') : t('leave.submitLeave')}
+              </Button>
+            </div>
+          )}
       </form>
     </div>
   );

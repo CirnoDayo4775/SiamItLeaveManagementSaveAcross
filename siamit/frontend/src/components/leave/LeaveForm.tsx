@@ -104,7 +104,7 @@ export const LeaveForm = ({ initialData, onSubmit, mode = 'create' }: LeaveFormP
       if (initialData.attachments) {
         let files = initialData.attachments;
         if (typeof files === 'string') {
-          try { files = JSON.parse(files); } catch {}
+          try { files = JSON.parse(files); } catch { }
         }
         setAttachments(Array.isArray(files) ? files : []);
       }
@@ -115,8 +115,8 @@ export const LeaveForm = ({ initialData, onSubmit, mode = 'create' }: LeaveFormP
     // ดึงข้อมูล department จาก API
     const fetchDepartments = async () => {
       try {
-          const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
+        const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+        const token = currentUser?.token;
         const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/departments`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -136,7 +136,7 @@ const token = currentUser?.token;
     const fetchLeaveTypes = async () => {
       try {
         const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
+        const token = currentUser?.token;
         const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/leave-types`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -155,8 +155,8 @@ const token = currentUser?.token;
     // ดึงข้อมูลตำแหน่ง (position) จาก API
     const fetchPositions = async () => {
       try {
-       const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
+        const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+        const token = currentUser?.token;
         const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/positions`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -176,7 +176,7 @@ const token = currentUser?.token;
     const fetchAdmins = async () => {
       try {
         const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
+        const token = currentUser?.token;
         const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admins`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -247,7 +247,7 @@ const token = currentUser?.token;
       }
       // ส่ง API
       const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
+      const token = currentUser?.token;
       let response, data;
       if (mode === 'edit' && initialData?.id) {
         // PUT สำหรับอัปเดตใบลา
@@ -454,7 +454,7 @@ const token = currentUser?.token;
         return;
       }
     }
-    
+
     if (durationType === "day" && !endDate) {
       toast({
         title: t('leave.selectEndDate'),
@@ -547,7 +547,7 @@ const token = currentUser?.token;
 
   return (
     <div className="max-w-2xl mx-auto my-4 md:my-8 animate-fade-in px-4">
-      <div className="glass shadow-2xl rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 border border-blue-100 dark:border-gray-800">
+      <div className="glass shadow-2xl rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 border border-blue-100 dark:border-gray-700 dark:bg-gray-900/80">
         <div className="flex items-center gap-3 mb-8">
           <ClipboardList className="w-7 h-7 text-blue-600 dark:text-blue-400" />
           <h2 className="text-2xl md:text-3xl font-bold gradient-text drop-shadow">{t('leave.leaveRequestForm')}</h2>
@@ -560,11 +560,10 @@ const token = currentUser?.token;
               <span className="font-semibold text-lg text-gray-800 dark:text-gray-100">{t('leave.leaveType')}</span>
             </div>
             <Select value={leaveType} onValueChange={handleLeaveTypeChange}>
-              <SelectTrigger className={`h-12 rounded-xl border-2 transition-all ${
-                errors.leaveType 
-                  ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+              <SelectTrigger className={`h-12 rounded-xl border-2 transition-all ${errors.leaveType
+                  ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                   : 'focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20'
-              }`}>
+                }`}>
                 <SelectValue placeholder={t('leave.selectLeaveType')} />
               </SelectTrigger>
               <SelectContent>
@@ -573,12 +572,12 @@ const token = currentUser?.token;
                   .map((type) => (
                     <SelectItem key={type.id} value={type.id}>{i18n.language.startsWith('th') ? type.leave_type_th : type.leave_type_en}</SelectItem>
                   ))}
-                              </SelectContent>
-              </Select>
-              {errors.leaveType && (
-                <p className="mt-1 text-sm text-red-600">{errors.leaveType}</p>
-              )}
-            </div>
+              </SelectContent>
+            </Select>
+            {errors.leaveType && (
+              <p className="mt-1 text-sm text-red-600">{errors.leaveType}</p>
+            )}
+          </div>
 
           {/* เงื่อนไข: แสดงฟิลด์อื่นๆ เฉพาะเมื่อเลือกประเภทการลาแล้ว */}
           {leaveType && (
@@ -590,11 +589,10 @@ const token = currentUser?.token;
                   <span className="font-semibold text-lg text-gray-800 dark:text-gray-100">{t('leave.durationType')}</span>
                 </div>
                 <Select value={durationType} onValueChange={handleDurationTypeChange}>
-                  <SelectTrigger className={`h-12 rounded-xl border-2 transition-all ${
-                    errors.durationType 
-                      ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                  <SelectTrigger className={`h-12 rounded-xl border-2 transition-all ${errors.durationType
+                      ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                       : 'focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20'
-                  }`}>
+                    }`}>
                     <SelectValue placeholder={t('leave.selectDurationType')} />
                   </SelectTrigger>
                   <SelectContent>
@@ -637,7 +635,7 @@ const token = currentUser?.token;
                         const notice = getLeaveNotice(startDate, undefined, t);
                         // แสดงเฉพาะเมื่อเป็นลาย้อนหลัง (backdated) เท่านั้น
                         if (!notice || notice.type !== 'backdated') return null;
-                        
+
                         return (
                           <div className={`mt-2 p-3 border rounded-lg ${notice.className}`}>
                             <div className="flex items-center gap-2">
@@ -676,11 +674,10 @@ const token = currentUser?.token;
                           setLeaveDate(date);
                         }}
                         placeholder={t('leave.selectLeaveDate')}
-                        className={`h-12 rounded-xl border-2 transition-all ${
-                          errors.leaveDate 
-                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                        className={`h-12 rounded-xl border-2 transition-all ${errors.leaveDate
+                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                             : 'focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
-                        }`}
+                          }`}
                       />
                       {errors.leaveDate && (
                         <p className="mt-1 text-sm text-red-600">{errors.leaveDate}</p>
@@ -707,11 +704,10 @@ const token = currentUser?.token;
                           onChange={(e) => setStartTime(e.target.value)}
                           min={getTimeConstraints().min}
                           max={getTimeConstraints().max}
-                          className={`w-full h-12 rounded-xl border-2 transition-all ${
-                            errors.startTime 
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          className={`w-full h-12 rounded-xl border-2 transition-all ${errors.startTime
+                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                               : 'focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                          }`}
+                            }`}
                         />
                         {errors.startTime && (
                           <p className="mt-1 text-sm text-red-600">{errors.startTime}</p>
@@ -734,11 +730,10 @@ const token = currentUser?.token;
                           onChange={(e) => setEndTime(e.target.value)}
                           min={getTimeConstraints().min}
                           max={getTimeConstraints().max}
-                          className={`w-full h-12 rounded-xl border-2 transition-all ${
-                            errors.endTime 
-                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                          className={`w-full h-12 rounded-xl border-2 transition-all ${errors.endTime
+                              ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                               : 'focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
-                          }`}
+                            }`}
                         />
                         {errors.endTime && (
                           <p className="mt-1 text-sm text-red-600">{errors.endTime}</p>
@@ -758,11 +753,10 @@ const token = currentUser?.token;
                       placeholder={t('leave.reasonPlaceholder')}
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
-                      className={`min-h-[100px] resize-none rounded-xl border-2 transition-all break-all overflow-wrap-anywhere whitespace-pre-wrap ${
-                        errors.reason 
-                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                      className={`min-h-[100px] resize-none rounded-xl border-2 transition-all break-all overflow-wrap-anywhere whitespace-pre-wrap ${errors.reason
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                           : 'focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20'
-                      }`}
+                        }`}
                     />
                     {errors.reason && (
                       <p className="mt-1 text-sm text-red-600">{errors.reason}</p>
@@ -778,11 +772,10 @@ const token = currentUser?.token;
                     <Input
                       id="contact"
                       placeholder={t('leave.contactPlaceholder')}
-                      className={`w-full h-12 rounded-xl border-2 transition-all ${
-                        errors.contact 
-                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+                      className={`w-full h-12 rounded-xl border-2 transition-all ${errors.contact
+                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                           : 'focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                      }`}
+                        }`}
                       value={contact}
                       onChange={e => setContact(e.target.value)}
                     />
@@ -817,17 +810,17 @@ const token = currentUser?.token;
 
                   {/* Section: ปุ่ม */}
                   <div className="flex flex-col sm:flex-row gap-3 pt-6">
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="flex-1 gradient-bg text-white font-semibold text-base sm:text-lg h-12 rounded-xl shadow-lg hover:scale-105 transition-transform duration-200"
                       size="lg"
                     >
                       <Send className="w-5 h-5 mr-2" />
                       {t('leave.submitLeave')}
                     </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
+                    <Button
+                      type="button"
+                      variant="outline"
                       onClick={() => { navigate("/"); }}
                       size="lg"
                       className="flex-1 h-12 rounded-xl border-2 hover:bg-gray-50 dark:hover:bg-gray-800 text-base sm:text-lg"
@@ -851,7 +844,7 @@ const token = currentUser?.token;
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelLeaveType')}</span><span className="font-medium">{(leaveTypes.find(l=>l.id===leaveType)?.[i18n.language.startsWith('th') ? 'leave_type_th':'leave_type_en']) || '-'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelLeaveType')}</span><span className="font-medium">{(leaveTypes.find(l => l.id === leaveType)?.[i18n.language.startsWith('th') ? 'leave_type_th' : 'leave_type_en']) || '-'}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelMode')}</span><span className="font-medium">{durationType === 'hour' ? t('leave.hourly') : t('leave.fullDay')}</span></div>
               {durationType === 'hour' ? (
                 <>
@@ -859,7 +852,7 @@ const token = currentUser?.token;
                   <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelTime')}</span><span className="font-medium">{startTime || '-'} - {endTime || '-'}</span></div>
                 </>
               ) : (
-                <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelDateRange')}</span><span className="font-medium">{startDate ? format(startDate,'dd/MM/yyyy') : '-'} → {endDate ? format(endDate,'dd/MM/yyyy') : '-'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelDateRange')}</span><span className="font-medium">{startDate ? format(startDate, 'dd/MM/yyyy') : '-'} → {endDate ? format(endDate, 'dd/MM/yyyy') : '-'}</span></div>
               )}
               <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelReason')}</span><span className="font-medium break-all text-right max-w-[60%]">{reason || '-'}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">{t('leave.confirm.labelContact')}</span><span className="font-medium break-all text-right max-w-[60%]">{contact || '-'}</span></div>
@@ -876,7 +869,7 @@ const token = currentUser?.token;
                         <button
                           key={idx}
                           type="button"
-                          onClick={() => { setPreviewUrl(url); setPreviewName(file?.name || `attachment-${idx+1}`); setPreviewType(mime); setPreviewOpen(true); }}
+                          onClick={() => { setPreviewUrl(url); setPreviewName(file?.name || `attachment-${idx + 1}`); setPreviewType(mime); setPreviewOpen(true); }}
                           className="block focus:outline-none group"
                           aria-label={`preview-attachment-${idx}`}
                           title={file?.name}
@@ -896,7 +889,7 @@ const token = currentUser?.token;
               )}
             </div>
             {/* Image Preview Dialog */}
-            <Dialog open={previewOpen} onOpenChange={(o)=>{ if(!o){ if(previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setPreviewName(null); setPreviewType(null);} setPreviewOpen(o); }}>
+            <Dialog open={previewOpen} onOpenChange={(o) => { if (!o) { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setPreviewName(null); setPreviewType(null); } setPreviewOpen(o); }}>
               <DialogContent className="sm:max-w-3xl">
                 <DialogHeader>
                   <DialogTitle>{previewName || t('leave.confirm.labelAttachments')}</DialogTitle>
@@ -919,13 +912,13 @@ const token = currentUser?.token;
                   </div>
                 )}
                 <DialogFooter>
-                  <Button variant="outline" onClick={()=>setPreviewOpen(false)}>{t('common.close')}</Button>
+                  <Button variant="outline" onClick={() => setPreviewOpen(false)}>{t('common.close')}</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
             <DialogFooter className="gap-2">
-              <Button variant="outline" onClick={()=>setConfirmOpen(false)}>{t('common.cancel')}</Button>
-              <Button onClick={async ()=>{ if (readyToSubmit){ setConfirmOpen(false); await submitToApi(); } }} className="gradient-bg text-white">
+              <Button variant="outline" onClick={() => setConfirmOpen(false)}>{t('common.cancel')}</Button>
+              <Button onClick={async () => { if (readyToSubmit) { setConfirmOpen(false); await submitToApi(); } }} className="gradient-bg text-white">
                 {t('common.confirm')}
               </Button>
             </DialogFooter>

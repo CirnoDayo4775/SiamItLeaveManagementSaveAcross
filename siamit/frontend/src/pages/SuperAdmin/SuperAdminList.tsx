@@ -300,7 +300,7 @@ const SuperAdminList: React.FC = () => {
   const currentConfig = getTabConfig(activeTab);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       {/* Enhanced Hero Section with Wave */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -318,35 +318,35 @@ const SuperAdminList: React.FC = () => {
 
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
-          <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
+          <SidebarTrigger className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm" />
         </div>
 
-        <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-20 animate-slide-down">
+        <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-12 animate-slide-down">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-xl opacity-30 animate-pulse-slow"></div>
             <img
               src="/lovable-uploads/siamit.png"
               alt="Logo"
-              className="relative w-20 h-20 md:w-28 md:h-28 rounded-full bg-white/90 shadow-2xl border-4 border-white mb-4 md:mb-6 hover:scale-110 transition-all duration-500 hover:shadow-3xl"
+              className="relative w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-2xl border-4 border-white dark:border-gray-700 mb-3 md:mb-4 hover:scale-110 transition-all duration-500 hover:shadow-3xl"
             />
           </div>
-          <h2 className="text-3xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 drop-shadow mb-2 md:mb-3 flex items-center gap-2 md:gap-3 animate-fade-in-up text-center px-4">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 dark:from-indigo-200 dark:via-purple-200 dark:to-indigo-200 drop-shadow mb-1 md:mb-2 flex items-center gap-2 md:gap-3 animate-fade-in-up text-center px-4">
             {t('admin.createUser')}
           </h2>
-          <p className="text-base md:text-2xl text-blue-900/80 mb-2 font-medium text-center max-w-3xl animate-fade-in-up-delay px-4">
+          <p className="text-sm md:text-lg text-blue-900/80 dark:text-gray-300 mb-2 font-medium text-center max-w-3xl animate-fade-in-up-delay px-4">
             {t('main.onlineLeaveSystemCompany', 'Siam IT Leave Management System')}
           </p>
           <div className="flex items-center gap-2 text-blue-700/70 animate-fade-in-up-delay">
             <Info className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="text-xs md:text-sm">{t('admin.selectUserType')}</span>
+            <span className="text-xs md:text-sm dark:text-gray-400">{t('admin.selectUserType')}</span>
           </div>
         </div>
       </div>
 
-      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 pb-8 animate-fade-in-up-slow">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 pb-8 animate-fade-in-up-slow">
         {/* Enhanced Role Selection Tabs */}
         <div className="mb-6 md:mb-8 animate-fade-in-up-delay-1">
-          <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-3 flex flex-col md:flex-row gap-3 border border-white/20">
+          <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-3xl shadow-2xl p-2 md:p-3 flex flex-col md:flex-row gap-2 md:gap-3 border border-white/20 dark:border-gray-700">
             {TABS.map((tab) => {
               const config = getTabConfig(tab);
               const IconComponent = config.icon;
@@ -356,16 +356,16 @@ const SuperAdminList: React.FC = () => {
                 <button
                   key={tab}
                   onClick={() => handleTabChange(tab)}
-                  className={`flex-1 flex items-center justify-center gap-3 md:gap-4 py-4 px-6 md:py-6 md:px-8 rounded-2xl transition-all duration-500 transform hover:scale-105 relative overflow-hidden ${isActive
-                      ? `bg-gradient-to-r ${config.gradient} ${config.activeTextColor}  shadow-lg`
-                      : `${config.bgColor} ${config.textColor} ${config.hoverColor} ${config.borderColor} border hover:shadow-lg`
+                  className={`flex-1 flex items-center justify-center gap-2 md:gap-3 py-3 px-4 md:py-4 md:px-6 rounded-2xl transition-all duration-500 transform hover:scale-105 relative overflow-hidden ${isActive
+                    ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg ring-2 ring-offset-2 ring-blue-400 dark:ring-offset-gray-900`
+                    : `bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 hover:shadow-md`
                     }`}
                 >
                   {isActive && (
                     <div className="absolute inset-0 bg-white/10 animate-pulse-slow"></div>
                   )}
                   <IconComponent className={`w-5 h-5 md:w-6 md:h-6 transition-all duration-300 ${isActive ? 'animate-bounce' : ''}`} />
-                  <span className="font-bold text-base md:text-lg">{config.title}</span>
+                  <span className="font-bold text-sm md:text-base">{config.title}</span>
                 </button>
               );
             })}
@@ -373,13 +373,13 @@ const SuperAdminList: React.FC = () => {
         </div>
 
         {/* Enhanced Form Container */}
-        <div className={`bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-5 md:p-10 animate-slide-up hover:shadow-3xl transition-all duration-500 hover:scale-[1.01] border-2 ${currentConfig.borderColor} relative overflow-hidden max-w-3xl mx-auto`}>
+        <div className={`bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-3xl shadow-2xl p-4 md:p-6 animate-slide-up hover:shadow-3xl transition-all duration-500 hover:scale-[1.01] border-2 ${currentConfig.borderColor} dark:border-gray-700 relative overflow-hidden max-w-3xl xl:max-w-full mx-auto`}>
           {/* Section: ข้อมูลส่วนตัว */}
-          <h4 className="text-lg md:text-xl font-bold mb-4 text-blue-700">{t('admin.personalInfo')}</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-6 md:mb-8">
+          <h4 className="text-lg md:text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">{t('admin.personalInfo')}</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
             {/* Full Name */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-3">
-              <Label htmlFor="full_name" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="full_name" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <User className="w-4 h-4 md:w-5 md:h-5" />
                 {t('auth.fullName')}
                 <span className="text-red-500">*</span>
@@ -392,7 +392,7 @@ const SuperAdminList: React.FC = () => {
                   placeholder={t('admin.enterFullName')}
                   value={form.full_name}
                   onChange={handleChange}
-                  className={`pl-6 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  className={`pl-6 py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100 dark:placeholder-gray-500`}
                   required
                   autoComplete="name"
                 />
@@ -404,7 +404,7 @@ const SuperAdminList: React.FC = () => {
 
             {/* Email */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-4">
-              <Label htmlFor="email" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="email" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Mail className="w-4 h-4 md:w-5 md:h-5" />
                 {t('auth.email')}
                 <span className="text-red-500">*</span>
@@ -417,7 +417,7 @@ const SuperAdminList: React.FC = () => {
                   placeholder={t('admin.enterEmail')}
                   value={form.email}
                   onChange={handleChange}
-                  className={`pl-6 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  className={`pl-6 py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100 dark:placeholder-gray-500`}
                   required
                   autoComplete="email"
                 />
@@ -428,7 +428,7 @@ const SuperAdminList: React.FC = () => {
             </div>
             {/* Phone Number */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-4">
-              <Label htmlFor="phone_number" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="phone_number" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Phone className="w-4 h-4 md:w-5 md:h-5" />
                 {t('admin.phoneNumber')}
                 <span className="text-red-500">*</span>
@@ -441,7 +441,7 @@ const SuperAdminList: React.FC = () => {
                   placeholder={t('admin.enterPhoneNumber')}
                   value={form.phone_number}
                   onChange={handleChange}
-                  className={`pl-6 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  className={`pl-6 py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100 dark:placeholder-gray-500`}
                   required
                   autoComplete="tel"
                 />
@@ -450,18 +450,18 @@ const SuperAdminList: React.FC = () => {
 
             {/* Gender */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
-              <Label htmlFor="gender" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="gender" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <User className="w-4 h-4 md:w-5 md:h-5" />
                 {t('admin.gender')}
               </Label>
               <Select value={form.gender} onValueChange={value => setForm(f => ({ ...f, gender: value }))}>
-                <SelectTrigger id="gender" className={`rounded-xl shadow-sm text-base md:text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-3 md:py-4`}>
+                <SelectTrigger id="gender" className={`rounded-xl shadow-sm text-sm md:text-base transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm py-2.5 md:py-3 dark:text-gray-100`}>
                   <SelectValue placeholder={t('admin.selectGender')} />
                 </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
+                <SelectContent className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md border-2 border-gray-200 dark:border-gray-700 rounded-xl dark:text-gray-100">
                   {genders && genders.length > 0 ? (
                     genders.map((g: any) => (
-                      <SelectItem key={g.id || g.value || g.gender_name_th} value={g.gender_name_th || g.value} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
+                      <SelectItem key={g.id || g.value || g.gender_name_th} value={g.gender_name_th || g.value} className="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-200 rounded-lg">
                         {lang === 'th' ? (g.gender_name_th || g.label || g.value) : (g.gender_name_en || g.label || g.value)}
                       </SelectItem>
                     ))
@@ -478,7 +478,7 @@ const SuperAdminList: React.FC = () => {
 
             {/* Date of Birth */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-6">
-              <Label htmlFor="date_of_birth" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="date_of_birth" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Calendar className="w-4 h-4 md:w-5 md:h-5" />
                 {t('admin.dateOfBirth')}
                 <span className="text-red-500">*</span>
@@ -487,28 +487,28 @@ const SuperAdminList: React.FC = () => {
                 date={form.date_of_birth}
                 onDateChange={(date) => setForm(f => ({ ...f, date_of_birth: date }))}
                 placeholder={t('admin.enterDateOfBirth')}
-                className={`py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                className={`py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100`}
               />
             </div>
           </div>
-          <hr className="my-6" />
+          <hr className="my-6 border-gray-200 dark:border-gray-700" />
           {/* Section: ข้อมูลการทำงาน */}
-          <h4 className="text-lg md:text-xl font-bold mb-4 text-purple-700">{t('admin.workInfo')}</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-6 md:mb-8">
+          <h4 className="text-lg md:text-xl font-bold mb-4 text-purple-700 dark:text-purple-300">{t('admin.workInfo')}</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
             {/* Department */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-6">
-              <Label htmlFor="department" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="department" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Building className="w-4 h-4 md:w-5 md:h-5" />
                 {t('auth.department')}
                 <span className="text-red-500">*</span>
               </Label>
               <Select value={form.department} onValueChange={value => setForm(f => ({ ...f, department: value }))}>
-                <SelectTrigger id="department" className={`rounded-xl shadow-sm text-base md:text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-3 md:py-4`}>
+                <SelectTrigger id="department" className={`rounded-xl shadow-sm text-sm md:text-base transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm py-2.5 md:py-3 dark:text-gray-100`}>
                   <SelectValue placeholder={t('admin.selectDepartment')} />
                 </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
+                <SelectContent className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md border-2 border-gray-200 dark:border-gray-700 rounded-xl dark:text-gray-100">
                   {departments.map((dep) => (
-                    <SelectItem key={dep.id} value={dep.id} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
+                    <SelectItem key={dep.id} value={dep.id} className="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-200 rounded-lg">
                       {lang === 'th' ? dep.department_name_th : dep.department_name_en}
                     </SelectItem>
                   ))}
@@ -518,18 +518,18 @@ const SuperAdminList: React.FC = () => {
 
             {/* Position */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-5">
-              <Label htmlFor="position" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="position" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Building className="w-4 h-4 md:w-5 md:h-5" />
                 {t('auth.position')}
                 <span className="text-red-500">*</span>
               </Label>
               <Select value={form.position} onValueChange={handlePositionChange}>
-                <SelectTrigger id="position" className={`rounded-xl shadow-sm text-base md:text-lg transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm py-3 md:py-4`}>
+                <SelectTrigger id="position" className={`rounded-xl shadow-sm text-sm md:text-base transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm py-2.5 md:py-3 dark:text-gray-100`}>
                   <SelectValue placeholder={t('admin.selectPosition')} />
                 </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 rounded-xl">
+                <SelectContent className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md border-2 border-gray-200 dark:border-gray-700 rounded-xl dark:text-gray-100">
                   {positions.map((pos) => (
-                    <SelectItem key={pos.id} value={pos.id} className="hover:bg-indigo-50 transition-colors duration-200 rounded-lg">
+                    <SelectItem key={pos.id} value={pos.id} className="hover:bg-indigo-50 dark:hover:bg-gray-700 transition-colors duration-200 rounded-lg">
                       {lang === 'th' ? pos.position_name_th : pos.position_name_en}
                     </SelectItem>
                   ))}
@@ -539,7 +539,7 @@ const SuperAdminList: React.FC = () => {
 
             {/* Start Work */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
-              <Label htmlFor="start_work" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="start_work" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Calendar className="w-4 h-4 md:w-5 md:h-5" />
                 {t('admin.startWork')}
                 <span className="text-red-500">*</span>
@@ -548,13 +548,13 @@ const SuperAdminList: React.FC = () => {
                 date={form.start_work}
                 onDateChange={(date) => setForm(f => ({ ...f, start_work: date }))}
                 placeholder={t('admin.enterStartWork')}
-                className={`py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                className={`py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100`}
               />
             </div>
             {/* End Work (conditionally rendered) */}
             {selectedPositionRequireEnddate && (
               <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
-                <Label htmlFor="end_work" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+                <Label htmlFor="end_work" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                   <Calendar className="w-4 h-4 md:w-5 md:h-5" />
                   {t('admin.endWork')}
                   <span className="text-red-500">*</span>
@@ -563,18 +563,18 @@ const SuperAdminList: React.FC = () => {
                   date={form.end_work}
                   onDateChange={(date) => setForm(f => ({ ...f, end_work: date }))}
                   placeholder={t('admin.enterEndWork')}
-                  className={`py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  className={`py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100`}
                 />
               </div>
             )}
           </div>
-          <hr className="my-6" />
+          <hr className="my-6 border-gray-200 dark:border-gray-700" />
           {/* Section: ข้อมูลเข้าสู่ระบบ */}
-          <h4 className="text-lg md:text-xl font-bold mb-4 text-indigo-700">{t('admin.loginInfo')}</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-6 md:mb-8">
+          <h4 className="text-lg md:text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">{t('admin.loginInfo')}</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
             {/* Password */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-7">
-              <Label htmlFor="password" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="password" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Lock className="w-4 h-4 md:w-5 md:h-5" />
                 {t('auth.password')}
                 <span className="text-red-500">*</span>
@@ -587,14 +587,14 @@ const SuperAdminList: React.FC = () => {
                   placeholder="••••••••"
                   value={form.password}
                   onChange={handleChange}
-                  className={`pl-6 pr-12 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  className={`pl-6 pr-12 py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100 dark:placeholder-gray-500`}
                   required
                   autoComplete="new-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} hover:scale-110 transition-all duration-300`}
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} dark:text-gray-400 hover:scale-110 transition-all duration-300`}
                 >
                   {showPassword ? <EyeOff /> : <Eye />}
                 </button>
@@ -610,12 +610,12 @@ const SuperAdminList: React.FC = () => {
                       <div
                         key={level}
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${passwordStrength === 'weak' && level === 1
-                            ? 'bg-red-500'
-                            : passwordStrength === 'medium' && level <= 2
-                              ? 'bg-yellow-500'
-                              : passwordStrength === 'strong' && level <= 3
-                                ? 'bg-green-500'
-                                : 'bg-gray-300'
+                          ? 'bg-red-500'
+                          : passwordStrength === 'medium' && level <= 2
+                            ? 'bg-yellow-500'
+                            : passwordStrength === 'strong' && level <= 3
+                              ? 'bg-green-500'
+                              : 'bg-gray-300'
                           }`}
                       />
                     ))}
@@ -626,7 +626,7 @@ const SuperAdminList: React.FC = () => {
 
             {/* Confirm Password */}
             <div className="space-y-2 md:space-y-3 animate-fade-in-up-delay-8">
-              <Label htmlFor="confirmPassword" className={`mb-2 md:mb-3 block ${currentConfig.textColor} font-bold text-base md:text-lg transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
+              <Label htmlFor="confirmPassword" className={`mb-2 md:mb-3 block ${currentConfig.textColor} dark:text-gray-300 font-bold text-sm md:text-base transition-all duration-300 hover:text-opacity-80 flex items-center gap-2`}>
                 <Lock className="w-4 h-4 md:w-5 md:h-5" />
                 {t('auth.confirmPassword')}
                 <span className="text-red-500">*</span>
@@ -639,14 +639,14 @@ const SuperAdminList: React.FC = () => {
                   placeholder="••••••••"
                   value={form.confirmPassword}
                   onChange={handleChange}
-                  className={`pl-6 pr-12 py-3 md:py-4 text-base md:text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} border-2 bg-white/80 backdrop-blur-sm`}
+                  className={`pl-6 pr-12 py-2.5 md:py-3 text-sm md:text-base rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 ${currentConfig.borderColor} dark:border-gray-600 border-2 bg-white/80 dark:bg-gray-800 backdrop-blur-sm dark:text-gray-100 dark:placeholder-gray-500`}
                   required
                   autoComplete="new-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} hover:scale-110 transition-all duration-300`}
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 ${currentConfig.textColor} dark:text-gray-400 hover:scale-110 transition-all duration-300`}
                 >
                   {showConfirmPassword ? <EyeOff /> : <Eye />}
                 </button>
@@ -673,7 +673,7 @@ const SuperAdminList: React.FC = () => {
           <div className="flex justify-center mt-6 md:mt-8 animate-fade-in-up-delay-9">
             <Button
               type="button"
-              className={`w-full md:w-1/2 py-4 md:py-6 text-lg md:text-xl font-bold rounded-2xl shadow-2xl bg-gradient-to-r ${currentConfig.gradient} hover:shadow-3xl text-white transition-all duration-500 hover:scale-105 active:scale-95 transform relative overflow-hidden group`}
+              className={`w-full md:w-1/2 py-3 md:py-4 text-base md:text-lg font-bold rounded-2xl shadow-2xl bg-gradient-to-r ${currentConfig.gradient} hover:shadow-3xl text-white transition-all duration-500 hover:scale-105 active:scale-95 transform relative overflow-hidden group`}
               disabled={loading}
               onClick={() => setShowConfirmModal(true)}
             >
@@ -695,11 +695,11 @@ const SuperAdminList: React.FC = () => {
           </div>
           {/* Confirm Create User Dialog */}
           <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-            <DialogContent>
-              <DialogTitle>{t('admin.confirmCreateUserTitle')}</DialogTitle>
-              <div>{t('admin.confirmCreateUserMessage')}</div>
+            <DialogContent className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700">
+              <DialogTitle className="dark:text-gray-100">{t('admin.confirmCreateUserTitle')}</DialogTitle>
+              <div className="dark:text-gray-300">{t('admin.confirmCreateUserMessage')}</div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setShowConfirmModal(false)}>
+                <Button variant="outline" onClick={() => setShowConfirmModal(false)} className="dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
                   {t('admin.cancel')}
                 </Button>
                 <Button
@@ -718,18 +718,18 @@ const SuperAdminList: React.FC = () => {
       </div>
 
       {/* Enhanced Footer */}
-      <footer className="w-full mt-10 md:mt-20 py-8 md:py-12 bg-gradient-to-r from-blue-50 via-indigo-50 to-white text-center text-gray-500 text-base font-medium shadow-inner flex flex-col items-center gap-3 md:gap-4 animate-fade-in-up-slow">
+      <footer className="w-full mt-10 md:mt-16 py-6 md:py-8 bg-gradient-to-r from-blue-50 via-indigo-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-center text-gray-500 dark:text-gray-400 text-base font-medium shadow-inner flex flex-col items-center gap-2 md:gap-3 animate-fade-in-up-slow">
         <div className="flex items-center gap-3">
           <img
             src="/lovable-uploads/siamit.png"
             alt="Logo"
             className="w-10 h-10 md:w-12 md:h-12 rounded-full hover:scale-110 transition-all duration-300"
           />
-          <span className="text-base md:text-lg font-semibold text-gray-700">
+          <span className="text-sm md:text-base font-semibold text-gray-700 dark:text-gray-300">
             {t('footer.systemName')}
           </span>
         </div>
-        <span className="transition-all duration-300 hover:text-indigo-600 text-xs md:text-sm">
+        <span className="transition-all duration-300 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs md:text-sm">
           {t('footer.copyright')}
         </span>
       </footer>

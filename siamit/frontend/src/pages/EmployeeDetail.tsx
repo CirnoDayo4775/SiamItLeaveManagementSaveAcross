@@ -95,7 +95,7 @@ const EmployeeDetail = () => {
 
   // --- สร้างรายการปี (ย้อนหลัง 3 ปี) ---
   const currentYear = new Date().getFullYear();
-  const yearOptions = [currentYear, currentYear-1, currentYear-2];
+  const yearOptions = [currentYear, currentYear - 1, currentYear - 2];
 
   // --- กรอง leaveHistory ตาม filter ---
   // ลบ useMemo เดิมออก ไม่ต้อง filter ฝั่ง frontend แล้ว
@@ -116,12 +116,12 @@ const EmployeeDetail = () => {
     params.push(`page=${leavePage}`);
     params.push(`limit=6`);
     const query = params.length > 0 ? `?${params.join("&")}` : "";
-    
+
     // เพิ่ม debug log
     console.log('🔍 Fetching leave history with params:', params);
     console.log('🔍 filterBackdated value:', filterBackdated);
     console.log('🔍 Full URL:', `${API_BASE_URL}${apiEndpoints.employees.leaveHistory(id, query)}`);
-    
+
     try {
       const data = await apiService.get(apiEndpoints.employees.leaveHistory(id, query));
       // เพิ่ม log เพื่อตรวจสอบ response
@@ -154,7 +154,7 @@ const EmployeeDetail = () => {
     console.log('🔄 filterBackdated:', filterBackdated);
     console.log('🔄 filterType:', filterType);
     console.log('🔄 filterStatus:', filterStatus);
-    
+
     fetchLeaveHistory();
     // eslint-disable-next-line
   }, [id, t, filterType, filterMonth, filterYear, filterStatus, filterBackdated, leavePage]);
@@ -252,27 +252,27 @@ const EmployeeDetail = () => {
       gender: employee?.gender || '',
       birthdate: employee?.dob || '', // <-- เปลี่ยนจาก birthdate เป็น dob
       phone: employee?.phone_number || '', // <-- เปลี่ยนจาก phone เป็น phone_number
-		startWorkDate: employee?.start_work || '', // <-- ใช้คอลัมน์จริงจาก DB
-		internStartDate: employee?.start_work || '', // Intern ใช้ start_work เป็นวันเริ่มฝึกงาน
-		internEndDate: employee?.end_work || '' // Intern ใช้ end_work เป็นวันสิ้นสุดฝึกงาน
+      startWorkDate: employee?.start_work || '', // <-- ใช้คอลัมน์จริงจาก DB
+      internStartDate: employee?.start_work || '', // Intern ใช้ start_work เป็นวันเริ่มฝึกงาน
+      internEndDate: employee?.end_work || '' // Intern ใช้ end_work เป็นวันสิ้นสุดฝึกงาน
     });
     setIsEditing(true);
   };
 
-	const handleSave = async () => {
+  const handleSave = async () => {
     try {
-			const payload: any = {
-				name: editData.full_name,
-				position_id: editData.position, // id
-				department_id: editData.department, // id
-				email: editData.email,
-				gender: editData.gender,
-				birthdate: editData.birthdate,
-				phone: editData.phone,
-				// ถ้าเป็น Intern ให้ส่ง startWorkDate จาก internStartDate และแนบ endWorkDate ด้วย
-				startWorkDate: isInternPosition() ? editData.internStartDate : editData.startWorkDate,
-				...(isInternPosition() ? { endWorkDate: editData.internEndDate } : {}),
-			};
+      const payload: any = {
+        name: editData.full_name,
+        position_id: editData.position, // id
+        department_id: editData.department, // id
+        email: editData.email,
+        gender: editData.gender,
+        birthdate: editData.birthdate,
+        phone: editData.phone,
+        // ถ้าเป็น Intern ให้ส่ง startWorkDate จาก internStartDate และแนบ endWorkDate ด้วย
+        startWorkDate: isInternPosition() ? editData.internStartDate : editData.startWorkDate,
+        ...(isInternPosition() ? { endWorkDate: editData.internEndDate } : {}),
+      };
       if (editData.password && editData.password.trim() !== '') payload.password = editData.password;
       const data = await apiService.put(apiEndpoints.employees.detail(id), payload);
       if (data.success) {
@@ -312,7 +312,7 @@ const EmployeeDetail = () => {
 
   const handleViewLeaveDetails = async (leave) => {
     console.log('View Details clicked. leave:', leave, 'leave.id:', leave.id);
-    
+
     // First try to use the existing leave data
     const leaveData = leaveHistory.find(l => l.id === leave.id);
     if (leaveData) {
@@ -393,7 +393,7 @@ const EmployeeDetail = () => {
     if (!id) return;
     setLoading(true);
     setError(null);
-            apiService.get(apiEndpoints.employees.detail(id))
+    apiService.get(apiEndpoints.employees.detail(id))
       .then(data => {
         if (data.success) {
           setEmployee(data.data);
@@ -424,7 +424,7 @@ const EmployeeDetail = () => {
       : found.position_name_en || found.position_name;
   };
 
-  
+
   const getDepartmentLabel = (departmentIdOrName: string) => {
     if (!departmentIdOrName || departmentIdOrName === "not_specified") {
       return t("departments.noDepartment");
@@ -467,7 +467,7 @@ const EmployeeDetail = () => {
   };
 
   if (loading) return <div>{t('common.loading')}</div>;
-  if (error) return <div>{error}</div>; 
+  if (error) return <div>{error}</div>;
   if (!employee) return <div>{t('employee.notFound')}</div>;
 
   return (
@@ -476,41 +476,41 @@ const EmployeeDetail = () => {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 w-[350px] h-[350px] rounded-full bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-100 opacity-30 blur-2xl animate-float-slow" />
         <div className="absolute bottom-0 right-0 w-[250px] h-[250px] rounded-full bg-gradient-to-tr from-purple-200 via-blue-100 to-indigo-100 opacity-20 blur-xl animate-float-slow2" />
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse-slow" style={{transform:'translate(-50%,-50%)'}} />
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse-slow" style={{ transform: 'translate(-50%,-50%)' }} />
       </div>
       {/* Topbar */}
-      <div className="border-b bg-white/80 backdrop-blur-sm z-10 relative shadow-lg">
-        <div className="flex h-16 items-center px-4 gap-4">
+      <div className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-10 relative shadow-lg">
+        <div className="flex h-14 items-center px-3 md:px-4 gap-2 md:gap-3">
           <SidebarTrigger />
           <button
             onClick={() => navigate(-1)}
-            className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm p-2 rounded-full transition-all duration-200"
+            className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm p-1.5 md:p-2 rounded-full transition-all duration-200"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
           </button>
           <div className="flex-1">
-            <h1 className="text-3xl font-extrabold text-blue-900 tracking-tight drop-shadow-lg animate-slide-in-left">{t('employee.details')}</h1>
-            <p className="text-sm text-blue-500 animate-slide-in-left delay-100">{employee.name}</p>
+            <h1 className="text-xl md:text-2xl font-extrabold text-blue-900 dark:text-blue-100 tracking-tight drop-shadow-lg animate-slide-in-left">{t('employee.details')}</h1>
+            <p className="text-xs md:text-sm text-blue-500 dark:text-blue-300 animate-slide-in-left delay-100">{employee.name}</p>
           </div>
         </div>
       </div>
-      <div className="p-6 animate-fade-in">
-        <div className="max-w-6xl mx-auto space-y-6">
+      <div className="p-4 md:p-6 animate-fade-in">
+        <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
           {/* Personal Info Card */}
           <Card className="glass shadow-2xl border-0 animate-fade-in-up">
-            <CardHeader className="bg-gradient-to-r from-blue-500 via-indigo-400 to-purple-400 text-white rounded-t-2xl p-5 shadow-lg">
-              <CardTitle className="flex items-center gap-3 text-2xl font-bold animate-slide-in-left">
-                <User className="h-6 w-6" />
+            <CardHeader className="bg-gradient-to-r from-blue-500 via-indigo-400 to-purple-400 text-white rounded-t-2xl p-4 md:p-5 shadow-lg">
+              <CardTitle className="flex items-center gap-2 md:gap-3 text-lg md:text-xl font-bold animate-slide-in-left">
+                <User className="h-5 w-5 md:h-6 md:w-6" />
                 {t('employee.personalInfo')}
               </CardTitle>
-              <CardDescription className="text-blue-100 text-sm animate-slide-in-left delay-100">
+              <CardDescription className="text-blue-100 text-xs md:text-sm animate-slide-in-left delay-100">
                 {t('employee.personalInfoDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="flex flex-col items-center p-8">
+              <div className="flex flex-col items-center p-4 md:p-6">
                 {/* Profile Picture - Centered with enhanced styling */}
-                <div className="relative w-36 h-36 mb-10">
+                <div className="relative w-24 h-24 md:w-32 md:h-32 mb-6 md:mb-8">
                   {employee.avatar ? (
                     <img
                       key={`avatar-${employee.id}-${avatarKey}`}
@@ -525,8 +525,8 @@ const EmployeeDetail = () => {
                       }}
                     />
                   ) : null}
-                  <div className={`w-full h-full rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 flex items-center justify-center text-blue-900 font-bold text-5xl shadow-2xl border-4 border-white ${employee.avatar ? 'hidden' : ''}`}>
-                    {employee.name ? employee.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase() : '?'}
+                  <div className={`w-full h-full rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 flex items-center justify-center text-blue-900 font-bold text-3xl md:text-4xl shadow-2xl border-4 border-white ${employee.avatar ? 'hidden' : ''}`}>
+                    {employee.name ? employee.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '?'}
                   </div>
                   {isEditing && (
                     <button
@@ -562,17 +562,17 @@ const EmployeeDetail = () => {
                     form.append('avatar', file);
                     const res = await apiService.post(apiEndpoints.employees.avatar(String(id)), form);
                     if (res?.success) {
-                      
+
                       // Update employee data with new avatar URL immediately
                       setEmployee((prev: any) => {
                         if (!prev) return prev;
                         return { ...prev, avatar: res.avatar_url };
                       });
-                      
+
                       // Force cache bust to ensure new image loads
                       setAvatarKey(prev => prev + 1);
                       setAvatarTimestamp(Date.now());
-                      
+
                       // Show success message
                       toast({
                         title: t('employee.avatarUpdateSuccess') || 'Avatar Updated',
@@ -589,7 +589,7 @@ const EmployeeDetail = () => {
                     setAvatarLocalGif(null);
                   }}
                 />
-                
+
                 {/* Information Grid - Enhanced 2 columns for better usability */}
                 <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl">
                   {/* Column 1: Personal Info */}
@@ -690,7 +690,7 @@ const EmployeeDetail = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   {/* Column 2: Contact & Actions */}
                   <div className="space-y-6 bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-2xl border border-indigo-100">
                     <h3 className="text-lg font-bold text-indigo-800 mb-6 flex items-center gap-2">
@@ -793,7 +793,7 @@ const EmployeeDetail = () => {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Action Buttons - Moved to bottom center */}
                 <div className="flex justify-center gap-3 mt-8">
                   {isEditing ? (
@@ -946,16 +946,16 @@ const EmployeeDetail = () => {
                           setFilterWarning(t('validation.selectYearWhenSelectMonth'));
                           return;
                         }
-                        
+
                         // ล้างข้อความแจ้งเตือน
                         setFilterWarning("");
-                        
+
                         // เพิ่ม debug log
                         console.log('🔘 Confirm button clicked');
                         console.log('🔘 pendingFilterBackdated:', pendingFilterBackdated);
                         console.log('🔘 pendingFilterType:', pendingFilterType);
                         console.log('🔘 pendingFilterStatus:', pendingFilterStatus);
-                        
+
                         setFilterType(pendingFilterType);
                         setFilterMonth(pendingFilterMonth);
                         setFilterYear(pendingFilterYear);
@@ -1005,13 +1005,13 @@ const EmployeeDetail = () => {
                   <TableBody>
                     {Array.isArray(leaveHistory) && leaveHistory.map((leave, idx) => {
 
-                      
+
                       return (
                         <TableRow key={leave.id} className="hover:bg-blue-50/60 group animate-fade-in-up border-b border-gray-100" style={{ animationDelay: `${idx * 60}ms` }}>
                           <TableCell className="font-medium text-blue-900 px-4 py-3">
                             <div className="flex items-center gap-2">
                               <span className="font-semibold text-sm whitespace-nowrap">
-                                {i18n.language.startsWith('th') 
+                                {i18n.language.startsWith('th')
                                   ? (leave.leaveTypeName_th || leave.leaveTypeName_en || getLeaveTypeLabel(leave.leaveType))
                                   : (leave.leaveTypeName_en || leave.leaveTypeName_th || getLeaveTypeLabel(leave.leaveType))
                                 }
@@ -1024,58 +1024,58 @@ const EmployeeDetail = () => {
                             </div>
                           </TableCell>
                           <TableCell className="text-blue-700 px-4 py-3">
-                          {(() => {
-                            if (leave.startDate && leave.endDate) {
-                              const start = new Date(leave.startDate);
-                              const end = new Date(leave.endDate);
-                              const isSameDay = start.toDateString() === end.toDateString();
-                              const locale = i18n.language.startsWith('th') ? th : undefined;
-                              if (isSameDay) {
+                            {(() => {
+                              if (leave.startDate && leave.endDate) {
+                                const start = new Date(leave.startDate);
+                                const end = new Date(leave.endDate);
+                                const isSameDay = start.toDateString() === end.toDateString();
+                                const locale = i18n.language.startsWith('th') ? th : undefined;
+                                if (isSameDay) {
                                   return <span className="font-medium text-sm whitespace-nowrap">{format(start, 'dd MMM yyyy', { locale })}</span>;
-                              } else {
+                                } else {
                                   return (
                                     <div className="flex flex-col gap-0.5">
                                       <span className="font-medium text-sm">{format(start, 'dd MMM', { locale })} -</span>
                                       <span className="font-medium text-sm">{format(end, 'dd MMM yyyy', { locale })}</span>
                                     </div>
                                   );
-                              }
-                            } else if (leave.startDate) {
-                              const start = new Date(leave.startDate);
-                              const locale = i18n.language.startsWith('th') ? th : undefined;
+                                }
+                              } else if (leave.startDate) {
+                                const start = new Date(leave.startDate);
+                                const locale = i18n.language.startsWith('th') ? th : undefined;
                                 return <span className="font-medium text-sm whitespace-nowrap">{format(start, 'dd MMM yyyy', { locale })}</span>;
-                            } else {
-                                return <span className="text-gray-400">-</span>;
-                            }
-                          })()}
-                        </TableCell>
-                          <TableCell className="text-blue-700 px-4 py-3">
-                          {(() => {
-                            if (leave.durationType === 'day') {
-                              const days = Math.floor(Number(leave.duration));
-                              const hours = Math.round((Number(leave.duration) - days) * 24);
-                              if (days > 0 && hours > 0) {
-                                  return <span className="font-medium text-sm whitespace-nowrap">{days} {t(days === 1 ? 'leave.day' : 'leave.days')} {hours} {t(hours === 1 ? 'leave.hour' : 'leave.hours')}</span>;
-                              } else if (days > 0) {
-                                  return <span className="font-medium text-sm whitespace-nowrap">{days} {t(days === 1 ? 'leave.day' : 'leave.days')}</span>;
-                              } else if (hours > 0) {
-                                  return <span className="font-medium text-sm whitespace-nowrap">{hours} {t(hours === 1 ? 'leave.hour' : 'leave.hours')}</span>;
                               } else {
-                                  return <span className="text-gray-400">-</span>;
+                                return <span className="text-gray-400">-</span>;
                               }
-                            } else if (leave.durationType === 'hour') {
+                            })()}
+                          </TableCell>
+                          <TableCell className="text-blue-700 px-4 py-3">
+                            {(() => {
+                              if (leave.durationType === 'day') {
+                                const days = Math.floor(Number(leave.duration));
+                                const hours = Math.round((Number(leave.duration) - days) * 24);
+                                if (days > 0 && hours > 0) {
+                                  return <span className="font-medium text-sm whitespace-nowrap">{days} {t(days === 1 ? 'leave.day' : 'leave.days')} {hours} {t(hours === 1 ? 'leave.hour' : 'leave.hours')}</span>;
+                                } else if (days > 0) {
+                                  return <span className="font-medium text-sm whitespace-nowrap">{days} {t(days === 1 ? 'leave.day' : 'leave.days')}</span>;
+                                } else if (hours > 0) {
+                                  return <span className="font-medium text-sm whitespace-nowrap">{hours} {t(hours === 1 ? 'leave.hour' : 'leave.hours')}</span>;
+                                } else {
+                                  return <span className="text-gray-400">-</span>;
+                                }
+                              } else if (leave.durationType === 'hour') {
                                 // ใช้ durationHours แทน duration เมื่อเป็นชั่วโมง
                                 const hours = Number(leave.durationHours || leave.duration);
                                 if (hours > 0) {
-                                    return <span className="font-medium text-sm whitespace-nowrap">{hours} {t(hours === 1 ? 'leave.hour' : 'leave.hours')}</span>;
+                                  return <span className="font-medium text-sm whitespace-nowrap">{hours} {t(hours === 1 ? 'leave.hour' : 'leave.hours')}</span>;
                                 } else {
-                                    return <span className="text-gray-400">-</span>;
+                                  return <span className="text-gray-400">-</span>;
                                 }
-                            } else {
+                              } else {
                                 return <span className="text-gray-400">-</span>;
-                            }
-                          })()}
-                        </TableCell>
+                              }
+                            })()}
+                          </TableCell>
                           <TableCell className="text-blue-700 px-4 py-3">
                             <div className="pr-2">
                               <div
@@ -1090,14 +1090,14 @@ const EmployeeDetail = () => {
                             </div>
                           </TableCell>
                           <TableCell className="px-4 py-3">
-                          <Badge className={
+                            <Badge className={
                               leave.status === 'approved' ? 'bg-green-100 text-green-800 border-green-200 text-xs px-2 py-0.5 whitespace-nowrap' :
-                              leave.status === 'pending' ? 'bg-yellow-100 text-yellow-700 border-yellow-200 text-xs px-2 py-0.5 whitespace-nowrap' :
-                              'bg-red-100 text-red-700 border-red-200 text-xs px-2 py-0.5 whitespace-nowrap'
-                          }>
-                            {leave.status === 'approved' ? t('leave.approved') : leave.status === 'pending' ? t('leave.pending') : t('leave.rejected')}
-                          </Badge>
-                        </TableCell>
+                                leave.status === 'pending' ? 'bg-yellow-100 text-yellow-700 border-yellow-200 text-xs px-2 py-0.5 whitespace-nowrap' :
+                                  'bg-red-100 text-red-700 border-red-200 text-xs px-2 py-0.5 whitespace-nowrap'
+                            }>
+                              {leave.status === 'approved' ? t('leave.approved') : leave.status === 'pending' ? t('leave.pending') : t('leave.rejected')}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-blue-700 px-4 py-3">
                             {leave.submittedDate ? (
                               (() => {
@@ -1111,34 +1111,34 @@ const EmployeeDetail = () => {
                             ) : (
                               <span className="text-gray-400">-</span>
                             )}
-                        </TableCell>
+                          </TableCell>
                           <TableCell className="text-center px-4 py-3">
                             <div className="flex justify-center gap-1.5">
-                          <Button
-                            size="sm"
+                              <Button
+                                size="sm"
                                 variant="secondary"
                                 className="rounded-lg px-3 py-1.5 font-medium bg-gradient-to-r from-blue-500 to-indigo-400 text-white shadow hover:scale-105 transition text-xs"
-                            onClick={() => handleViewLeaveDetails(leave)}
-                          >
+                                onClick={() => handleViewLeaveDetails(leave)}
+                              >
                                 <Eye className="w-3.5 h-3.5 mr-1" />
                                 {t('common.viewDetails')}
                               </Button>
 
                             </div>
-                        </TableCell>
-                      </TableRow>
-                      );
-                    })}
-                      {(!Array.isArray(leaveHistory) || leaveHistory.length === 0) && (
-                        <TableRow>
-                          <TableCell colSpan={7} className="text-center py-6 text-gray-500">
-                            <div className="flex flex-col items-center gap-2">
-                              <Calendar className="w-6 h-6 text-gray-300" />
-                              <span className="text-sm">{t('leave.noHistory')}</span>
-                            </div>
                           </TableCell>
                         </TableRow>
-                      )}
+                      );
+                    })}
+                    {(!Array.isArray(leaveHistory) || leaveHistory.length === 0) && (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                          <div className="flex flex-col items-center gap-2">
+                            <Calendar className="w-6 h-6 text-gray-300" />
+                            <span className="text-sm">{t('leave.noHistory')}</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -1160,7 +1160,7 @@ const EmployeeDetail = () => {
         onOpenChange={setLeaveDialogOpen}
         leaveRequest={selectedLeave}
       />
-        
+
 
     </div>
   );

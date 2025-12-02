@@ -10,7 +10,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, XCircle, MessageSquare, Settings, TestTube, Grid3X3, Menu } from 'lucide-react';
 import axios from 'axios';
-import axiosInstance from '@/lib/axios';
 
 interface LineOASettingsProps {
   className?: string;
@@ -32,7 +31,7 @@ const LineOASettings: React.FC<LineOASettingsProps> = ({ className }) => {
     setConnectionStatus('checking');
     
     try {
-      const response = await axiosInstance.get('/api/line/check-connection');
+      const response = await axios.get('http://localhost:3001/api/line/check-connection');
       
       if (response.data.success) {
         setIsConnected(true);
@@ -77,7 +76,7 @@ const LineOASettings: React.FC<LineOASettingsProps> = ({ className }) => {
     setIsLoading(true);
     
     try {
-      const response = await axiosInstance.post('/api/line/send-message', {
+      const response = await axios.post('http://localhost:3001/api/line/send-message', {
         userId: testUserId,
         message: testMessage
       });
@@ -127,7 +126,7 @@ const LineOASettings: React.FC<LineOASettingsProps> = ({ className }) => {
         reason: 'ป่วยไข้ไม่สบาย'
       };
 
-      const response = await axiosInstance.post('/api/line/send-leave-approval', {
+      const response = await axios.post('http://localhost:3001/api/line/send-leave-approval', {
         userId: testUserId,
         leaveData: testLeaveData
       });
@@ -176,7 +175,7 @@ const LineOASettings: React.FC<LineOASettingsProps> = ({ className }) => {
     
     try {
       const endpoint = type === 'simple' ? '/api/line/rich-menu/simple' : '/api/line/rich-menu/create';
-      const response = await axiosInstance.post(endpoint, {
+      const response = await axios.post(`http://localhost:3001${endpoint}`, {
         baseUrl
       });
       
@@ -207,7 +206,7 @@ const LineOASettings: React.FC<LineOASettingsProps> = ({ className }) => {
   // โหลดรายการ Rich Menu
   const loadRichMenuList = async () => {
     try {
-      const response = await axiosInstance.get('/api/line/rich-menu/list');
+      const response = await axios.get('http://localhost:3001/api/line/rich-menu/list');
       if (response.data.success) {
         setRichMenuList(response.data.richMenuList);
       }
@@ -219,7 +218,7 @@ const LineOASettings: React.FC<LineOASettingsProps> = ({ className }) => {
   // ตั้งค่า Rich Menu เป็น default
   const setDefaultRichMenu = async (richMenuId) => {
     try {
-      const response = await axiosInstance.post(`/api/line/rich-menu/set-default/${richMenuId}`);
+      const response = await axios.post(`http://localhost:3001/api/line/rich-menu/set-default/${richMenuId}`);
       if (response.data.success) {
         toast({
           title: 'ตั้งค่า Rich Menu สำเร็จ',

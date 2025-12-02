@@ -225,16 +225,16 @@ const AnnouncementsFeedPage = () => {
 
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
-          <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
+          <SidebarTrigger className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm" />
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-16">
-          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
-          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-2 md:gap-3">
-            <Newspaper className="w-6 h-6 md:w-10 md:h-10 text-blue-600" />
+          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 dark:bg-gray-800/80 shadow-2xl border-4 border-white dark:border-gray-700 mb-4" />
+          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 dark:text-indigo-200 drop-shadow mb-2 flex items-center gap-2 md:gap-3">
+            <Newspaper className="w-6 h-6 md:w-10 md:h-10 text-blue-600 dark:text-blue-400" />
             {t('announcementsFeed.title')}
           </h1>
-          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl px-4">
+          <p className="text-sm md:text-xl text-blue-900/70 dark:text-blue-200/80 mb-2 font-medium text-center max-w-2xl px-4">
             {t('announcementsFeed.subtitle')}
           </p>
           {/* Management Buttons for Admin/SuperAdmin */}

@@ -908,7 +908,7 @@ const ApproveLeave = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 relative overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:from-gray-900 dark:via-gray-950 dark:to-indigo-900 relative overflow-x-hidden">
       {customAnimationStyle}
       {/* Floating/Parallax Background Shapes */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -917,12 +917,12 @@ const ApproveLeave = () => {
         <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse" style={{ transform: 'translate(-50%,-50%)' }} />
       </div>
       {/* Topbar */}
-      <div className="border-b bg-white/80 backdrop-blur-sm z-10 relative shadow-lg animate-fade-in-up">
+      <div className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-10 relative shadow-lg animate-fade-in-up">
         <div className="flex h-16 items-center px-4 gap-4">
-          <SidebarTrigger />
+          <SidebarTrigger className="dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:text-blue-300 dark:border-blue-700" />
           <div className="flex-1">
-            <h1 className="text-xl md:text-3xl font-extrabold text-blue-900 tracking-tight drop-shadow-lg animate-slide-in-left">{t('navigation.adminDashboard')}</h1>
-            <p className="text-xs md:text-sm text-blue-500 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>{t('admin.dashboardDesc')}</p>
+            <h1 className="text-xl md:text-3xl font-extrabold text-blue-900 dark:text-blue-100 tracking-tight drop-shadow-lg animate-slide-in-left">{t('navigation.adminDashboard')}</h1>
+            <p className="text-xs md:text-sm text-blue-500 dark:text-blue-400 animate-slide-in-left" style={{ animationDelay: '0.2s' }}>{t('admin.dashboardDesc')}</p>
 
           </div>
           {/* Language Switcher at top right */}
@@ -937,16 +937,16 @@ const ApproveLeave = () => {
               return (
                 <Card
                   key={stat.title}
-                  className={`glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift`}
+                  className={`glass dark:bg-gray-800/80 shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up hover-lift`}
                   style={{ animationDelay: `${(index + 1) * 0.1}s` }}
                 >
                   <CardContent className="p-7 flex items-center gap-4">
-                    <div className={`w-16 h-16 ${stat.bgColor} rounded-full flex items-center justify-center shadow-lg`}>
-                      <Icon className={`w-8 h-8 ${stat.color}`} />
+                    <div className={`w-16 h-16 ${stat.bgColor} dark:bg-opacity-40 rounded-full flex items-center justify-center shadow-lg`}>
+                      <Icon className={`w-8 h-8 ${stat.color} dark:brightness-150`} />
                     </div>
                     <div>
-                      <p className="text-3xl font-extrabold text-blue-900 drop-shadow animate-bounce-in">{stat.value}</p>
-                      <p className="text-base text-blue-500 font-medium animate-fade-in-up" style={{ animationDelay: '0.2s' }}>{stat.title}</p>
+                      <p className="text-3xl font-extrabold text-blue-900 dark:text-blue-100 drop-shadow animate-bounce-in">{stat.value}</p>
+                      <p className="text-base text-blue-500 dark:text-blue-300 font-medium animate-fade-in-up" style={{ animationDelay: '0.2s' }}>{stat.title}</p>
 
                     </div>
                   </CardContent>
@@ -963,7 +963,7 @@ const ApproveLeave = () => {
             {/* Pending Requests */}
             <TabsContent value="pending" className="space-y-4">
               {/* --- Filter UI --- */}
-              <div className="flex flex-col md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <div className="flex flex-col md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 dark:from-gray-800/80 dark:via-gray-900/80 dark:to-indigo-900/60 backdrop-blur rounded-2xl border border-blue-100 dark:border-gray-700 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
 
                 {/* Leave Type Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
@@ -987,8 +987,8 @@ const ApproveLeave = () => {
                       <Button
                         variant="outline"
                         className={`w-full md:w-auto justify-start text-left font-normal border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingMonth !== '' && !pendingPendingSingleDate
-                            ? 'opacity-50 cursor-not-allowed bg-gray-100'
-                            : 'hover:bg-blue-50 hover:border-blue-300'
+                          ? 'opacity-50 cursor-not-allowed bg-gray-100'
+                          : 'hover:bg-blue-50 hover:border-blue-300'
                           }`}
                         disabled={pendingPendingMonth !== '' && !pendingPendingSingleDate}
                       >
@@ -1023,8 +1023,8 @@ const ApproveLeave = () => {
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.month')}</label>
                   <select
                     className={`w-full md:w-32 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingSingleDate
-                        ? 'opacity-50 cursor-not-allowed bg-gray-100'
-                        : 'hover:bg-blue-50 hover:border-blue-300'
+                      ? 'opacity-50 cursor-not-allowed bg-gray-100'
+                      : 'hover:bg-blue-50 hover:border-blue-300'
                       }`}
                     value={pendingPendingMonth}
                     onChange={e => handleMonthChange(e.target.value ? Number(e.target.value) : '')}
@@ -1044,8 +1044,8 @@ const ApproveLeave = () => {
                     min={2000}
                     max={2100}
                     className={`w-full md:w-28 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingSingleDate
-                        ? 'opacity-50 cursor-not-allowed bg-gray-100'
-                        : 'hover:bg-blue-50 hover:border-blue-300'
+                      ? 'opacity-50 cursor-not-allowed bg-gray-100'
+                      : 'hover:bg-blue-50 hover:border-blue-300'
                       }`}
                     value={pendingPendingYear}
                     onChange={e => handleYearChange(e.target.value ? Number(e.target.value) : '')}
@@ -1102,7 +1102,7 @@ const ApproveLeave = () => {
                   ) : (
                     <div className="space-y-4 p-6">
                       {pendingRequests.length === 0 && (
-                        <div className="text-center text-gray-500 text-base py-8 animate-fade-in-up">
+                        <div className="text-center text-gray-500 dark:text-gray-400 text-base py-8 animate-fade-in-up">
                           {t('admin.noPendingRequests')}
                         </div>
                       )}

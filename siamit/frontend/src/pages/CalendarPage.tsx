@@ -339,7 +339,7 @@ const CalendarPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:from-gray-900 dark:via-gray-950 dark:to-indigo-900 flex flex-col">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -356,77 +356,77 @@ const CalendarPage = () => {
 
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
-          <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
+          <SidebarTrigger className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm" />
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-16 px-4">
-          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
-          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-2 md:gap-3 text-center">
+          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 dark:bg-gray-800/80 shadow-2xl border-4 border-white dark:border-gray-700 mb-4" />
+          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 dark:text-indigo-200 drop-shadow mb-2 flex items-center gap-2 md:gap-3 text-center">
             {t('calendar.title')}
           </h1>
-          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl">
+          <p className="text-sm md:text-xl text-blue-900/70 dark:text-blue-200/80 mb-2 font-medium text-center max-w-2xl">
             {t('calendar.subtitle')}
           </p>
         </div>
       </div>
       <div className="flex flex-col items-center py-6">
         <div className="flex items-center gap-4 mb-6">
-          <button onClick={() => setYear(y => y - 1)} className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600 shadow">
+          <button onClick={() => setYear(y => y - 1)} className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/60 hover:bg-blue-200 dark:hover:bg-blue-800/60 text-blue-600 dark:text-blue-200 shadow">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <span className="text-2xl font-bold text-blue-900">{year + (i18n.language.startsWith('th') ? 543 : 0)}</span>
-          <button onClick={() => setYear(now.getFullYear())} className="px-4 py-2 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold shadow">
+          <span className="text-2xl font-bold text-blue-900 dark:text-blue-100">{year + (i18n.language.startsWith('th') ? 543 : 0)}</span>
+          <button onClick={() => setYear(now.getFullYear())} className="px-4 py-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 hover:bg-indigo-200 dark:hover:bg-indigo-800/60 text-indigo-700 dark:text-indigo-200 font-semibold shadow">
             {t('calendar.currentYear')}
           </button>
-          <button onClick={() => setYear(y => y + 1)} className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600 shadow">
+          <button onClick={() => setYear(y => y + 1)} className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/60 hover:bg-blue-200 dark:hover:bg-blue-800/60 text-blue-600 dark:text-blue-200 shadow">
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>
 
         {/* Filter Switches and Legend */}
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg w-full max-w-5xl">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 mb-6 bg-white/60 dark:bg-gray-800/60 rounded-xl p-4 shadow-lg w-full max-w-5xl">
           <div className="flex flex-wrap justify-center gap-3 md:gap-6">
-            <div className="flex items-center gap-2 md:gap-3 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+            <div className="flex items-center gap-2 md:gap-3 bg-white/50 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg shadow-sm">
               <Switch
                 checked={showAnnualHolidays}
                 onCheckedChange={setShowAnnualHolidays}
                 className="data-[state=checked]:bg-red-500 scale-90 md:scale-100"
               />
-              <span className="text-xs md:text-sm font-medium text-red-700">{t('calendar.annualHolidays')}</span>
+              <span className="text-xs md:text-sm font-medium text-red-700 dark:text-red-300">{t('calendar.annualHolidays')}</span>
             </div>
-            <div className="flex items-center gap-2 md:gap-3 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+            <div className="flex items-center gap-2 md:gap-3 bg-white/50 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg shadow-sm">
               <Switch
                 checked={showCompanyHolidays}
                 onCheckedChange={setShowCompanyHolidays}
                 className="data-[state=checked]:bg-blue-500 scale-90 md:scale-100"
               />
-              <span className="text-xs md:text-sm font-medium text-blue-700">{t('calendar.companyHolidays')}</span>
+              <span className="text-xs md:text-sm font-medium text-blue-700 dark:text-blue-300">{t('calendar.companyHolidays')}</span>
             </div>
-            <div className="flex items-center gap-2 md:gap-3 bg-white/50 px-3 py-1.5 rounded-lg shadow-sm">
+            <div className="flex items-center gap-2 md:gap-3 bg-white/50 dark:bg-gray-700/50 px-3 py-1.5 rounded-lg shadow-sm">
               <Switch
                 checked={showEmployeeLeaves}
                 onCheckedChange={setShowEmployeeLeaves}
                 className="data-[state=checked]:bg-green-500 scale-90 md:scale-100"
               />
-              <span className="text-xs md:text-sm font-medium text-green-700">
+              <span className="text-xs md:text-sm font-medium text-green-700 dark:text-green-300">
                 {isAdmin ? t('calendar.employeeLeaves') : t('calendar.myLeaves')}
               </span>
             </div>
           </div>
 
           {/* Legend */}
-          <div className="flex hidden md:flex flex-wrap justify-center items-center gap-3 md:gap-4 mt-2 lg:mt-0 pt-3 lg:pt-0 border-t lg:border-t-0 lg:border-l border-gray-300 lg:pl-6 w-full lg:w-auto">
+          <div className="flex hidden md:flex flex-wrap justify-center items-center gap-3 md:gap-4 mt-2 lg:mt-0 pt-3 lg:pt-0 border-t lg:border-t-0 lg:border-l border-gray-300 dark:border-gray-600 lg:pl-6 w-full lg:w-auto">
             <div className="flex items-center gap-1.5 md:gap-2">
               <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-red-500 rounded-full"></div>
-              <span className="text-[10px] md:text-xs text-red-700">{t('calendar.legend.annualHoliday')}</span>
+              <span className="text-[10px] md:text-xs text-red-700 dark:text-red-300">{t('calendar.legend.annualHoliday')}</span>
             </div>
             <div className="flex items-center gap-1.5 md:gap-2">
               <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-blue-500 rounded-full"></div>
-              <span className="text-[10px] md:text-xs text-blue-700">{t('calendar.legend.companyHoliday')}</span>
+              <span className="text-[10px] md:text-xs text-blue-700 dark:text-blue-300">{t('calendar.legend.companyHoliday')}</span>
             </div>
             <div className="flex items-center gap-1.5 md:gap-2">
               <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-green-500 rounded-full"></div>
-              <span className="text-[10px] md:text-xs text-green-700">
+              <span className="text-[10px] md:text-xs text-green-700 dark:text-green-300">
                 {isAdmin ? t('calendar.legend.employeeLeave') : t('calendar.legend.myLeave')}
               </span>
             </div>
@@ -440,7 +440,7 @@ const CalendarPage = () => {
             <span className="ml-3 text-blue-600">{t('calendar.loading')}</span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 w-full max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 w-full max-w-6xl xl:max-w-[95%] 2xl:max-w-[1600px]">
             {monthNames.map((month, mIdx) => {
               const days = getDaysInMonth(year, mIdx);
               const firstDay = new Date(year, mIdx, 1).getDay();
@@ -468,11 +468,11 @@ const CalendarPage = () => {
               });
 
               return (
-                <div key={month} className="bg-white/80 rounded-2xl shadow-xl p-4 flex flex-col items-center">
+                <div key={month} className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-4 flex flex-col items-center">
                   <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-5 h-5 text-indigo-400" />
+                    <Calendar className="w-5 h-5 text-indigo-400 dark:text-indigo-300" />
                     <button
-                      className="text-lg font-bold text-blue-900 hover:underline hover:text-indigo-600 transition cursor-pointer bg-transparent border-0 p-0"
+                      className="text-lg font-bold text-blue-900 dark:text-blue-100 hover:underline hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer bg-transparent border-0 p-0"
                       onClick={() => navigate(`/calendar/${year}/${mIdx + 1}`)}
                     >
                       {month}
@@ -480,7 +480,7 @@ const CalendarPage = () => {
                   </div>
                   <table className="w-full text-center">
                     <thead>
-                      <tr className="text-blue-500">
+                      <tr className="text-blue-500 dark:text-blue-400">
                         <th className="py-1">{weekdayNames[0]}</th>
                         <th className="py-1">{weekdayNames[1]}</th>
                         <th className="py-1">{weekdayNames[2]}</th>
@@ -543,24 +543,24 @@ const CalendarPage = () => {
                       return (
                         <li key={e.id || `event-${e.date}`} className="flex items-center gap-2 mb-1">
                           <span className={`inline-block w-2 h-2 rounded-full ${eventType === 'annual'
-                              ? 'bg-red-500'
-                              : eventType === 'employee'
-                                ? 'bg-green-500'
-                                : 'bg-blue-500'
+                            ? 'bg-red-500'
+                            : eventType === 'employee'
+                              ? 'bg-green-500'
+                              : 'bg-blue-500'
                             }`}></span>
                           <span className={
                             eventType === 'annual'
-                              ? 'text-red-600'
+                              ? 'text-red-600 dark:text-red-400'
                               : eventType === 'employee'
-                                ? 'text-green-600'
-                                : 'text-blue-600'
+                                ? 'text-green-600 dark:text-green-400'
+                                : 'text-blue-600 dark:text-blue-400'
                           }>
                             {eventType === 'employee' && e.employeeInfo
                               ? `${e.employeeInfo.userName} (${e.employeeInfo.leaveType})`
                               : e.title
                             } ({day}/{monthNum})
                             {eventType === 'employee' && e.employeeInfo && (
-                              <span className="text-gray-500 ml-1">
+                              <span className="text-gray-500 dark:text-gray-400 ml-1">
                                 {new Date(e.employeeInfo.startDate).toLocaleDateString(i18n.language.startsWith('th') ? 'th-TH' : 'en-US')} - {new Date(e.employeeInfo.endDate).toLocaleDateString(i18n.language.startsWith('th') ? 'th-TH' : 'en-US')}
                               </span>
                             )}

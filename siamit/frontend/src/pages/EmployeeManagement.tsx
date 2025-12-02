@@ -363,7 +363,7 @@ const EmployeeManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 flex flex-col">
       {/* Hero Section (identical to other main pages) */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -380,21 +380,21 @@ const EmployeeManagement = () => {
 
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
-          <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
+          <SidebarTrigger className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm" />
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center py-6 md:py-16">
-          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-3 md:mb-4" />
-          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-1 md:mb-2 flex items-center gap-2 md:gap-3 text-center px-4">
+          <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/80 dark:bg-gray-800/80 shadow-2xl border-4 border-white dark:border-gray-700 mb-3 md:mb-4" />
+          <h1 className="text-2xl md:text-4xl font-extrabold text-indigo-900 dark:text-gray-100 drop-shadow mb-1 md:mb-2 flex items-center gap-2 md:gap-3 text-center px-4">
             {t('navigation.employeeManagement')}
           </h1>
-          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl px-4">
+          <p className="text-sm md:text-lg text-blue-900/70 dark:text-gray-300 mb-2 font-medium text-center max-w-2xl px-4">
             {t('system.manageDepartment')}
           </p>
         </div>
       </div>
-      <div className="w-full max-w-6xl mx-auto px-4 mt-0 animate-fade-in flex-1">
-        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 flex flex-col h-auto overflow-visible">
+      <div className="w-full max-w-7xl mx-auto px-4 mt-0 animate-fade-in flex-1">
+        <div className="bg-white/70 dark:bg-gray-900/90 backdrop-blur-md rounded-3xl shadow-2xl p-4 sm:p-6 flex flex-col h-auto overflow-visible">
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
             {stats.map((stat, index) => {
@@ -402,16 +402,16 @@ const EmployeeManagement = () => {
               return (
                 <Card
                   key={stat.title}
-                  className="glass shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up"
+                  className="glass dark:bg-gray-800/80 shadow-xl border-0 hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: `${index * 120}ms` }}
                 >
                   <CardContent className="p-5 md:p-7 flex items-center gap-4">
-                    <div className={`w-12 h-12 md:w-16 md:h-16 ${stat.bgColor} rounded-full flex items-center justify-center shadow-lg animate-float`}>
-                      <Icon className={`w-6 h-6 md:w-8 md:h-8 ${stat.color}`} />
+                    <div className={`w-10 h-10 md:w-12 md:h-12 ${stat.bgColor} dark:bg-opacity-20 rounded-full flex items-center justify-center shadow-lg animate-float`}>
+                      <Icon className={`w-5 h-5 md:w-6 md:h-6 ${stat.color} dark:brightness-125`} />
                     </div>
                     <div>
-                      <p className="text-2xl md:text-3xl font-extrabold text-blue-900 drop-shadow">{stat.value}</p>
-                      <p className="text-sm md:text-base text-blue-500 font-medium">{stat.title}</p>
+                      <p className="text-xl md:text-2xl font-extrabold text-blue-900 dark:text-gray-100 drop-shadow">{stat.value}</p>
+                      <p className="text-sm text-blue-500 dark:text-gray-400 font-medium">{stat.title}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -419,13 +419,13 @@ const EmployeeManagement = () => {
             })}
           </div>
           {/* Employee List */}
-          <Card className="glass shadow-2xl border-0 animate-fade-in-up h-auto min-h-[500px] md:h-[650px] flex flex-col">
-            <CardHeader className="bg-gradient-to-r from-blue-500 via-indigo-400 to-purple-400 text-white rounded-t-2xl p-4 md:p-5 shadow-lg flex-shrink-0">
+          <Card className="glass dark:bg-gray-900/50 shadow-2xl border-0 animate-fade-in-up h-auto min-h-[500px] md:h-[650px] flex flex-col">
+            <CardHeader className="bg-gradient-to-r from-blue-500 via-indigo-400 to-purple-400 dark:from-blue-900 dark:via-indigo-900 dark:to-purple-900 text-white rounded-t-2xl p-4 shadow-lg flex-shrink-0">
               <CardTitle className="flex items-center gap-2 md:gap-3 text-xl md:text-2xl font-bold animate-slide-in-left">
                 <Users className="w-5 h-5 md:w-6 md:h-6" />
                 {t('system.employeeList')}
               </CardTitle>
-              <CardDescription className="text-blue-100 text-xs md:text-sm animate-slide-in-left delay-100">
+              <CardDescription className="text-blue-100 dark:text-gray-300 text-xs md:text-sm animate-slide-in-left delay-100">
                 {t('system.allEmployeesInterns')}
               </CardDescription>
             </CardHeader>
@@ -434,10 +434,10 @@ const EmployeeManagement = () => {
               <div className="p-4 sm:p-6 pb-2 flex-shrink-0">
                 <div className="grid grid-cols-1 sm:grid-cols-3 md:flex md:flex-row gap-3 items-end">
                   <div className="flex flex-col w-full md:w-auto">
-                    <label className="text-xs text-gray-500 font-semibold mb-1" htmlFor="position-filter">{t('auth.position')}</label>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1" htmlFor="position-filter">{t('auth.position')}</label>
                     <select
                       id="position-filter"
-                      className="rounded-lg border border-blue-200 px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
+                      className="rounded-lg border border-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
                       value={pendingPositionFilter}
                       onChange={e => setPendingPositionFilter(e.target.value)}
                       style={{ minWidth: 40, maxWidth: '100%' }}
@@ -452,10 +452,10 @@ const EmployeeManagement = () => {
                     </select>
                   </div>
                   <div className="flex flex-col w-full md:w-auto">
-                    <label className="text-xs text-gray-500 font-semibold mb-1" htmlFor="department-filter">{t('auth.department')}</label>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1" htmlFor="department-filter">{t('auth.department')}</label>
                     <select
                       id="department-filter"
-                      className="rounded-lg border border-blue-200 px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
+                      className="rounded-lg border border-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
                       value={pendingDepartmentFilter}
                       onChange={e => setPendingDepartmentFilter(e.target.value)}
                       style={{ minWidth: 40, maxWidth: '100%' }}
@@ -470,10 +470,10 @@ const EmployeeManagement = () => {
                     </select>
                   </div>
                   <div className="flex flex-col w-full md:w-auto">
-                    <label className="text-xs text-gray-500 font-semibold mb-1" htmlFor="role-filter">{t('common.status')}</label>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1" htmlFor="role-filter">{t('common.status')}</label>
                     <select
                       id="role-filter"
-                      className="rounded-lg border border-blue-200 px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
+                      className="rounded-lg border border-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
                       value={pendingRoleFilter}
                       onChange={e => setPendingRoleFilter(e.target.value)}
                       style={{ minWidth: 40, maxWidth: '100%' }}
@@ -486,7 +486,7 @@ const EmployeeManagement = () => {
                   </div>
                   <div className="flex flex-row gap-3 items-stretch h-full w-full md:w-auto sm:col-span-3 md:col-span-auto mt-2 md:mt-0">
                     <button
-                      className="min-h-[42px] flex-1 md:flex-none md:min-w-[100px] px-5 py-2.5 rounded-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-500 text-white shadow-lg hover:from-blue-700 hover:to-indigo-600 hover:shadow-xl transition-all duration-200 transform hover:scale-105 text-sm"
+                      className="min-h-[38px] flex-1 md:flex-none md:min-w-[80px] px-4 py-2 rounded-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-700 dark:to-indigo-600 text-white shadow-lg hover:from-blue-700 hover:to-indigo-600 hover:shadow-xl transition-all duration-200 transform hover:scale-105 text-sm"
                       onClick={() => {
                         setPositionFilter(pendingPositionFilter);
                         setDepartmentFilter(pendingDepartmentFilter);
@@ -496,7 +496,7 @@ const EmployeeManagement = () => {
                       {t('common.confirm')}
                     </button>
                     <button
-                      className="min-h-[42px] flex-1 md:flex-none md:min-w-[90px] px-4 py-2.5 rounded-lg font-bold border-2 border-blue-400 text-blue-600 bg-white hover:bg-blue-50 hover:border-blue-500 hover:shadow-md transition-all duration-200 transform hover:scale-105 text-sm"
+                      className="min-h-[38px] flex-1 md:flex-none md:min-w-[80px] px-4 py-2 rounded-lg font-bold border-2 border-blue-400 dark:border-blue-600 text-blue-600 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-500 hover:shadow-md transition-all duration-200 transform hover:scale-105 text-sm"
                       onClick={() => {
                         setPendingPositionFilter("");
                         setPendingDepartmentFilter("");
@@ -518,13 +518,13 @@ const EmployeeManagement = () => {
                   <div className="flex-1 overflow-auto min-h-0">
                     {paginatedEmployees.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-full py-10 md:py-16">
-                        <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-4 md:mb-6">
-                          <Users className="w-10 h-10 md:w-12 md:h-12 text-blue-400" />
+                        <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center mb-4 md:mb-6">
+                          <Users className="w-10 h-10 md:w-12 md:h-12 text-blue-400 dark:text-blue-300" />
                         </div>
-                        <h3 className="text-lg md:text-xl font-bold text-blue-900 mb-2">
+                        <h3 className="text-lg md:text-xl font-bold text-blue-900 dark:text-gray-100 mb-2">
                           {t('system.noEmployeesFound')}
                         </h3>
-                        <p className="text-blue-600 text-center max-w-md text-sm md:text-base px-4">
+                        <p className="text-blue-600 dark:text-gray-400 text-center max-w-md text-sm md:text-base px-4">
                           {t('system.noEmployeesFoundDesc')}
                         </p>
                         <button
@@ -546,13 +546,13 @@ const EmployeeManagement = () => {
                         {/* Mobile Card View */}
                         <div className="md:hidden space-y-4 p-4">
                           {paginatedEmployees.map((employee) => (
-                            <div key={employee.id} className="bg-white rounded-xl shadow-md p-4 border border-blue-100 flex flex-col gap-3 animate-fade-in-up">
+                            <div key={employee.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 border border-blue-100 dark:border-gray-700 flex flex-col gap-3 animate-fade-in-up">
                               <div className="flex items-center gap-3">
                                 {employee.avatar ? (
                                   <img
                                     src={getImageUrl(employee.avatar, import.meta.env.VITE_API_BASE_URL)}
                                     alt={employee.full_name}
-                                    className="w-12 h-12 rounded-full object-cover shadow-sm border border-blue-200"
+                                    className="w-12 h-12 rounded-full object-cover shadow-sm border border-blue-200 dark:border-gray-600"
                                     onError={(e) => {
                                       const target = e.target as HTMLImageElement;
                                       target.style.display = 'none';
@@ -560,41 +560,41 @@ const EmployeeManagement = () => {
                                     }}
                                   />
                                 ) : null}
-                                <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 flex items-center justify-center text-blue-900 font-bold text-lg shadow-sm ${employee.avatar ? 'hidden' : ''}`}>
+                                <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 dark:from-blue-900 dark:via-indigo-900 dark:to-purple-900 flex items-center justify-center text-blue-900 dark:text-blue-100 font-bold text-lg shadow-sm ${employee.avatar ? 'hidden' : ''}`}>
                                   {employee.full_name ? employee.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '?'}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center gap-2 mb-1">
-                                    <h4 className="font-bold text-blue-900 text-base truncate">{employee.full_name}</h4>
+                                    <h4 className="font-bold text-blue-900 dark:text-gray-100 text-base truncate">{employee.full_name}</h4>
                                     {user && employee.id === user.id && (
                                       <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold shadow-sm animate-pulse shrink-0">
                                         {t('common.me')}
                                       </span>
                                     )}
                                   </div>
-                                  <p className="text-xs text-blue-500 truncate">{employee.email}</p>
+                                  <p className="text-xs text-blue-500 dark:text-gray-400 truncate">{employee.email}</p>
                                 </div>
                               </div>
 
                               <div className="grid grid-cols-2 gap-2 text-sm">
-                                <div className="bg-blue-50 p-2 rounded-lg">
-                                  <p className="text-xs text-blue-400 font-semibold mb-0.5">{t('auth.position')}</p>
-                                  <p className="text-blue-700 font-medium truncate">{getDisplayPositionName(employee)}</p>
+                                <div className="bg-blue-50 dark:bg-gray-700/50 p-2 rounded-lg">
+                                  <p className="text-xs text-blue-400 dark:text-blue-300 font-semibold mb-0.5">{t('auth.position')}</p>
+                                  <p className="text-blue-700 dark:text-blue-100 font-medium truncate">{getDisplayPositionName(employee)}</p>
                                 </div>
-                                <div className="bg-indigo-50 p-2 rounded-lg">
-                                  <p className="text-xs text-indigo-400 font-semibold mb-0.5">{t('auth.department')}</p>
-                                  <p className="text-indigo-700 font-medium truncate">{getDisplayDepartmentName(employee)}</p>
+                                <div className="bg-indigo-50 dark:bg-gray-700/50 p-2 rounded-lg">
+                                  <p className="text-xs text-indigo-400 dark:text-indigo-300 font-semibold mb-0.5">{t('auth.department')}</p>
+                                  <p className="text-indigo-700 dark:text-indigo-100 font-medium truncate">{getDisplayDepartmentName(employee)}</p>
                                 </div>
                               </div>
 
-                              <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                              <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
                                 <div>
                                   {employee.role === 'superadmin' ? (
-                                    <span className="text-xs px-2 py-1 rounded-full border border-purple-300 bg-purple-50 text-purple-700 font-bold shadow-sm">
+                                    <span className="text-xs px-2 py-1 rounded-full border border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-bold shadow-sm">
                                       {t('auth.roles.superadmin')}
                                     </span>
                                   ) : employee.role === 'admin' ? (
-                                    <span className="text-xs px-2 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-400 text-white font-bold shadow-sm">
+                                    <span className="text-xs px-2 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-400 dark:from-blue-700 dark:to-indigo-600 text-white font-bold shadow-sm">
                                       {t('auth.roles.admin')}
                                     </span>
                                   ) : (

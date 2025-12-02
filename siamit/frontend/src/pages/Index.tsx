@@ -384,15 +384,15 @@ const Index = () => {
 
       {/* Top Bar */}
       <div className="border-b bg-white/80 dark:dark-card-gradient backdrop-blur-sm sticky top-0 z-20 shadow-sm dark:dark-glow">
-        <div className="flex flex-col md:flex-row h-auto md:h-16 items-center px-4 py-3 md:py-0 gap-3 md:gap-0">
+        <div className="flex flex-col md:flex-row h-auto md:h-14 items-center px-3 md:px-4 py-2 md:py-0 gap-2 md:gap-0">
           <div className="flex items-center w-full md:w-auto justify-between md:justify-start">
             <div className="flex items-center">
               <SidebarTrigger />
-              <div className="flex-1 ml-3">
-                <h1 className="text-lg md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-500 to-purple-500 tracking-tight drop-shadow-lg animate-fade-in-up">
+              <div className="flex-1 ml-2 md:ml-3">
+                <h1 className="text-base md:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-500 to-purple-500 tracking-tight drop-shadow-lg animate-fade-in-up">
                   {t('main.leaveManagementSystem')}
                 </h1>
-                <p className="text-[10px] sm:text-sm text-blue-500 dark:text-blue-200 animate-fade-in-up delay-100 leading-tight truncate whitespace-nowrap max-w-[200px] sm:max-w-xs md:max-w-md">
+                <p className="text-[10px] sm:text-xs text-blue-500 dark:text-blue-200 animate-fade-in-up delay-100 leading-tight truncate whitespace-nowrap max-w-[200px] sm:max-w-xs md:max-w-md">
                   {t('main.welcomeMessage')}
                 </p>
               </div>
@@ -400,9 +400,9 @@ const Index = () => {
           </div>
 
           {/* Calendar Filter */}
-          <div className="flex gap-2 w-full md:w-auto justify-end mt-2 md:mt-0 md:ml-auto md:mr-4">
+          <div className="flex gap-2 w-full md:w-auto justify-end mt-1 md:mt-0 md:ml-auto">
             <select
-              className="flex-1 md:flex-none rounded-lg border px-2 py-1.5 text-sm md:text-base text-blue-700 bg-white/80 shadow focus:ring-2 focus:ring-blue-400 outline-none"
+              className="flex-1 md:flex-none rounded-lg border px-2 py-1 text-xs md:text-sm text-blue-700 bg-white/80 shadow focus:ring-2 focus:ring-blue-400 outline-none"
               value={filterMonth}
               onChange={e => setFilterMonth(Number(e.target.value))}
             >
@@ -411,7 +411,7 @@ const Index = () => {
               ))}
             </select>
             <select
-              className="flex-1 md:flex-none rounded-lg border px-2 py-1.5 text-sm md:text-base text-blue-700 bg-white/80 shadow focus:ring-2 focus:ring-blue-400 outline-none"
+              className="flex-1 md:flex-none rounded-lg border px-2 py-1 text-xs md:text-sm text-blue-700 bg-white/80 shadow focus:ring-2 focus:ring-blue-400 outline-none"
               value={filterYear}
               onChange={e => setFilterYear(Number(e.target.value))}
             >
@@ -423,14 +423,14 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="p-4 md:p-6 space-y-6 animate-fade-in pb-20">
+      <div className="p-3 md:p-5 space-y-4 md:space-y-5 animate-fade-in pb-16 md:pb-20">
         {/* Welcome Section */}
-        <div className="relative rounded-2xl p-4 md:p-6 text-white overflow-hidden glass shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-in-up bg-gradient-to-tr from-blue-100 via-indigo-200 to-purple-100">
+        <div className="relative rounded-2xl p-4 md:p-6 text-white overflow-hidden glass shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-in-up bg-gradient-to-tr from-blue-100 via-indigo-200 to-purple-100 dark:from-indigo-900/80 dark:via-purple-900/80 dark:to-blue-900/80">
           <div className="z-10 flex-1 space-y-3 text-center md:text-left w-full">
-            <h2 className="text-2xl md:text-4xl font-extrabold mb-1 drop-shadow-lg animate-slide-in-left text-blue-600">
+            <h2 className="text-2xl md:text-4xl font-extrabold mb-1 drop-shadow-lg animate-slide-in-left text-blue-600 dark:text-blue-200">
               {t('main.hello')} {loadingUserProfile ? t('common.loading') : (userProfile?.name || t('main.user'))}! 👋
             </h2>
-            <p className="mb-4 text-sm md:text-lg font-medium animate-slide-in-left delay-100 text-indigo-500">
+            <p className="mb-4 text-sm md:text-lg font-medium animate-slide-in-left delay-100 text-indigo-500 dark:text-indigo-300">
               {t('main.today')} {formatCurrentDate()}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
@@ -438,7 +438,7 @@ const Index = () => {
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="w-full sm:w-auto bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg border-0 px-6 py-2 text-sm md:text-base rounded-xl animate-bounce-in transition-transform hover:scale-105"
+                  className="w-full sm:w-auto bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-700 font-bold shadow-lg border-0 px-6 py-2 text-sm md:text-base rounded-xl animate-bounce-in transition-transform hover:scale-105"
                 >
                   {t('main.newLeaveRequest')}
                 </Button>
@@ -450,8 +450,8 @@ const Index = () => {
                 onClick={lineLinkStatus === 'linked' ? handleLineUnlink : handleLineLogin}
                 disabled={lineLinkingLoading}
                 className={`w-full sm:w-auto font-bold shadow-lg border-0 px-6 py-2 text-sm md:text-base rounded-xl animate-bounce-in flex items-center justify-center gap-2 transition-transform hover:scale-105 ${lineLinkStatus === 'linked'
-                  ? 'bg-red-500 text-white hover:bg-red-600'
-                  : 'bg-[#06C755] text-white hover:bg-[#05b34c]'
+                  ? 'bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700'
+                  : 'bg-[#06C755] text-white hover:bg-[#05b34c] dark:bg-[#05b34c] dark:hover:bg-[#04a043]'
                   }`}
               >
                 {lineLinkingLoading
@@ -463,7 +463,7 @@ const Index = () => {
               </Button>
             </div>
           </div>
-          <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-gradient-to-l from-yellow-100 to-transparent opacity-30 blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-gradient-to-l from-yellow-100 dark:from-yellow-600/30 to-transparent opacity-30 blur-3xl"></div>
           <div className="flex-1 flex items-center justify-center animate-float hidden md:flex">
             <img src={`${config.upload.publicPath}/lovable-uploads/siamit.png`} alt="Logo" className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-2xl" />
           </div>
@@ -472,46 +472,46 @@ const Index = () => {
         {/* Dashboard Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Backdated Requests Card */}
-          <Card className="group border-0 shadow-xl bg-white/70 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up">
+          <Card className="group border-0 shadow-xl bg-white/70 dark:bg-gray-800/80 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up">
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-red-50 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
-                <Calendar className="w-6 h-6 md:w-7 md:h-7 text-red-500" />
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-red-50 dark:bg-red-900/40 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
+                <Calendar className="w-6 h-6 md:w-7 md:h-7 text-red-500 dark:text-red-400" />
               </div>
-              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 mb-1">{loadingDashboard ? '-' : backdatedCount}</div>
-              <div className="text-xs md:text-base font-bold text-blue-600/80 mt-1 text-center">{t('main.backdatedRequests', 'Backdated Requests')}</div>
+              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 dark:text-blue-100 mb-1">{loadingDashboard ? '-' : backdatedCount}</div>
+              <div className="text-xs md:text-base font-bold text-blue-600/80 dark:text-blue-300/90 mt-1 text-center">{t('main.backdatedRequests', 'Backdated Requests')}</div>
             </div>
           </Card>
           {/* Days Used Card */}
-          <Card className="group border-0 shadow-xl bg-white/70 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          <Card className="group border-0 shadow-xl bg-white/70 dark:bg-gray-800/80 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '100ms' }}>
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-green-50 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
-                <Clock className="w-6 h-6 md:w-7 md:h-7 text-green-500" />
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-green-50 dark:bg-green-900/40 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
+                <Clock className="w-6 h-6 md:w-7 md:h-7 text-green-500 dark:text-green-400" />
               </div>
-              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 mb-1">
+              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 dark:text-blue-100 mb-1">
                 {loadingDashboard ? '-' : `${daysUsed}`}
-                <span className="text-sm md:text-lg font-medium text-blue-700 ml-1">{t('common.days')}</span>
+                <span className="text-sm md:text-lg font-medium text-blue-700 dark:text-blue-300 ml-1">{t('common.days')}</span>
               </div>
-              <div className="text-xs md:text-base font-bold text-blue-600/80 mt-1 text-center">{t('main.daysUsed', 'Days Used')}</div>
+              <div className="text-xs md:text-base font-bold text-blue-600/80 dark:text-blue-300/90 mt-1 text-center">{t('main.daysUsed', 'Days Used')}</div>
             </div>
           </Card>
           {/* Pending Requests Card */}
-          <Card className="group border-0 shadow-xl bg-white/70 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+          <Card className="group border-0 shadow-xl bg-white/70 dark:bg-gray-800/80 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-orange-50 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
-                <Users className="w-6 h-6 md:w-7 md:h-7 text-orange-500" />
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-orange-50 dark:bg-orange-900/40 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
+                <Users className="w-6 h-6 md:w-7 md:h-7 text-orange-500 dark:text-orange-400" />
               </div>
-              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 mb-1">{loadingDashboard ? '-' : pendingRequests}</div>
-              <div className="text-xs md:text-base font-bold text-blue-600/80 mt-1 text-center">{t('main.pendingRequests', 'Pending Requests')}</div>
+              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 dark:text-blue-100 mb-1">{loadingDashboard ? '-' : pendingRequests}</div>
+              <div className="text-xs md:text-base font-bold text-blue-600/80 dark:text-blue-300/90 mt-1 text-center">{t('main.pendingRequests', 'Pending Requests')}</div>
             </div>
           </Card>
           {/* Approval Rate Card */}
-          <Card className="group border-0 shadow-xl bg-white/70 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <Card className="group border-0 shadow-xl bg-white/70 dark:bg-gray-800/80 dark:dark-card-gradient backdrop-blur-lg rounded-2xl flex flex-col items-center justify-center py-4 md:py-6 px-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '300ms' }}>
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-purple-50 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
-                <TrendingUp className="w-6 h-6 md:w-7 md:h-7 text-purple-500" />
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-purple-50 dark:bg-purple-900/40 rounded-full flex items-center justify-center mb-1 shadow-md group-hover:scale-110 transition-transform duration-200 animate-pop-in">
+                <TrendingUp className="w-6 h-6 md:w-7 md:h-7 text-purple-500 dark:text-purple-400" />
               </div>
-              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 mb-1">{loadingDashboard ? '-' : approvalRate + '%'}</div>
-              <div className="text-xs md:text-base font-bold text-blue-600/80 mt-1 text-center">{t('main.approvalRate', 'Approval Rate')}</div>
+              <div className="text-2xl md:text-4xl font-extrabold text-blue-900 dark:text-blue-100 mb-1">{loadingDashboard ? '-' : approvalRate + '%'}</div>
+              <div className="text-xs md:text-base font-bold text-blue-600/80 dark:text-blue-300/90 mt-1 text-center">{t('main.approvalRate', 'Approval Rate')}</div>
             </div>
           </Card>
         </div>
@@ -519,8 +519,8 @@ const Index = () => {
         {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {/* User Summary */}
-          <Card className="glass dark:dark-card-gradient shadow-xl dark:dark-glow border-0 flex flex-col items-center justify-center p-6 animate-fade-in-up rounded-2xl">
-            <Avatar className="w-20 h-20 mb-3 ring-4 ring-blue-50 shadow-lg">
+          <Card className="glass dark:bg-gray-800/90 dark:dark-card-gradient shadow-xl dark:dark-glow border-0 flex flex-col items-center justify-center p-6 animate-fade-in-up rounded-2xl">
+            <Avatar className="w-20 h-20 mb-3 ring-4 ring-blue-50 dark:ring-blue-900/50 shadow-lg">
               {avatarUrl ? (
                 <AvatarImage
                   src={
@@ -532,44 +532,44 @@ const Index = () => {
                   className="object-cover"
                 />
               ) : null}
-              <AvatarFallback className="bg-blue-100 text-blue-600 text-xl font-bold">
+              <AvatarFallback className="bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-200 text-xl font-bold">
                 {loadingUserProfile ? '...' : (userProfile?.name ? userProfile.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() : '--')}
               </AvatarFallback>
             </Avatar>
-            <div className="text-xl font-bold text-blue-900 mt-1 text-center">
+            <div className="text-xl font-bold text-blue-900 dark:text-blue-100 mt-1 text-center">
               {loadingUserProfile ? t('common.loading') : userProfile?.name || '-'}
             </div>
-            <div className="text-sm font-medium text-blue-600 mt-1 text-center">
+            <div className="text-sm font-medium text-blue-600 dark:text-blue-300 mt-1 text-center">
               {loadingUserProfile ? t('common.loading') : (
                 i18n.language.startsWith('th')
                   ? userProfile?.position?.name_th || userProfile?.position?.name_en || t('positions.noPosition')
                   : userProfile?.position?.name_en || userProfile?.position?.name_th || t('positions.noPosition')
               )}
             </div>
-            <div className="text-xs text-blue-400 mb-2 text-center">
+            <div className="text-xs text-blue-400 dark:text-blue-400 mb-2 text-center">
               {loadingUserProfile ? t('common.loading') : (
                 i18n.language.startsWith('th')
                   ? userProfile?.department?.name_th || userProfile?.department?.name_en || t('departments.noDepartment')
                   : userProfile?.department?.name_en || userProfile?.department?.name_th || t('departments.noDepartment')
               )}
             </div>
-            <div className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+            <div className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700/60 px-3 py-1 rounded-full">
               {loadingUserProfile ? t('common.loading') : userProfile?.email || '-'}
             </div>
           </Card>
 
           {/* Company Holidays */}
-          <Card className="glass dark:dark-card-gradient shadow-xl dark:dark-glow border-0 p-0 animate-fade-in-up rounded-2xl overflow-hidden flex flex-col h-full">
-            <CardHeader className="pb-3 bg-blue-50/50">
-              <CardTitle className="flex items-center gap-2 text-blue-700 text-base font-bold">
-                <Calendar className="w-5 h-5 text-blue-500" />
+          <Card className="glass dark:bg-gray-800/90 dark:dark-card-gradient shadow-xl dark:dark-glow border-0 p-0 animate-fade-in-up rounded-2xl overflow-hidden flex flex-col h-full">
+            <CardHeader className="pb-3 bg-blue-50/50 dark:bg-blue-900/30">
+              <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-200 text-base font-bold">
+                <Calendar className="w-5 h-5 text-blue-500 dark:text-blue-400" />
                 {t('main.companyHolidays')}
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 pt-4 flex-1">
               <div className="flex gap-2">
                 <select
-                  className="flex-1 rounded-lg border px-2 py-1.5 text-sm text-blue-700 bg-white/80 shadow-sm outline-none focus:ring-2 focus:ring-blue-200"
+                  className="flex-1 rounded-lg border dark:border-gray-600 px-2 py-1.5 text-sm text-blue-700 dark:text-blue-200 bg-white/80 dark:bg-gray-700/80 shadow-sm outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-600"
                   value={selectedMonth}
                   onChange={e => setSelectedMonth(Number(e.target.value))}
                 >
@@ -578,7 +578,7 @@ const Index = () => {
                   ))}
                 </select>
                 <select
-                  className="w-24 rounded-lg border px-2 py-1.5 text-sm text-blue-700 bg-white/80 shadow-sm outline-none focus:ring-2 focus:ring-blue-200"
+                  className="w-24 rounded-lg border dark:border-gray-600 px-2 py-1.5 text-sm text-blue-700 dark:text-blue-200 bg-white/80 dark:bg-gray-700/80 shadow-sm outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-600"
                   value={selectedYear}
                   onChange={e => setSelectedYear(Number(e.target.value))}
                 >
@@ -597,12 +597,12 @@ const Index = () => {
                     <div className="text-center py-8 text-blue-400/70 italic text-sm">{t('main.noCompanyHolidays')}</div>
                   ) : (
                     companyHolidaysOfMonth.map(h => (
-                      <li key={h.date} className="flex items-center gap-3 bg-white/60 rounded-xl px-3 py-2.5 shadow-sm hover:bg-blue-50 transition-colors">
-                        <div className="flex flex-col items-center justify-center bg-blue-100 text-blue-700 rounded-lg w-10 h-10 shrink-0">
+                      <li key={h.date} className="flex items-center gap-3 bg-white/60 dark:bg-gray-700/60 rounded-xl px-3 py-2.5 shadow-sm hover:bg-blue-50 dark:hover:bg-gray-600/60 transition-colors">
+                        <div className="flex flex-col items-center justify-center bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-200 rounded-lg w-10 h-10 shrink-0">
                           <span className="text-xs font-bold">{new Date(h.date).getDate()}</span>
                           <span className="text-[10px] uppercase">{new Date(h.date).toLocaleDateString('en-US', { month: 'short' })}</span>
                         </div>
-                        <span className="text-blue-900 font-medium text-sm line-clamp-2">{h.title}</span>
+                        <span className="text-blue-900 dark:text-blue-100 font-medium text-sm line-clamp-2">{h.title}</span>
                       </li>
                     ))
                   )}
@@ -612,17 +612,17 @@ const Index = () => {
           </Card>
 
           {/* Annual Holidays */}
-          <Card className="glass dark:dark-card-gradient shadow-xl dark:dark-glow border-0 p-0 animate-fade-in-up rounded-2xl overflow-hidden flex flex-col h-full">
-            <CardHeader className="pb-3 bg-indigo-50/50">
-              <CardTitle className="flex items-center gap-2 text-indigo-700 text-base font-bold">
-                <Calendar className="w-5 h-5 text-indigo-500" />
+          <Card className="glass dark:bg-gray-800/90 dark:dark-card-gradient shadow-xl dark:dark-glow border-0 p-0 animate-fade-in-up rounded-2xl overflow-hidden flex flex-col h-full">
+            <CardHeader className="pb-3 bg-indigo-50/50 dark:bg-indigo-900/30">
+              <CardTitle className="flex items-center gap-2 text-indigo-700 dark:text-indigo-200 text-base font-bold">
+                <Calendar className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
                 {t('main.annualHolidays')}
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 pt-4 flex-1">
               <div className="flex gap-2">
                 <select
-                  className="flex-1 rounded-lg border px-2 py-1.5 text-sm text-indigo-700 bg-white/80 shadow-sm outline-none focus:ring-2 focus:ring-indigo-200"
+                  className="flex-1 rounded-lg border dark:border-gray-600 px-2 py-1.5 text-sm text-indigo-700 dark:text-indigo-200 bg-white/80 dark:bg-gray-700/80 shadow-sm outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-600"
                   value={selectedMonth}
                   onChange={e => setSelectedMonth(Number(e.target.value))}
                 >
@@ -631,7 +631,7 @@ const Index = () => {
                   ))}
                 </select>
                 <select
-                  className="w-24 rounded-lg border px-2 py-1.5 text-sm text-indigo-700 bg-white/80 shadow-sm outline-none focus:ring-2 focus:ring-indigo-200"
+                  className="w-24 rounded-lg border dark:border-gray-600 px-2 py-1.5 text-sm text-indigo-700 dark:text-indigo-200 bg-white/80 dark:bg-gray-700/80 shadow-sm outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-600"
                   value={selectedYear}
                   onChange={e => setSelectedYear(Number(e.target.value))}
                 >
@@ -646,12 +646,12 @@ const Index = () => {
                     <div className="text-center py-8 text-indigo-400/70 italic text-sm">{t('main.noUpcomingHolidays')}</div>
                   ) : (
                     holidaysOfMonth.map(h => (
-                      <li key={h.date} className="flex items-center gap-3 bg-white/60 rounded-xl px-3 py-2.5 shadow-sm hover:bg-indigo-50 transition-colors">
-                        <div className="flex flex-col items-center justify-center bg-indigo-100 text-indigo-700 rounded-lg w-10 h-10 shrink-0">
+                      <li key={h.date} className="flex items-center gap-3 bg-white/60 dark:bg-gray-700/60 rounded-xl px-3 py-2.5 shadow-sm hover:bg-indigo-50 dark:hover:bg-gray-600/60 transition-colors">
+                        <div className="flex flex-col items-center justify-center bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-200 rounded-lg w-10 h-10 shrink-0">
                           <span className="text-xs font-bold">{new Date(h.date).getDate()}</span>
                           <span className="text-[10px] uppercase">{new Date(h.date).toLocaleDateString('en-US', { month: 'short' })}</span>
                         </div>
-                        <span className="text-indigo-900 font-medium text-sm line-clamp-2">{h.name}</span>
+                        <span className="text-indigo-900 dark:text-indigo-100 font-medium text-sm line-clamp-2">{h.name}</span>
                       </li>
                     ))
                   )}
@@ -661,10 +661,10 @@ const Index = () => {
           </Card>
 
           {/* Announcements */}
-          <Card className="glass dark:dark-card-gradient shadow-xl dark:dark-glow border-0 p-0 animate-fade-in-up rounded-2xl overflow-hidden flex flex-col h-full">
-            <CardHeader className="pb-3 bg-purple-50/50">
-              <CardTitle className="flex items-center gap-2 text-purple-700 text-base font-bold">
-                <Bell className="w-5 h-5 text-purple-500" />
+          <Card className="glass dark:bg-gray-800/90 dark:dark-card-gradient shadow-xl dark:dark-glow border-0 p-0 animate-fade-in-up rounded-2xl overflow-hidden flex flex-col h-full">
+            <CardHeader className="pb-3 bg-purple-50/50 dark:bg-purple-900/30">
+              <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-200 text-base font-bold">
+                <Bell className="w-5 h-5 text-purple-500 dark:text-purple-400" />
                 {t('main.companyNews')}
               </CardTitle>
             </CardHeader>
@@ -678,13 +678,13 @@ const Index = () => {
                   <div className="text-center py-8 text-purple-400/70 italic text-sm">{t('main.noAnnouncements')}</div>
                 ) : (
                   announcements.map((a, idx) => (
-                    <div key={a.id} className="flex items-start gap-3 p-3 mb-2 rounded-xl glass bg-gradient-to-br from-white/80 via-purple-50/50 to-indigo-50/50 shadow-sm border border-purple-100/50 hover:shadow-md transition-all">
-                      <span className="w-8 h-8 flex items-center justify-center rounded-full bg-purple-100 text-purple-600 shrink-0 mt-0.5">
+                    <div key={a.id} className="flex items-start gap-3 p-3 mb-2 rounded-xl glass bg-gradient-to-br from-white/80 via-purple-50/50 to-indigo-50/50 dark:from-gray-700/60 dark:via-purple-900/30 dark:to-indigo-900/30 shadow-sm border border-purple-100/50 dark:border-purple-800/50 hover:shadow-md transition-all">
+                      <span className="w-8 h-8 flex items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300 shrink-0 mt-0.5">
                         <Bell className="w-4 h-4" />
                       </span>
                       <div className="flex-1 min-w-0">
-                        <div className="font-bold text-sm text-purple-900 truncate mb-0.5">{a.subject}</div>
-                        <div className="text-xs text-gray-600 line-clamp-2 leading-relaxed">{a.detail}</div>
+                        <div className="font-bold text-sm text-purple-900 dark:text-purple-100 truncate mb-0.5">{a.subject}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">{a.detail}</div>
                         <div className="text-[10px] text-gray-400 mt-1 text-right">
                           {a.createdAt ? format(new Date(a.createdAt), 'dd MMM yyyy') : ''}
                         </div>

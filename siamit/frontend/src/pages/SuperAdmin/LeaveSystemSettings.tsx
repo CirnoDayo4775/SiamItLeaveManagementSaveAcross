@@ -701,7 +701,7 @@ const LeaveSystemSettings: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 flex flex-col">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -718,23 +718,23 @@ const LeaveSystemSettings: React.FC = () => {
 
         {/* Sidebar Trigger */}
         <div className="absolute top-4 left-4 z-20">
-          <SidebarTrigger className="bg-white/90 hover:bg-white text-blue-700 border border-blue-200 hover:border-blue-300 shadow-lg backdrop-blur-sm" />
+          <SidebarTrigger className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm" />
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-16">
-          <img src={config.assets.logo} alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
-          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-3">
+          <img src={config.assets.logo} alt="Logo" className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/80 dark:bg-gray-800/80 shadow-2xl border-4 border-white dark:border-gray-700 mb-4" />
+          <h1 className="text-2xl md:text-5xl font-extrabold text-indigo-900 dark:text-gray-100 drop-shadow mb-2 flex items-center gap-3">
             {t('navigation.manageAll')}
           </h1>
-          <p className="text-sm md:text-xl text-blue-900/70 mb-2 font-medium text-center max-w-2xl px-4">
+          <p className="text-sm md:text-xl text-blue-900/70 dark:text-gray-300 mb-2 font-medium text-center max-w-2xl px-4">
             {t('main.manageAllDesc')}
           </p>
         </div>
       </div>
       <div className="w-full max-w-7xl mx-auto px-4 py-4 md:py-8">
-        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-4 md:p-8">
+        <div className="bg-white/70 dark:bg-gray-900/90 backdrop-blur-md rounded-3xl shadow-2xl p-4 md:p-8">
           <Tabs defaultValue="positions" className="w-full" >
-            <TabsList className="mb-6 md:mb-10 bg-indigo-50 rounded-2xl shadow-inner grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-center py-3 px-4 h-auto" >
+            <TabsList className="mb-6 md:mb-10 bg-indigo-50 dark:bg-gray-800/90 rounded-2xl shadow-inner grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-center py-3 px-4 h-auto" >
               <TabsTrigger value="positions" className="w-full data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-indigo-700 font-bold text-lg md:text-xl py-3 px-4 md:px-6 rounded-2xl transition-all flex items-center justify-center gap-2">
                 <span role="img" aria-label="positions">🧑‍💼</span> {t('positions.positions')}
               </TabsTrigger>
@@ -754,15 +754,15 @@ const LeaveSystemSettings: React.FC = () => {
                   <h2 className="text-lg font-bold text-white">{t('positions.positions')}</h2>
                 </div>
                 <div className="p-6">
-                  <form onSubmit={handlePositionSubmit} className="mb-6 flex flex-col gap-4 bg-blue-50 rounded-xl p-6 shadow-sm">
+                  <form onSubmit={handlePositionSubmit} className="mb-6 flex flex-col gap-4 bg-blue-50 dark:bg-gray-800/90 rounded-xl p-6 shadow-sm">
                     <div className="flex flex-col md:flex-row gap-4">
-                      <Input name="name_en" value={positionForm.name_en} onChange={handlePositionChange} placeholder="Position (EN)" required className="flex-1" />
-                      <Input name="name_th" value={positionForm.name_th} onChange={handlePositionChange} placeholder="Position (TH)" required className="flex-1" />
+                      <Input name="name_en" value={positionForm.name_en} onChange={handlePositionChange} placeholder="Position (EN)" required className="flex-1 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700 dark:placeholder-gray-500" />
+                      <Input name="name_th" value={positionForm.name_th} onChange={handlePositionChange} placeholder="Position (TH)" required className="flex-1 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700 dark:placeholder-gray-500" />
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {filteredLeaveTypes.map(lt => (
                         <div key={lt.id} className="flex flex-col">
-                          <label className="text-sm font-medium text-gray-700 mb-1">{lang === 'th' ? lt.leave_type_th : lt.leave_type_en}</label>
+                          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{lang === 'th' ? lt.leave_type_th : lt.leave_type_en}</label>
                           <Input
                             type="number"
                             min={0}
@@ -771,6 +771,7 @@ const LeaveSystemSettings: React.FC = () => {
                             value={positionForm.quotas[lt.id] || ''}
                             onChange={e => handleQuotaChange(lt.id, e.target.value)}
                             required
+                            className="dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700 dark:placeholder-gray-500"
                           />
                         </div>
                       ))}
@@ -784,7 +785,7 @@ const LeaveSystemSettings: React.FC = () => {
                           onChange={handlePositionChange}
                           className="accent-blue-600 h-5 w-5 rounded border-gray-300 focus:ring-2 focus:ring-blue-400 transition-all"
                         />
-                        <span className="text-base font-medium select-none cursor-pointer whitespace-nowrap">
+                        <span className="text-base font-medium select-none cursor-pointer whitespace-nowrap dark:text-gray-300">
                           {t('positions.requestQuote')}
                         </span>
                       </label>
@@ -796,9 +797,10 @@ const LeaveSystemSettings: React.FC = () => {
                     )}
                   </form>
                   <div className="overflow-x-auto rounded-xl shadow">
-                    <table className="w-full table-auto bg-white rounded-xl">
+                    <table className="w-full table-auto bg-white dark:bg-gray-900 rounded-xl">
                       <thead>
-                        <tr className="bg-blue-100 text-blue-900">
+                        <tr className="bg-blue-100 dark:bg-gray-800 text-blue-900 dark:text-blue-100">
+
                           <th className="p-3">{t('positions.position')} (EN)</th>
                           <th className="p-3">{t('positions.position')} (TH)</th>
                           <th className="p-3">{t('positions.requestQuote')}</th>
@@ -887,8 +889,8 @@ const LeaveSystemSettings: React.FC = () => {
                 </div>
                 <div className="p-6 space-y-6">
                   {/* Manual reset section */}
-                  <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <h3 className="text-blue-900 font-semibold mb-3">{t('leave.manualReset')}</h3>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                    <h3 className="text-blue-900 dark:text-blue-100 font-semibold mb-3">{t('leave.manualReset')}</h3>
                     {/* Controls */}
                     <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-3">
                       <div className="flex-1 flex flex-col sm:flex-row gap-2">
@@ -896,9 +898,9 @@ const LeaveSystemSettings: React.FC = () => {
                           value={employeeSearch}
                           onChange={e => setEmployeeSearch(e.target.value)}
                           placeholder={t('common.searchEmployee', 'Search employee by name or id')}
-                          className="w-full md:w-80"
+                          className="w-full md:w-80 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700"
                         />
-                        <label className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded border bg-blue-50 text-blue-900 whitespace-nowrap">
+                        <label className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded border bg-blue-50 dark:bg-gray-700 text-blue-900 dark:text-blue-100 whitespace-nowrap dark:border-gray-600">
                           <input type="checkbox" checked={showSelectedOnly} onChange={e => setShowSelectedOnly(e.target.checked)} className="accent-blue-600" />
                           {t('common.showSelectedOnly', 'Show selected only')}
                         </label>
@@ -909,22 +911,22 @@ const LeaveSystemSettings: React.FC = () => {
                       </div>
                     </div>
                     {/* Counter */}
-                    <div className="text-sm text-gray-600 mb-2">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       {t('common.showing', 'Showing')}: <span className="font-medium">{filteredEmployees2.length}</span> / {employeeOptions.length}
                       {' · '}
                       {t('common.selected', 'Selected')}: <span className="font-medium">{selectedUserIds.length}</span>
                     </div>
                     {/* List */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-64 overflow-auto border rounded p-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-64 overflow-auto border dark:border-gray-700 rounded p-2">
                       {filteredEmployees2.length === 0 ? (
                         <div className="col-span-full text-center text-gray-500 py-6">{t('common.noResults', 'No results')}</div>
                       ) : (
                         filteredEmployees2.map(e => (
-                          <label key={e.id} className="flex items-center gap-3 text-sm p-2 rounded hover:bg-blue-50 cursor-pointer">
+                          <label key={e.id} className="flex items-center gap-3 text-sm p-2 rounded hover:bg-blue-50 dark:hover:bg-gray-700 cursor-pointer">
                             <input type="checkbox" className="mt-0.5" checked={selectedUserIds.includes(e.id)} onChange={() => toggleSelectUser(e.id)} />
                             <span className="flex items-center gap-2">
                               <img src={e.avatar || config.assets.defaultAvatar} alt={e.name} className="w-6 h-6 rounded-full object-cover border" />
-                              <span className="font-medium text-blue-900 truncate max-w-[220px]" title={e.name}>{e.name}</span>
+                              <span className="font-medium text-blue-900 dark:text-blue-100 truncate max-w-[220px]" title={e.name}>{e.name}</span>
                             </span>
                           </label>
                         ))
@@ -937,30 +939,30 @@ const LeaveSystemSettings: React.FC = () => {
 
                     </div>
                   </div>
-                  <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <h3 className="text-blue-900 font-semibold mb-3">{t('leave.note')}</h3>
-                    <p className="text-sm text-gray-700">{t('leave.noteDetail')}</p>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                    <h3 className="text-blue-900 dark:text-blue-100 font-semibold mb-3">{t('leave.note')}</h3>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">{t('leave.noteDetail')}</p>
                   </div>
 
                   {/* Cleanup old records section */}
-                  <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <h3 className="text-blue-900 font-semibold mb-3">{t('common.cleanupTitle')}</h3>
-                    <p className="text-sm text-gray-700 mb-3">{t('common.cleanupDescription')}</p>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                    <h3 className="text-blue-900 dark:text-blue-100 font-semibold mb-3">{t('common.cleanupTitle')}</h3>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">{t('common.cleanupDescription')}</p>
                     <Button
                       onClick={openConfirmCleanup}
                       disabled={cleanupLoading}
                       variant="outline"
-                      className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                      className="border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-900/20"
                     >
                       {cleanupLoading ? t('common.cleanupButtonLoading') : t('common.cleanupButton')}
                     </Button>
                   </div>
-                  <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <h3 className="text-blue-900 font-semibold mb-3">{t('positions.positions')}</h3>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                    <h3 className="text-blue-900 dark:text-blue-100 font-semibold mb-3">{t('positions.positions')}</h3>
                     <div className="overflow-x-auto rounded-xl">
-                      <table className="w-full table-auto bg-white rounded-xl">
+                      <table className="w-full table-auto bg-white dark:bg-gray-900 rounded-xl">
                         <thead>
-                          <tr className="bg-blue-100 text-blue-900">
+                          <tr className="bg-blue-100 dark:bg-gray-700 text-blue-900 dark:text-blue-100">
                             <th className="p-3">{t('positions.position')} (EN)</th>
                             <th className="p-3">{t('positions.position')} (TH)</th>
                             <th className="p-3 text-center">{t('positions.newYearQuota')}</th>
@@ -968,7 +970,7 @@ const LeaveSystemSettings: React.FC = () => {
                         </thead>
                         <tbody>
                           {positions.map(pos => (
-                            <tr key={pos.id} className="hover:bg-blue-50">
+                            <tr key={pos.id} className="hover:bg-blue-50 dark:hover:bg-gray-700">
                               <td className="p-3 font-medium">{pos.position_name_en}</td>
                               <td className="p-3 font-medium">{pos.position_name_th}</td>
                               <td className="p-3 font-medium text-center">
@@ -1000,15 +1002,15 @@ const LeaveSystemSettings: React.FC = () => {
                   <h2 className="text-lg font-bold text-white">{t('departments.departments')}</h2>
                 </div>
                 <div className="p-4 md:p-6">
-                  <form onSubmit={handleDepartmentSubmit} className="mb-6 flex flex-col md:flex-row gap-4 items-end bg-blue-50 rounded-xl p-4 md:p-6 shadow-sm">
-                    <Input name="name_en" value={departmentForm.name_en} onChange={handleDepartmentChange} placeholder="Department Name (EN)" required className="w-full md:w-64" />
-                    <Input name="name_th" value={departmentForm.name_th} onChange={handleDepartmentChange} placeholder="Department Name (TH)" required className="w-full md:w-64" />
+                  <form onSubmit={handleDepartmentSubmit} className="mb-6 flex flex-col md:flex-row gap-4 items-end bg-blue-50 dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-sm">
+                    <Input name="name_en" value={departmentForm.name_en} onChange={handleDepartmentChange} placeholder="Department Name (EN)" required className="w-full md:w-64 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700" />
+                    <Input name="name_th" value={departmentForm.name_th} onChange={handleDepartmentChange} placeholder="Department Name (TH)" required className="w-full md:w-64 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700" />
                     <Button type="submit" className="btn-primary w-full md:w-auto">{editingDepartmentId ? t('common.update') : t('common.add')}</Button>
                   </form>
                   <div className="overflow-x-auto rounded-xl shadow">
-                    <table className="w-full table-auto bg-white rounded-xl">
+                    <table className="w-full table-auto bg-white dark:bg-gray-900 rounded-xl">
                       <thead>
-                        <tr className="bg-blue-100 text-blue-900">
+                        <tr className="bg-blue-100 dark:bg-gray-800 text-blue-900 dark:text-blue-100">
                           <th className="p-3">{t('departments.departments')} (EN)</th>
                           <th className="p-3">{t('departments.departments')} (TH)</th>
                           <th className="p-3 text-center">{t('common.actions')}</th>
@@ -1016,14 +1018,14 @@ const LeaveSystemSettings: React.FC = () => {
                       </thead>
                       <tbody>
                         {departments.map(dep => (
-                          <tr key={dep.id} className="hover:bg-blue-50">
+                          <tr key={dep.id} className="hover:bg-blue-50 dark:hover:bg-gray-800">
                             {inlineDepartmentEdit && inlineDepartmentEdit.id === dep.id ? (
                               <>
                                 <td className="p-3 font-medium">
-                                  <Input value={inlineDepartmentEdit.name_en} onChange={e => handleInlineDepartmentEditChange('name_en', e.target.value)} className="w-32" />
+                                  <Input value={inlineDepartmentEdit.name_en} onChange={e => handleInlineDepartmentEditChange('name_en', e.target.value)} className="w-32 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600" />
                                 </td>
                                 <td className="p-3 font-medium">
-                                  <Input value={inlineDepartmentEdit.name_th} onChange={e => handleInlineDepartmentEditChange('name_th', e.target.value)} className="w-32" />
+                                  <Input value={inlineDepartmentEdit.name_th} onChange={e => handleInlineDepartmentEditChange('name_th', e.target.value)} className="w-32 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600" />
                                 </td>
                                 <td className="p-3 flex gap-2 justify-center">
                                   <Button variant="outline" onClick={saveInlineDepartmentEdit}>{t('common.save')}</Button>
@@ -1057,10 +1059,10 @@ const LeaveSystemSettings: React.FC = () => {
                   <h2 className="text-lg font-bold text-white">{t('leave.leaveType')}</h2>
                 </div>
                 <div className="p-4 md:p-6">
-                  <form onSubmit={handleLeaveTypeSubmit} className="mb-6 flex flex-col md:flex-row items-start md:items-end bg-blue-50 rounded-xl p-4 md:p-6 shadow-sm gap-4">
+                  <form onSubmit={handleLeaveTypeSubmit} className="mb-6 flex flex-col md:flex-row items-start md:items-end bg-blue-50 dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-sm gap-4">
                     <div className="flex flex-col md:flex-row flex-1 gap-4 items-start md:items-end w-full">
-                      <Input name="name_en" value={leaveTypeForm.name_en} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (EN)" required className="w-full md:w-64" />
-                      <Input name="name_th" value={leaveTypeForm.name_th} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (TH)" required className="w-full md:w-64" />
+                      <Input name="name_en" value={leaveTypeForm.name_en} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (EN)" required className="w-full md:w-64 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700" />
+                      <Input name="name_th" value={leaveTypeForm.name_th} onChange={handleLeaveTypeChange} placeholder="Leave Type Name (TH)" required className="w-full md:w-64 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700" />
                       <div className="flex items-center gap-3 ml-0 md:ml-2 mb-0 md:mb-2 h-10">
                         <input
                           type="checkbox"
@@ -1070,7 +1072,7 @@ const LeaveSystemSettings: React.FC = () => {
                           className="accent-blue-600 h-5 w-5 rounded border-gray-300 focus:ring-2 focus:ring-blue-400 transition-all"
                           id="require-attachment-checkbox"
                         />
-                        <label htmlFor="require-attachment-checkbox" className="text-base font-medium select-none cursor-pointer whitespace-nowrap">
+                        <label htmlFor="require-attachment-checkbox" className="text-base font-medium select-none cursor-pointer whitespace-nowrap dark:text-gray-300">
                           {t('leave.requiresAttachment')}
                         </label>
                       </div>
@@ -1080,9 +1082,9 @@ const LeaveSystemSettings: React.FC = () => {
                     </div>
                   </form>
                   <div className="overflow-x-auto rounded-xl shadow">
-                    <table className="w-full table-auto bg-white rounded-xl">
+                    <table className="w-full table-auto bg-white dark:bg-gray-900 rounded-xl">
                       <thead>
-                        <tr className="bg-blue-100 text-blue-900">
+                        <tr className="bg-blue-100 dark:bg-gray-800 text-blue-900 dark:text-blue-100">
                           <th className="p-3">{t('leave.leaveType')} (EN)</th>
                           <th className="p-3">{t('leave.leaveType')} (TH)</th>
                           <th className="p-3">{t('leave.requiresAttachment')}</th>
@@ -1091,14 +1093,14 @@ const LeaveSystemSettings: React.FC = () => {
                       </thead>
                       <tbody>
                         {leaveTypes.map(lt => (
-                          <tr key={lt.id} className="hover:bg-blue-50">
+                          <tr key={lt.id} className="hover:bg-blue-50 dark:hover:bg-gray-800">
                             {inlineLeaveTypeEdit && inlineLeaveTypeEdit.id === lt.id ? (
                               <>
                                 <td className="p-3 font-medium">
-                                  <Input value={inlineLeaveTypeEdit.name_en} onChange={e => handleInlineLeaveTypeEditChange('name_en', e.target.value)} className="w-32" />
+                                  <Input value={inlineLeaveTypeEdit.name_en} onChange={e => handleInlineLeaveTypeEditChange('name_en', e.target.value)} className="w-32 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600" />
                                 </td>
                                 <td className="p-3 font-medium">
-                                  <Input value={inlineLeaveTypeEdit.name_th} onChange={e => handleInlineLeaveTypeEditChange('name_th', e.target.value)} className="w-32" />
+                                  <Input value={inlineLeaveTypeEdit.name_th} onChange={e => handleInlineLeaveTypeEditChange('name_th', e.target.value)} className="w-32 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600" />
                                 </td>
                                 <td className="p-3 font-medium text-center">
                                   <label style={{ display: 'inline-block', position: 'relative', width: 40, height: 24 }}>
@@ -1213,18 +1215,18 @@ const LeaveSystemSettings: React.FC = () => {
 
       {/* Add Leave Type with quotas dialog */}
       <Dialog open={addLeaveTypeOpen} onOpenChange={setAddLeaveTypeOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700">
           <DialogHeader>
             <DialogTitle>{t('leave.addLeaveTypeQuota', 'กำหนดโควต้าต่อแต่ละตำแหน่ง')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               {t('leave.fillQuotaForPositions', 'กรอกจำนวนโควต้าของประเภทการลาใหม่นี้สำหรับแต่ละตำแหน่ง')}
             </div>
             <div className="overflow-x-auto rounded-xl">
-              <table className="w-full table-auto bg-white rounded-xl">
+              <table className="w-full table-auto bg-white dark:bg-gray-800 rounded-xl">
                 <thead>
-                  <tr className="bg-blue-100 text-blue-900">
+                  <tr className="bg-blue-100 dark:bg-gray-700 text-blue-900 dark:text-blue-100">
                     <th className="p-3 text-left">{t('positions.position')} (EN)</th>
                     <th className="p-3 text-left">{t('positions.position')} (TH)</th>
                     <th className="p-3 text-left">{t('leave.quota', 'Quota')}</th>
@@ -1232,7 +1234,7 @@ const LeaveSystemSettings: React.FC = () => {
                 </thead>
                 <tbody>
                   {positions.map((pos: any) => (
-                    <tr key={pos.id} className="hover:bg-blue-50">
+                    <tr key={pos.id} className="hover:bg-blue-50 dark:hover:bg-gray-700">
                       <td className="p-3 font-medium">{pos.position_name_en}</td>
                       <td className="p-3 font-medium">{pos.position_name_th}</td>
                       <td className="p-3">
@@ -1241,7 +1243,7 @@ const LeaveSystemSettings: React.FC = () => {
                           min={0}
                           value={newLeaveTypeQuotas[pos.id] ?? ''}
                           onChange={(e) => setNewLeaveTypeQuotas(prev => ({ ...prev, [pos.id]: Number(e.target.value) }))}
-                          className="w-28"
+                          className="w-28 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                         />
                       </td>
                     </tr>
@@ -1266,7 +1268,7 @@ const LeaveSystemSettings: React.FC = () => {
 
       {/* Position Delete Confirmation */}
       <AlertDialog open={deletePositionDialog.open} onOpenChange={(open) => setDeletePositionDialog({ open, position: null })}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1286,7 +1288,7 @@ const LeaveSystemSettings: React.FC = () => {
 
       {/* Confirm manual reset dialog */}
       <AlertDialog open={confirmResetOpen} onOpenChange={setConfirmResetOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('leave.confirmManualResetTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1304,7 +1306,7 @@ const LeaveSystemSettings: React.FC = () => {
 
       {/* Confirm cleanup old records dialog */}
       <AlertDialog open={confirmCleanupOpen} onOpenChange={setConfirmCleanupOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('common.cleanupTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1322,7 +1324,7 @@ const LeaveSystemSettings: React.FC = () => {
 
       {/* Department Delete Confirmation */}
       <AlertDialog open={deleteDepartmentDialog.open} onOpenChange={(open) => setDeleteDepartmentDialog({ open, department: null })}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1342,7 +1344,7 @@ const LeaveSystemSettings: React.FC = () => {
 
       {/* Leave Type Delete Confirmation */}
       <AlertDialog open={deleteLeaveTypeDialog.open} onOpenChange={(open) => setDeleteLeaveTypeDialog({ open, leaveType: null })}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1365,7 +1367,7 @@ const LeaveSystemSettings: React.FC = () => {
       </AlertDialog>
 
       {/* Footer */}
-      <footer className="w-full mt-16 py-8 bg-white text-center text-gray-400 text-base font-medium shadow-inner flex flex-col items-center gap-2">
+      <footer className="w-full mt-16 py-8 bg-white dark:bg-gray-900 text-center text-gray-400 text-base font-medium shadow-inner flex flex-col items-center gap-2">
         <img src={config.assets.logo} alt="Logo" className="w-10 h-10 rounded-full mx-auto mb-1" />
         <div className="font-bold text-gray-600">{t('footer.systemName')}</div>
         <div className="text-sm">{t('footer.copyright')}</div>
