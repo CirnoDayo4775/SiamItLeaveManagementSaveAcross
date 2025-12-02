@@ -156,7 +156,7 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError({});
-    
+
     // ตรวจสอบรูปแบบอีเมล
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
@@ -168,7 +168,7 @@ const Register = () => {
       setError({ email: t('auth.invalidEmailFormat') });
       return;
     }
-    
+
     // ตรวจสอบเพิ่มเติมว่าอีเมลไม่ใช่รูปแบบที่ไม่สมบูรณ์ เช่น @g, @gmail
     if (formData.email.includes('@') && !formData.email.includes('.')) {
       toast({
@@ -179,7 +179,7 @@ const Register = () => {
       setError({ email: t('auth.invalidEmailFormat') });
       return;
     }
-    
+
     // ตรวจสอบว่าโดเมนต้องมีอย่างน้อย 2 ตัวอักษรหลังจุด (เช่น .com, .co.th)
     const domainMatch = formData.email.match(/@[^@]+\.([^.]+)$/);
     if (domainMatch && domainMatch[1].length < 2) {
@@ -191,7 +191,7 @@ const Register = () => {
       setError({ email: t('auth.invalidEmailFormat') });
       return;
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: t('auth.passwordMismatch'),
@@ -226,7 +226,7 @@ const Register = () => {
     try {
       // Convert intern role to employee for signup, but keep position info
       const signupRole = formData.role === 'intern' ? 'employee' : formData.role as 'employee' | 'admin';
-      
+
       await signup(formData.email, formData.password, {
         full_name: formData.full_name,
         department: formData.department,
@@ -238,7 +238,7 @@ const Register = () => {
         start_work: formData.start_work || undefined,
         end_work: formData.end_work || undefined,
       });
-      
+
       toast({
         title: t('auth.registerSuccess'),
         description: t('auth.checkEmailVerification'),
@@ -247,45 +247,45 @@ const Register = () => {
       navigate('/');
     } catch (error: any) {
       const errMsg = error.message || t('common.error');
-      
+
       const newError: { email?: string; full_name?: string; general?: string } = {};
       const lowerMsg = errMsg.toLowerCase();
-      
+
       // Better error categorization and translation
       let translatedMessage = errMsg;
-      
+
       // Check for specific error patterns first
       if (lowerMsg.includes('อีเมล') && lowerMsg.includes('ถูกใช้ไปแล้ว')) {
         // Email already exists error - must contain both email and "already used"
-        translatedMessage = lang === 'th' 
-          ? 'อีเมลนี้ถูกใช้ไปแล้ว กรุณาใช้อีเมลอื่น' 
+        translatedMessage = lang === 'th'
+          ? 'อีเมลนี้ถูกใช้ไปแล้ว กรุณาใช้อีเมลอื่น'
           : 'This email is already in use. Please use a different email.';
         newError.email = translatedMessage;
       } else if (lowerMsg.includes('ชื่อ') && (lowerMsg.includes('ถูกใช้ไปแล้ว') || lowerMsg.includes('มีอยู่แล้ว'))) {
         // Name already exists error
-        translatedMessage = lang === 'th' 
-          ? 'ชื่อนี้ถูกใช้ไปแล้ว กรุณาใช้ชื่ออื่น' 
+        translatedMessage = lang === 'th'
+          ? 'ชื่อนี้ถูกใช้ไปแล้ว กรุณาใช้ชื่ออื่น'
           : 'This name is already in use. Please use a different name.';
         newError.full_name = translatedMessage;
       } else if (lowerMsg.includes('ชื่อ') || lowerMsg.includes('name') || lowerMsg.includes('user')) {
         // General name-related error
-        translatedMessage = lang === 'th' 
-          ? 'ข้อมูลชื่อไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง' 
+        translatedMessage = lang === 'th'
+          ? 'ข้อมูลชื่อไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง'
           : 'Name information is invalid. Please check again.';
         newError.full_name = translatedMessage;
       } else if (lowerMsg.includes('แผนก') || lowerMsg.includes('department')) {
-        translatedMessage = lang === 'th' 
-          ? 'ข้อมูลแผนกไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง' 
+        translatedMessage = lang === 'th'
+          ? 'ข้อมูลแผนกไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง'
           : 'Department information is invalid. Please check again.';
         newError.general = translatedMessage;
       } else if (lowerMsg.includes('ตำแหน่ง') || lowerMsg.includes('position')) {
-        translatedMessage = lang === 'th' 
-          ? 'ข้อมูลตำแหน่งไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง' 
+        translatedMessage = lang === 'th'
+          ? 'ข้อมูลตำแหน่งไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง'
           : 'Position information is invalid. Please check again.';
         newError.general = translatedMessage;
       } else if (lowerMsg.includes('รหัสผ่าน') || lowerMsg.includes('password')) {
-        translatedMessage = lang === 'th' 
-          ? 'ข้อมูลรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง' 
+        translatedMessage = lang === 'th'
+          ? 'ข้อมูลรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง'
           : 'Password information is invalid. Please check again.';
         newError.general = translatedMessage;
       } else {
@@ -293,7 +293,7 @@ const Register = () => {
         translatedMessage = errMsg;
         newError.general = translatedMessage;
       }
-      
+
       setError(newError);
       toast({
         title: t('auth.registerError'),
@@ -306,7 +306,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 relative">
       <div className="absolute top-4 right-4 z-10">
         <LanguageSwitcher />
       </div>
@@ -317,70 +317,73 @@ const Register = () => {
             alt="Siam IT Logo"
             className="mx-auto h-16 w-auto mb-6"
           />
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             {t('auth.register')}
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
             {t('main.onlineLeaveSystemCompany')}
           </p>
         </div>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 dark:bg-gray-800 dark:border-gray-700">
           {/* Removed duplicate Register title and description in the card header */}
           <CardContent className="pt-6 px-4 sm:px-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2 mb-4 mt-4">
-                <Label htmlFor="full_name" className="mb-2 block">{t('auth.fullName')}</Label>
+                <Label htmlFor="full_name" className="mb-2 block dark:text-gray-200">{t('auth.fullName')}</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     id="full_name"
                     placeholder={t('auth.fullName')}
                     value={formData.full_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
-                    className="pl-12 pr-4 py-3 border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl"
+                    className="pl-12 pr-4 py-3 border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     required
                   />
-                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 dark:text-gray-500 transition-colors" />
                 </div>
               </div>
 
               {/* Gender */}
               <div className="space-y-2 mb-4">
-                <Label htmlFor="gender" className="mb-2 block">{t('employee.gender')}</Label>
+                <Label htmlFor="gender" className="mb-2 block dark:text-gray-200">{t('employee.gender')}</Label>
                 <Select value={formData.gender} onValueChange={(value) => setFormData(prev => ({ ...prev, gender: value as any }))}>
-                  <SelectTrigger>
+                  <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     <SelectValue placeholder={t('employee.selectGender')} />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">{t('employee.male')}</SelectItem>
-                    <SelectItem value="female">{t('employee.female')}</SelectItem>
-                    <SelectItem value="other">{t('employee.other')}</SelectItem>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+                    <SelectItem value="male" className="dark:text-gray-200 dark:focus:bg-gray-700">{t('employee.male')}</SelectItem>
+                    <SelectItem value="female" className="dark:text-gray-200 dark:focus:bg-gray-700">{t('employee.female')}</SelectItem>
+                    <SelectItem value="other" className="dark:text-gray-200 dark:focus:bg-gray-700">{t('employee.other')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Date of Birth */}
               <div className="space-y-2 mb-4">
-                <Label htmlFor="dob" className="mb-2 block">{t('employee.birthdate')}</Label>
-                <DatePicker 
-                  date={formData.dob} 
-                  onDateChange={(date) => setFormData(prev => ({ ...prev, dob: date }))}
-                  placeholder={t('employee.selectDate')}
-                />
+                <Label htmlFor="dob" className="mb-2 block dark:text-gray-200">{t('employee.birthdate')}</Label>
+                <div className="dark:bg-gray-700 dark:border-gray-600 rounded-md">
+                  <DatePicker
+                    date={formData.dob}
+                    onDateChange={(date) => setFormData(prev => ({ ...prev, dob: date }))}
+                    placeholder={t('employee.selectDate')}
+                    className="dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2 mb-4">
-                <Label htmlFor="position" className="mb-2 block">{t('auth.position')}</Label>
+                <Label htmlFor="position" className="mb-2 block dark:text-gray-200">{t('auth.position')}</Label>
                 <Select onValueChange={(value) => setFormData(prev => ({ ...prev, position: value }))}>
-                  <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl py-3">
+                  <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl py-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     <SelectValue placeholder={t('positions.selectPosition')} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                     {positions
                       .filter(pos => (pos.position_name_th || pos.position_name_en) && (pos.position_name_th?.trim() !== '' || pos.position_name_en?.trim() !== ''))
                       .map((pos) => (
-                        <SelectItem key={pos.id} value={pos.id}>
+                        <SelectItem key={pos.id} value={pos.id} className="dark:text-gray-200 dark:focus:bg-gray-700">
                           {lang === 'th' ? pos.position_name_th : pos.position_name_en}
                         </SelectItem>
                       ))}
@@ -390,19 +393,19 @@ const Register = () => {
 
               {/* Department Field */}
               <div className="space-y-2">
-                <Label htmlFor="department" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                 
+                <Label htmlFor="department" className="text-sm font-medium text-gray-700 dark:text-gray-200 flex items-center gap-2">
+
                   {t('auth.department')}
                 </Label>
                 <Select onValueChange={(value) => setFormData(prev => ({ ...prev, department: value }))}>
-                  <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl py-3">
+                  <SelectTrigger className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl py-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     <SelectValue placeholder={t('departments.selectDepartment')} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                     {departments
                       .filter(dept => (dept.department_name_th || dept.department_name_en) && (dept.department_name_th?.trim() !== '' || dept.department_name_en?.trim() !== ''))
                       .map((dept) => (
-                        <SelectItem key={dept.id} value={dept.id}>
+                        <SelectItem key={dept.id} value={dept.id} className="dark:text-gray-200 dark:focus:bg-gray-700">
                           {lang === 'th' ? dept.department_name_th : dept.department_name_en}
                         </SelectItem>
                       ))}
@@ -412,17 +415,18 @@ const Register = () => {
 
               {/* Phone number */}
               <div className="space-y-2 mb-4">
-                <Label htmlFor="phone" className="mb-2 block">{t('employee.phoneNumber')}</Label>
-                <Input 
-                  id="phone" 
-                  type="tel" 
-                  placeholder={t('employee.enterPhoneNumber')} 
-                  value={formData.phone_number} 
+                <Label htmlFor="phone" className="mb-2 block dark:text-gray-200">{t('employee.phoneNumber')}</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder={t('employee.enterPhoneNumber')}
+                  value={formData.phone_number}
                   onChange={(e) => {
                     // อนุญาตเฉพาะตัวเลขและเครื่องหมาย + - ( ) และช่องว่าง
                     const value = e.target.value.replace(/[^0-9+\-() ]/g, '');
                     setFormData(prev => ({ ...prev, phone_number: value }));
-                  }} 
+                  }}
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
@@ -433,21 +437,27 @@ const Register = () => {
                 return (
                   <div className={`grid grid-cols-1 ${showEndWorkDate ? 'md:grid-cols-2' : ''} gap-4`}>
                     <div className="space-y-2">
-                      <Label htmlFor="start_work" className="mb-2 block">{t('employee.startWorkDate')}</Label>
-                      <DatePicker 
-                        date={formData.start_work} 
-                        onDateChange={(date) => setFormData(prev => ({ ...prev, start_work: date }))}
-                        placeholder={t('employee.selectDate')}
-                      />
+                      <Label htmlFor="start_work" className="mb-2 block dark:text-gray-200">{t('employee.startWorkDate')}</Label>
+                      <div className="dark:bg-gray-700 dark:border-gray-600 rounded-md">
+                        <DatePicker
+                          date={formData.start_work}
+                          onDateChange={(date) => setFormData(prev => ({ ...prev, start_work: date }))}
+                          placeholder={t('employee.selectDate')}
+                          className="dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                        />
+                      </div>
                     </div>
                     {showEndWorkDate && (
                       <div className="space-y-2">
-                        <Label htmlFor="end_work" className="mb-2 block">{t('employee.endWorkDate')}</Label>
-                        <DatePicker 
-                          date={formData.end_work} 
-                          onDateChange={(date) => setFormData(prev => ({ ...prev, end_work: date }))}
-                          placeholder={t('employee.selectDate')}
-                        />
+                        <Label htmlFor="end_work" className="mb-2 block dark:text-gray-200">{t('employee.endWorkDate')}</Label>
+                        <div className="dark:bg-gray-700 dark:border-gray-600 rounded-md">
+                          <DatePicker
+                            date={formData.end_work}
+                            onDateChange={(date) => setFormData(prev => ({ ...prev, end_work: date }))}
+                            placeholder={t('employee.selectDate')}
+                            className="dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -455,25 +465,25 @@ const Register = () => {
               })()}
 
               <div className="space-y-2 mb-4">
-                <Label htmlFor="email" className="mb-2 block">{t('auth.email')}</Label>
+                <Label htmlFor="email" className="mb-2 block dark:text-gray-200">{t('auth.email')}</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     id="email"
                     type="email"
                     placeholder={t('auth.email')}
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="pl-10"
+                    className="pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     required
                   />
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 dark:text-gray-500 transition-colors" />
                 </div>
               </div>
-              
+
               {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-200 flex items-center gap-2">
                   <Lock className="h-4 w-4" />
                   {t('auth.password')}
                 </Label>
@@ -484,24 +494,23 @@ const Register = () => {
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={handlePasswordChange}
-                    className="pl-12 pr-12 py-3 border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl"
+                    className="pl-12 pr-12 py-3 border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 rounded-xl dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     required
                   />
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 dark:text-gray-500 transition-colors" />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
                   >
                     {showPassword ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
                 {formData.password && (
                   <div className={`flex items-center gap-2 text-sm mt-1 ${getPasswordStrengthColor()}`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      passwordStrength === 'weak' ? 'bg-red-500' : 
-                      passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
-                    }`}></div>
+                    <div className={`w-2 h-2 rounded-full ${passwordStrength === 'weak' ? 'bg-red-500' :
+                        passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                      }`}></div>
                     {getPasswordStrengthText()}
                   </div>
                 )}
@@ -509,7 +518,7 @@ const Register = () => {
 
               {/* Confirm Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700 dark:text-gray-200 flex items-center gap-2">
                   <Lock className="h-4 w-4" />
                   {t('auth.confirmPassword')}
                 </Label>
@@ -520,21 +529,20 @@ const Register = () => {
                     placeholder="••••••••"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="pl-10 pr-10"
+                    className="pl-10 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                   >
                     {showConfirmPassword ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
                 {formData.confirmPassword && formData.password && (
-                  <div className={`flex items-center gap-2 text-sm mt-1 ${
-                    formData.password === formData.confirmPassword ? 'text-green-600' : 'text-red-500'
-                  }`}>
+                  <div className={`flex items-center gap-2 text-sm mt-1 ${formData.password === formData.confirmPassword ? 'text-green-600' : 'text-red-500'
+                    }`}>
                     {formData.password === formData.confirmPassword ? (
                       <>
                         {/* <CheckCircle className="h-4 w-4" /> */}
@@ -551,9 +559,9 @@ const Register = () => {
               </div>
 
               {/* Submit Button */}
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={loading}
               >
                 {loading ? (
@@ -571,11 +579,11 @@ const Register = () => {
               </Button>
             </form>
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {t('auth.alreadyHaveAccount')}{' '}
-                <Link 
-                  to="/login" 
-                  className="font-semibold text-blue-600 hover:text-blue-700 transition-colors underline decoration-2 underline-offset-2"
+                <Link
+                  to="/"
+                  className="font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors underline decoration-2 underline-offset-2"
                 >
                   {t('auth.login')}
                 </Link>
@@ -584,7 +592,7 @@ const Register = () => {
           </CardContent>
         </Card>
       </div>
-      
+
       {/* Dialog ยืนยันการสมัครสมาชิก */}
       <RegisterConfirmDialog
         open={showConfirmDialog}

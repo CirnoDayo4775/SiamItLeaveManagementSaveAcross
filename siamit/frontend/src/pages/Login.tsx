@@ -17,7 +17,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const Login = () => {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-24 -left-24 w-[300px] h-[300px] rounded-full bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-100 opacity-30 blur-2xl animate-float-slow" />
         <div className="absolute bottom-0 right-0 w-[200px] h-[200px] rounded-full bg-gradient-to-tr from-purple-200 via-blue-100 to-indigo-100 opacity-20 blur-xl animate-float-slow2" />
-        <div className="absolute top-1/2 left-1/2 w-20 h-20 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse-slow" style={{transform:'translate(-50%,-50%)'}} />
+        <div className="absolute top-1/2 left-1/2 w-20 h-20 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse-slow" style={{ transform: 'translate(-50%,-50%)' }} />
       </div>
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
         <ThemeToggle />
@@ -75,18 +75,18 @@ const Login = () => {
               alt="Siam IT Logo"
               className="mx-auto h-20 w-auto mb-6 animate-float"
             />
-            <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-500 to-purple-500 drop-shadow-lg animate-pop-in">
+            <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-500 to-purple-500 dark:from-blue-300 dark:via-indigo-200 dark:to-purple-300 drop-shadow-lg animate-pop-in">
               {t('auth.login')}
             </h2>
-            <p className="mt-2 text-base text-blue-500 animate-fade-in-up delay-100">
+            <p className="mt-2 text-base text-blue-500 dark:text-blue-200 animate-fade-in-up delay-100">
               {t('main.onlineLeaveSystemCompany')}
             </p>
           </div>
 
           <Card className="shadow-2xl border-0 glass dark:dark-card-gradient dark:dark-glow animate-fade-in-up">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl text-center text-blue-800 animate-slide-in-left">{t('auth.login')}</CardTitle>
-              <CardDescription className="text-center text-blue-400 animate-fade-in-up delay-100">
+              <CardTitle className="text-2xl text-center text-blue-800 dark:text-white animate-slide-in-left">{t('auth.login')}</CardTitle>
+              <CardDescription className="text-center text-blue-400 dark:text-blue-200 animate-fade-in-up delay-100">
                 {t('auth.enterEmailPassword')}
               </CardDescription>
             </CardHeader>
@@ -107,11 +107,11 @@ const Login = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-blue-900 font-medium">{t('auth.password')}</Label>
+                  <Label htmlFor="password" className="text-blue-900 dark:text-gray-200 font-medium">{t('auth.password')}</Label>
                   <div className="flex items-center gap-3">
-                    <Lock className="h-6 w-6 text-blue-400 animate-pop-in" />
+                    <Lock className="h-6 w-6 text-blue-400 dark:text-blue-300 animate-pop-in" />
                     <div className="relative w-full">
                       <Input
                         id="password"
@@ -125,7 +125,7 @@ const Login = () => {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-300 hover:text-blue-500 transition-colors animate-pop-in"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-300 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-200 transition-colors animate-pop-in"
                         tabIndex={-1}
                       >
                         {showPassword ? <EyeOff /> : <Eye />}
@@ -134,8 +134,8 @@ const Login = () => {
                   </div>
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full btn-blue-login text-lg py-3 font-bold shadow-lg animate-bounce-in"
                   disabled={loading}
                 >
@@ -151,11 +151,11 @@ const Login = () => {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-base text-blue-500">
+                <p className="text-base text-blue-500 dark:text-blue-200">
                   {t('auth.dontHaveAccount')}{' '}
-                  <Link 
-                    to="/register" 
-                    className="font-bold text-blue-700 hover:text-blue-900 transition-colors"
+                  <Link
+                    to="/register"
+                    className="font-bold text-blue-700 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-100 transition-colors"
                   >
                     {t('auth.register')}
                   </Link>
@@ -202,6 +202,18 @@ const Login = () => {
         }
         .input-blue-login::-webkit-textfield-decoration-container {
           display: none !important;
+        }
+        .dark .input-blue-login {
+          background: rgba(17, 24, 39, 0.7);
+          border-color: #374151;
+          color: #f3f4f6;
+        }
+        .dark .input-blue-login::placeholder {
+          color: #9ca3af;
+        }
+        .dark .input-blue-login:focus {
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
         }
         .btn-blue-login {
           background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
