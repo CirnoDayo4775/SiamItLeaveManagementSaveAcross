@@ -75,10 +75,11 @@ const AppDataSource = new DataSource({
     require('./EnityTable/leaveType.js'),
     require('./EnityTable/department.js'),
     require('./EnityTable/leaveQuota.js'),
-    require('./EnityTable/leave_use.js'),
     require('./EnityTable/announcements.js'),
     require('./EnityTable/customHoliday.js'),
-    require('./EnityTable/lineUser.js')
+    require('./EnityTable/lineUser.js'),
+        require('./EnityTable/LeaveUsed.js'),
+        // require('./EnityTable/LeaveUsed.js'),
   ],
 });
 
@@ -94,43 +95,36 @@ AppDataSource.initialize()
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     const allowedOrigins = [
       ...config.cors.origins,
-      // Allow all ngrok domains
       /^https:\/\/.*\.ngrok-free\.app$/,
       /^https:\/\/.*\.ngrok\.io$/,
       /^https:\/\/.*\.loca\.lt$/,
-      // Allow common local dev hosts on any port (http)
       /^http:\/\/localhost:\d{2,5}$/,
       /^http:\/\/127\.0\.0\.1:\d{2,5}$/,
-      // Allow local network IPs on any port (e.g., 192.168.x.x:5173)
       /^http:\/\/192\.168\.[0-9]{1,3}\.[0-9]{1,3}:\d{2,5}$/
     ];
-    
-    // Check if the origin is allowed
-    const isAllowed = allowedOrigins.some(allowedOrigin => {
-      if (typeof allowedOrigin === 'string') {
-        return origin === allowedOrigin;
-      } else if (allowedOrigin instanceof RegExp) {
-        return allowedOrigin.test(origin);
-      }
-      return false;
-    });
-    
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+
+    const isAllowed = allowedOrigins.some(pattern =>
+      typeof pattern === "string"
+        ? origin === pattern
+        : pattern.test(origin)
+    );
+
+    if (isAllowed) callback(null, true);
+    else callback(new Error("Not allowed by CORS"));
   },
-  credentials: true // if you need to send cookies/auth headers
+
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  credentials: true,
+  maxAge: 86400 // cache preflight 24 ชั่วโมง
 }));
+
 
 // Ensure uploads directories exist
 const uploadsDir = config.getUploadsPath();

@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
 class LineLoginController {
 
@@ -21,12 +22,12 @@ class LineLoginController {
              // Create LINE Login URL
       console.log('LINE Login Debug:');
       console.log('Channel ID:', process.env.LINE_CHANNEL_ID);
-      console.log('Redirect URI:', process.env.LINE_REDIRECT_URI);
+      console.log('Redirect URI:', process.env.LINE_BOT_REDIRECT_URI);
       
        const loginUrl = `https://access.line.me/oauth2/v2.1/authorize?` +
          `response_type=code&` +
          `client_id=${process.env.LINE_CHANNEL_ID}&` +
-         `redirect_uri=${encodeURIComponent(process.env.LINE_REDIRECT_URI)}&` +
+         `redirect_uri=${encodeURIComponent(process.env.LINE_BOT_REDIRECT_URI)}&` +
          `state=${state}&` +
          `scope=profile%20openid`;
       
@@ -234,7 +235,7 @@ class LineLoginController {
         body: new URLSearchParams({
           grant_type: 'authorization_code',
           code: code,
-          redirect_uri: process.env.LINE_REDIRECT_URI,
+          redirect_uri: process.env.LINE_BOT_REDIRECT_URI,
           client_id: process.env.LINE_CHANNEL_ID,
           client_secret: process.env.LINE_CHANNEL_SECRET,
         }),

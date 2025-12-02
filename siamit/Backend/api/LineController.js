@@ -1,6 +1,8 @@
 const line = require('@line/bot-sdk');
 const axios = require('axios');
 const { Between } = require('typeorm');
+require('dotenv').config();
+
 const { 
   toDayHour, 
   calculateDaysBetween, 
@@ -24,7 +26,7 @@ console.log('Channel Secret length:', process.env.LINE_BOT_CHANNEL_SECRET ? proc
 
 // Helper function to get API base URL
 const getApiBaseUrl = () => {
-  return process.env.VITE_API_BASE_URL || config.server.apiBaseUrl;
+  return 'https://krista-nonmutable-evolutionally.ngrok-free.dev';
 };
 
 const client = new line.Client(config);
@@ -167,65 +169,71 @@ To link your account for full access, please visit the web application and use L
     }
   }
 
-  // Get leave status from API and format for LINE
-  static async getLeaveStatus(user) {
+static async getLeaveStatus(user) {
     try {
-      // Get recent leave requests directly from database like /recent-leave-requests endpoint
       const leaveRepo = global.AppDataSource.getRepository('LeaveRequest');
       const leaveTypeRepo = global.AppDataSource.getRepository('LeaveType');
       
-      // Find 3 most recent leave requests for the user
+      // 1. ดึงชื่อผู้ใช้ (ใช้ Raw SQL เพื่อป้องกัน Error เรื่อง Entity)
+      let userName = 'ไม่ระบุชื่อ';
+      try {
+        const [userResult] = await global.AppDataSource.query(
+          `SELECT name FROM users WHERE id = ?`, 
+          [user.id]
+        );
+        if (userResult) {
+          userName = userResult.name;
+        }
+      } catch (err) {
+        console.log('Could not fetch user name:', err);
+      }
+
+      // 2. ค้นหาใบลา 3 รายการล่าสุด
       const leaveRequests = await leaveRepo.find({ 
         where: { Repid: user.id }, 
         order: { createdAt: 'DESC' }, 
         take: 3 
       });
 
-      // Helper to calculate duration - using utility function
-
-      // Helper to get status in both languages
+      // ฟังก์ชันแปลงสถานะเป็นไทย
       function getStatusDisplay(status) {
         switch (status.toLowerCase()) {
-          case 'approved':
-            return 'Approved';
-          case 'pending':
-            return 'Pending';
-          case 'rejected':
-            return 'Rejected';
-          default:
-            return status;
+          case 'approved': return 'อนุมัติ';
+          case 'pending': return 'รออนุมัติ';
+          case 'rejected': return 'ไม่อนุมัติ';
+          default: return status;
         }
       }
 
-      let message = '📋 Recent Leave:\n\n';
+      // เริ่มต้นข้อความ
+      let message = `📋 รายการลาล่าสุด: ${userName}\n\n`;
       
       if (leaveRequests.length === 0) {
-        message += 'No recent leave requests found.';
+        message += 'ไม่พบประวัติการลาล่าสุด';
       } else {
         for (const lr of leaveRequests) {
-          // Get leave type names
+          // --- จัดการชื่อประเภทการลา ---
           let leaveTypeNameTh = lr.leaveType;
           let leaveTypeNameEn = lr.leaveType;
           
           if (lr.leaveType && lr.leaveType.length > 20) {
-            // ID-based leave type - Use raw query to include soft-deleted records
+            // กรณีเป็น ID (UUID)
             const leaveTypeQuery = `SELECT * FROM leave_type WHERE id = ?`;
-            const [leaveTypeResult] = await AppDataSource.query(leaveTypeQuery, [lr.leaveType]);
-            const leaveType = leaveTypeResult ? leaveTypeResult[0] : null;
+            const [leaveTypeResult] = await global.AppDataSource.query(leaveTypeQuery, [lr.leaveType]);
+            const leaveType = leaveTypeResult ? leaveTypeResult : null;
+            
             if (leaveType) {
-                          if (leaveType.is_active === false) {
-              // Add [DELETED] prefix for inactive/deleted leave types
-              const prefix_th = '[DELETED] ';
-              const prefix_en = '[DELETED] ';
-              leaveTypeNameTh = prefix_th + (leaveType.leave_type_th || lr.leaveType);
-              leaveTypeNameEn = prefix_en + (leaveType.leave_type_en || lr.leaveType);
-            } else {
-              leaveTypeNameTh = leaveType.leave_type_th || lr.leaveType;
-              leaveTypeNameEn = leaveType.leave_type_en || lr.leaveType;
-            }
+               if (leaveType.is_active === false || leaveType.is_active === 0) {
+                 const prefix = '[ถูกลบ] ';
+                 leaveTypeNameTh = prefix + (leaveType.leave_type_th || lr.leaveType);
+                 leaveTypeNameEn = prefix + (leaveType.leave_type_en || lr.leaveType);
+               } else {
+                 leaveTypeNameTh = leaveType.leave_type_th || lr.leaveType;
+                 leaveTypeNameEn = leaveType.leave_type_en || lr.leaveType;
+               }
             }
           } else {
-            // String-based leave type
+            // กรณีเป็น String
             const leaveType = await leaveTypeRepo.findOne({
               where: [
                 { leave_type_th: lr.leaveType },
@@ -238,49 +246,43 @@ To link your account for full access, please visit the web application and use L
             }
           }
 
-          // Calculate duration
+          // --- คำนวณระยะเวลา (เป็นภาษาไทย) ---
           let duration = '';
           if (lr.startTime && lr.endTime) {
-            // Hour-based
             const startMinutes = convertToMinutes(...lr.startTime.split(':').map(Number));
             const endMinutes = convertToMinutes(...lr.endTime.split(':').map(Number));
             let durationHours = (endMinutes - startMinutes) / 60;
             if (durationHours < 0 || isNaN(durationHours)) durationHours = 0;
-            duration = `${Math.floor(durationHours)} hour`;
+            duration = `${Math.floor(durationHours)} ชั่วโมง`;
           } else if (lr.startDate && lr.endDate) {
-            // Day-based
             const start = new Date(lr.startDate);
             const end = new Date(lr.endDate);
             let days = calculateDaysBetween(start, end);
             if (days < 0 || isNaN(days)) days = 0;
-            duration = `${days} day`;
+            duration = `${days} วัน`;
           }
 
-          // Format status with emoji and bilingual display
-          const status = lr.status === 'approved' ? '✅' : 
-                        lr.status === 'pending' ? '⏳' : '❌';
+          // --- จัดรูปแบบข้อความ ---
+          const statusIcon = lr.status === 'approved' ? '✅' : lr.status === 'pending' ? '⏳' : '❌';
           const statusDisplay = getStatusDisplay(lr.status);
+          
+          const startDate = new Date(lr.startDate).toLocaleDateString('th-TH'); // วันที่แบบไทย
+          const endDate = new Date(lr.endDate).toLocaleDateString('th-TH');
 
-          // Format date
-          const startDate = new Date(lr.startDate).toLocaleDateString('en-GB');
-          const endDate = new Date(lr.endDate).toLocaleDateString('en-GB');
+          // แสดงชื่อประเภทการลา (เน้นภาษาไทย)
+          const leaveTypeDisplay = leaveTypeNameTh || leaveTypeNameEn;
 
-          // Display leave type in both languages
-          const leaveTypeDisplay = leaveTypeNameEn && leaveTypeNameEn !== leaveTypeNameTh 
-            ? `${leaveTypeNameTh} (${leaveTypeNameEn})`
-            : leaveTypeNameTh;
-
-          message += `${status} ${leaveTypeDisplay}\n`;
-          message += `   📅 ${startDate} to ${endDate}\n`;
-          message += `   ⏱️ Duration: ${duration}\n`;
-          message += `   📝 Status: ${statusDisplay}\n\n`;
+          message += `${statusIcon} ${leaveTypeDisplay}\n`;
+          message += `   📅 ${startDate} ถึง ${endDate}\n`;
+          message += `   ⏱️ รวม: ${duration}\n`;
+          message += `   📝 สถานะ: ${statusDisplay}\n\n`;
         }
       }
       
       return { type: 'text', text: message };
     } catch (error) {
       console.error('Error fetching recent leave:', error);
-      return { type: 'text', text: '❌ Error fetching recent leave.' };
+      return { type: 'text', text: '❌ เกิดข้อผิดพลาดในการดึงข้อมูล' };
     }
   }
 

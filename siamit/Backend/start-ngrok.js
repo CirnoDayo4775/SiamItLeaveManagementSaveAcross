@@ -1,32 +1,31 @@
-const ngrok = require('ngrok');
-const config = require('./config');
+const { spawn } = require("child_process");
 
 async function startNgrok() {
-  try {
-    console.log('🚀 Starting ngrok tunnel...');
-    
-    const url = await ngrok.connect({
-      addr: config.server.port,
-      authtoken: process.env.NGROK_AUTH_TOKEN // Optional: Add your ngrok auth token to .env
-    });
-    
-    console.log('✅ ngrok tunnel is running!');
-    console.log(`🌐 Public URL: ${url}`);
-    console.log(`🔗 Local URL: http://localhost:${config.server.port}`);
-    console.log('\n📋 You can now share this URL for external access');
-    console.log('⚠️  Remember to stop the tunnel when done: Ctrl+C');
-    
-    // Keep the process running
-    process.on('SIGINT', async () => {
-      console.log('\n🛑 Stopping ngrok tunnel...');
-      await ngrok.kill();
-      process.exit(0);
-    });
-    
-  } catch (error) {
-    console.error('❌ Error starting ngrok:', error.message);
-    process.exit(1);
-  }
+  console.log("🚀 Starting ngrok tunnel...");
+
+  const ngrok = spawn("ngrok", ["http", "3000"], { shell: true });
+
+  ngrok.stdout.on("data", (data) => {
+    const text = data.toString();
+
+    // ดึง URL อัตโนมัติ
+    const match = text.match(/https:\/\/[a-z0-9-]+\.ngrok-(free|app)\.app/);
+    if (match) {
+      console.log("🌐 Public URL:", match[0]);
+    }
+
+    console.log(text);
+  });
+
+  ngrok.stderr.on("data", (data) => {
+    console.error("Error:", data.toString());
+  });
+
+  process.on("SIGINT", () => {
+    console.log("\n🛑 Stopping ngrok...");
+    ngrok.kill();
+    process.exit(0);
+  });
 }
 
 startNgrok();

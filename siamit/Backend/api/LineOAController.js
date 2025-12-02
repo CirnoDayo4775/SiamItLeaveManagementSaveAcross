@@ -1,10 +1,11 @@
 const { Client } = require('@line/bot-sdk');
 const axios = require('axios');
+require('dotenv').config();
 
 // Line Bot Configuration
 const lineConfig = {
-  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || 'YOUR_CHANNEL_ACCESS_TOKEN',
-  channelSecret: process.env.LINE_CHANNEL_SECRET || 'YOUR_CHANNEL_SECRET'
+  channelAccessToken: process.env.LINE_BOT_CHANNEL_SECRET || 'YOUR_CHANNEL_ACCESS_TOKEN',
+  channelSecret: process.env.LINE_BOT_CHANNEL_SECRET || 'YOUR_CHANNEL_SECRET'
 };
 
 const client = new Client(lineConfig);

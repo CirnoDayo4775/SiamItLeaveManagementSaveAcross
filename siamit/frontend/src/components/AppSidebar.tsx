@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Calendar, Home, Clock, Settings, User, LogOut, Users, Rss } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import NotificationBell from "./NotificationBell";
@@ -108,6 +108,7 @@ export function AppSidebar() {
   const location = useLocation();
   const { user, logout, loading } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   // Use avatar URL from user context if available, otherwise fetch it
   const avatarUrl = user?.avatar_url ? `${API_BASE_URL}${user.avatar_url}` : null;
 
@@ -133,6 +134,9 @@ export function AppSidebar() {
   const handleLogout = async () => {
     try {
       await logout();
+      // Ensure the app navigates back to root after logout
+      navigate('/', { replace: true });
+      
       toast({
         title: t('auth.logoutSuccess'),
         description: t('auth.logoutSuccess'),

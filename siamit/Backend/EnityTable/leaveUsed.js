@@ -16,7 +16,7 @@ module.exports = new EntitySchema({
             length: 36,
             nullable: false,
         },
-        leave_type: {
+        leave_type_id: {
             type: 'varchar',
             nullable: false,
         },

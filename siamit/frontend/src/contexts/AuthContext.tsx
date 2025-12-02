@@ -1,4 +1,5 @@
 import SessionExpiredDialog from '@/components/dialogs/SessionExpiredDialog';
+import { API_BASE_URL } from '@/constants/api';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -128,7 +129,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     console.log(email);
     console.log(password);
-          const response = await fetch(`http://localhost:3001/api/login`, {
+          const response = await fetch(`${API_BASE_URL}/api/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -153,7 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
  
     // Fetch profile info after login
     try {
-      const profileRes = await fetch(`http://localhost:3001/api/profile`, {
+      const profileRes = await fetch(`${API_BASE_URL}/api/profile`, {
         headers: { 'Authorization': `Bearer ${data.data?.token}` }
       });
       if (profileRes.ok) {
@@ -177,7 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Fetch avatar URL after login
     try {
-      const avatarResponse = await fetch(`http://localhost:3001/api/avatar`, {
+      const avatarResponse = await fetch(`${API_BASE_URL}/api/avatar`, {
          headers: { 'Authorization': `Bearer ${data.data?.token}` }
       });
       if (avatarResponse.ok) {
@@ -201,7 +202,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 const token = currentUser?.token;
 
-    const response = await fetch(`http://localhost:3001/api/register`, {
+
+    const response = await fetch(`${API_BASE_URL}/api/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' ,
         'Authorization': `Bearer ${token}`
