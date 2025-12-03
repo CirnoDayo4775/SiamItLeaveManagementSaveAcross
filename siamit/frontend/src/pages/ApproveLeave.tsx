@@ -963,21 +963,25 @@ const ApproveLeave = () => {
             {/* Pending Requests */}
             <TabsContent value="pending" className="space-y-4">
               {/* --- Filter UI --- */}
-              <div className="flex flex-col md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 dark:from-gray-800/80 dark:via-gray-900/80 dark:to-indigo-900/60 backdrop-blur rounded-2xl border border-blue-100 dark:border-gray-700 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <div className="grid grid-cols-2 md:flex md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 dark:from-gray-800/80 dark:via-gray-900/80 dark:to-indigo-900/60 backdrop-blur rounded-2xl border border-blue-100 dark:border-gray-700 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
 
                 {/* Leave Type Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.leaveType')}</label>
-                  <select
-                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
-                    value={pendingPendingFilterLeaveType}
-                    onChange={e => setPendingPendingFilterLeaveType(e.target.value)}
+                  <Select
+                    value={pendingPendingFilterLeaveType || "all"}
+                    onValueChange={(val) => setPendingPendingFilterLeaveType(val === "all" ? "" : val)}
                   >
-                    <option value="">{t('leave.allTypes', 'All Types')}</option>
-                    {pendingLeaveTypes.map(lt => (
-                      <option key={lt.id} value={lt.id}>{i18n.language.startsWith('th') ? lt.leave_type_th : lt.leave_type_en}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                      <SelectValue placeholder={t('leave.allTypes', 'All Types')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('leave.allTypes', 'All Types')}</SelectItem>
+                      {pendingLeaveTypes.map(lt => (
+                        <SelectItem key={lt.id} value={lt.id}>{i18n.language.startsWith('th') ? lt.leave_type_th : lt.leave_type_en}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Date Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.4s' }}>
@@ -1021,20 +1025,24 @@ const ApproveLeave = () => {
                 {/* Month Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.month')}</label>
-                  <select
-                    className={`w-full md:w-32 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingSingleDate
-                      ? 'opacity-50 cursor-not-allowed bg-gray-100'
-                      : 'hover:bg-blue-50 hover:border-blue-300'
-                      }`}
-                    value={pendingPendingMonth}
-                    onChange={e => handleMonthChange(e.target.value ? Number(e.target.value) : '')}
+                  <Select
+                    value={pendingPendingMonth ? pendingPendingMonth.toString() : "all"}
+                    onValueChange={(val) => handleMonthChange(val === "all" ? "" : Number(val))}
                     disabled={!!pendingPendingSingleDate}
                   >
-                    <option value="">{t('common.allMonths')}</option>
-                    {currentMonthNames.map((name, idx) => (
-                      <option key={idx + 1} value={idx + 1}>{name}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger className={`w-full md:w-32 border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press ${pendingPendingSingleDate
+                      ? 'opacity-50 cursor-not-allowed bg-gray-100'
+                      : 'hover:bg-blue-50 hover:border-blue-300'
+                      }`}>
+                      <SelectValue placeholder={t('common.allMonths')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('common.allMonths')}</SelectItem>
+                      {currentMonthNames.map((name, idx) => (
+                        <SelectItem key={idx + 1} value={(idx + 1).toString()}>{name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Year Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.6s' }}>
@@ -1056,18 +1064,22 @@ const ApproveLeave = () => {
                 {/* Backdated Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.backdatedFilter')}</label>
-                  <select
-                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                  <Select
                     value={pendingPendingBackdatedFilter}
-                    onChange={e => setPendingPendingBackdatedFilter(e.target.value)}
+                    onValueChange={setPendingPendingBackdatedFilter}
                   >
-                    <option value="all">{t('leave.allBackdated')}</option>
-                    <option value="backdated">{t('leave.backdatedOnly')}</option>
-                    <option value="normal">{t('leave.notBackdatedOnly')}</option>
-                  </select>
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('leave.allBackdated')}</SelectItem>
+                      <SelectItem value="backdated">{t('leave.backdatedOnly')}</SelectItem>
+                      <SelectItem value="normal">{t('leave.notBackdatedOnly')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Buttons */}
-                <div className="flex gap-3 mt-2 w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
+                <div className="col-span-2 md:col-span-1 flex gap-3 mt-2 w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
                   <button
                     className="flex-1 md:flex-none bg-gradient-to-r from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 text-blue-900 dark:text-white px-6 py-2 rounded-xl shadow-lg hover:from-gray-300 hover:to-gray-400 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
                     onClick={clearPendingFilters}
@@ -1090,7 +1102,7 @@ const ApproveLeave = () => {
                     <AlertCircle className="w-6 h-6" />
                     {t('admin.pendingLeaveRequests')}
                   </CardTitle>
-                  <CardDescription className="text-blue-100 text-sm animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
+                  <CardDescription className="text-white text-sm animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
                     {t('admin.pendingLeaveRequestsDesc')}
                   </CardDescription>
                 </CardHeader>
@@ -1109,11 +1121,11 @@ const ApproveLeave = () => {
                       {pendingRequests.map((request, idx) => (
                         <div
                           key={request.id}
-                          className={`glass bg-gradient-to-br from-white/80 via-blue-50/80 to-indigo-100/80 border-0 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all flex flex-col md:flex-row md:items-center md:justify-between gap-4 animate-fade-in-up hover-lift`}
+                          className={`glass bg-gradient-to-br from-white/80 via-blue-50/80 to-indigo-100/80 border-0 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 animate-fade-in-up hover-lift`}
                           style={{ animationDelay: `${0.1 + idx * 0.07}s` }}
                         >
                           <div className="flex-1 min-w-0">
-                            <div className="font-bold text-lg text-blue-900 mb-1 truncate animate-slide-in-left">
+                            <div className="font-bold text-lg text-blue-900 dark:text-white mb-1 truncate animate-slide-in-left">
                               {(() => {
                                 const userName = typeof request.user === "string" ? JSON.parse(request.user).name : request.user?.name;
                                 return userName === 'deleted_user' ? t('admin.deletedUser') : (userName || "-");
@@ -1134,9 +1146,9 @@ const ApproveLeave = () => {
                                 {t('leave.backdated')}
                               </Badge>
                             )}
-                            <div className="text-sm text-gray-700 mb-1 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>{t('leave.date')}: {request.startDate} - {request.endDate}</div>
+                            <div className="text-sm text-gray-700 dark:text-gray-200 mb-1 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>{t('leave.date')}: {request.startDate} - {request.endDate}</div>
                           </div>
-                          <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0 w-full md:w-auto">
+                          <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0 w-full lg:w-auto">
                             <Button
                               size="sm"
                               className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow hover:scale-105 transition animate-bounce-in btn-press hover-glow"
@@ -1160,9 +1172,9 @@ const ApproveLeave = () => {
                       ))}
                       {/* --- ปุ่มเปลี่ยนหน้า --- */}
                       {(pendingTotalPages >= 1 || pendingRequests.length > 0) && (
-                        <div className="flex flex-col sm:flex-row justify-center items-center mt-8 gap-4 p-6 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+                        <div className="flex flex-col lg:flex-row justify-center items-center mt-8 gap-4 p-6 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 dark:from-gray-800/60 dark:via-gray-900/60 dark:to-indigo-900/40 backdrop-blur rounded-2xl border border-blue-100 dark:border-gray-700 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
                           {/* Pagination Info */}
-                          <div className="flex items-center gap-3 text-sm text-gray-600">
+                          <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                             <div className="flex items-center gap-2">
                               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                               <span>{t('admin.pageInfo', { page: pendingPage || 1, totalPages: pendingTotalPages || 1 })}</span>
@@ -1183,16 +1195,16 @@ const ApproveLeave = () => {
                                 size="sm"
                                 onClick={() => setPendingPage(Math.max(1, pendingPage - 1))}
                                 disabled={pendingPage === 1}
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-3 py-2 transform hover:scale-105 hover:shadow-md btn-press"
+                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 transform hover:scale-105 hover:shadow-md btn-press"
                               >
                                 <ChevronLeft className="w-4 h-4" />
                               </Button>
 
                               {/* Page Numbers */}
-                              <div className="flex items-center gap-1">
+                              <div className="flex items-center gap-0.5 sm:gap-1">
                                 {(() => {
                                   const pages = [];
-                                  const maxPageButtons = 5;
+                                  const maxPageButtons = 3; // Reduced from 5 for narrow screens
                                   let start = Math.max(1, pendingPage - 2);
                                   const end = Math.min(pendingTotalPages, start + maxPageButtons - 1);
                                   if (end - start < maxPageButtons - 1) {
@@ -1205,13 +1217,13 @@ const ApproveLeave = () => {
                                         variant={pendingPage === 1 ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => setPendingPage(1)}
-                                        className={`rounded-xl px-3 py-2 transition-all duration-300 transform hover:scale-105 hover:shadow-md ${pendingPage === 1 ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
+                                        className={`rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-md ${pendingPage === 1 ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
                                       >
                                         1
                                       </Button>
                                     );
                                     if (start > 2) pages.push(
-                                      <span key="start-ellipsis" className="px-2 text-gray-400">...</span>
+                                      <span key="start-ellipsis" className="px-1 text-gray-400 text-xs">...</span>
                                     );
                                   }
                                   for (let i = start; i <= end; i++) {
@@ -1221,7 +1233,7 @@ const ApproveLeave = () => {
                                         variant={pendingPage === i ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => setPendingPage(i)}
-                                        className={`rounded-xl px-3 py-2 transition-all duration-300 transform hover:scale-105 hover:shadow-md ${pendingPage === i ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
+                                        className={`rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-md ${pendingPage === i ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
                                       >
                                         {i}
                                       </Button>
@@ -1229,7 +1241,7 @@ const ApproveLeave = () => {
                                   }
                                   if (end < pendingTotalPages) {
                                     if (end < pendingTotalPages - 1) pages.push(
-                                      <span key="end-ellipsis" className="px-2 text-gray-400">...</span>
+                                      <span key="end-ellipsis" className="px-1 text-gray-400 text-xs">...</span>
                                     );
                                     pages.push(
                                       <Button
@@ -1237,7 +1249,7 @@ const ApproveLeave = () => {
                                         variant={pendingPage === pendingTotalPages ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => setPendingPage(pendingTotalPages)}
-                                        className={`rounded-xl px-3 py-2 transition-all duration-300 transform hover:scale-105 hover:shadow-md ${pendingPage === pendingTotalPages ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
+                                        className={`rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-md ${pendingPage === pendingTotalPages ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
                                       >
                                         {pendingTotalPages}
                                       </Button>
@@ -1253,7 +1265,7 @@ const ApproveLeave = () => {
                                 size="sm"
                                 onClick={() => setPendingPage(Math.min(pendingTotalPages, pendingPage + 1))}
                                 disabled={pendingPage === pendingTotalPages}
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-3 py-2 transform hover:scale-105 hover:shadow-md btn-press"
+                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 transform hover:scale-105 hover:shadow-md btn-press"
                               >
                                 <ChevronRight className="w-4 h-4" />
                               </Button>
@@ -1278,7 +1290,7 @@ const ApproveLeave = () => {
                                 ))}
                               </SelectContent>
                             </Select>
-                            <span className="text-sm text-gray-600">{t('admin.itemsPerPage')}</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-300">{t('admin.itemsPerPage')}</span>
                           </div>
                         </div>
                       )}
@@ -1290,35 +1302,43 @@ const ApproveLeave = () => {
             {/* History Requests */}
             <TabsContent value="recent" className="space-y-4">
               {/* --- Filter UI สำหรับประวัติการอนุมัติล่าสุด --- */}
-              <div className="flex flex-col md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <div className="grid grid-cols-2 md:flex md:flex-row flex-wrap gap-4 items-end mb-4 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 dark:from-gray-800/80 dark:via-gray-900/80 dark:to-indigo-900/60 dark:border-gray-700 backdrop-blur rounded-2xl border border-blue-100 p-4 md:p-6 shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
 
                 {/* Leave Type Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.leaveType')}</label>
-                  <select
-                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
-                    value={pendingHistoryFilterLeaveType}
-                    onChange={e => setPendingHistoryFilterLeaveType(e.target.value)}
+                  <Select
+                    value={pendingHistoryFilterLeaveType || "all"}
+                    onValueChange={(val) => setPendingHistoryFilterLeaveType(val === "all" ? "" : val)}
                   >
-                    <option value="">{t('leave.allTypes', 'All Types')}</option>
-                    {pendingLeaveTypes.map(lt => (
-                      <option key={lt.id} value={lt.id}>{i18n.language.startsWith('th') ? lt.leave_type_th : lt.leave_type_en}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                      <SelectValue placeholder={t('leave.allTypes', 'All Types')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('leave.allTypes', 'All Types')}</SelectItem>
+                      {pendingLeaveTypes.map(lt => (
+                        <SelectItem key={lt.id} value={lt.id}>{i18n.language.startsWith('th') ? lt.leave_type_th : lt.leave_type_en}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Month Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.month')}</label>
-                  <select
-                    className="w-full md:w-32 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
-                    value={pendingFilterMonth}
-                    onChange={e => setPendingFilterMonth(e.target.value ? Number(e.target.value) : '')}
+                  <Select
+                    value={pendingFilterMonth ? pendingFilterMonth.toString() : "all"}
+                    onValueChange={(val) => setPendingFilterMonth(val === "all" ? "" : Number(val))}
                   >
-                    <option value="">{t('common.allMonths')}</option>
-                    {currentMonthNames.map((name, idx) => (
-                      <option key={idx + 1} value={idx + 1}>{name}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full md:w-32 border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                      <SelectValue placeholder={t('common.allMonths')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('common.allMonths')}</SelectItem>
+                      {currentMonthNames.map((name, idx) => (
+                        <SelectItem key={idx + 1} value={(idx + 1).toString()}>{name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Year Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.6s' }}>
@@ -1336,31 +1356,39 @@ const ApproveLeave = () => {
                 {/* Backdated Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.backdatedFilter')}</label>
-                  <select
-                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                  <Select
                     value={pendingHistoryBackdatedFilter}
-                    onChange={e => setPendingHistoryBackdatedFilter(e.target.value)}
+                    onValueChange={setPendingHistoryBackdatedFilter}
                   >
-                    <option value="all">{t('leave.allBackdated')}</option>
-                    <option value="backdated">{t('leave.backdatedOnly')}</option>
-                    <option value="normal">{t('leave.notBackdatedOnly')}</option>
-                  </select>
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('leave.allBackdated')}</SelectItem>
+                      <SelectItem value="backdated">{t('leave.backdatedOnly')}</SelectItem>
+                      <SelectItem value="normal">{t('leave.notBackdatedOnly')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Status Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
                   <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.status')}</label>
-                  <select
-                    className="w-full md:w-auto border border-blue-200 rounded-xl px-3 py-2 min-w-[120px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                  <Select
                     value={pendingHistoryStatusFilter}
-                    onChange={e => setPendingHistoryStatusFilter(e.target.value)}
+                    onValueChange={setPendingHistoryStatusFilter}
                   >
-                    <option value="all">{t('leave.statusAll')}</option>
-                    <option value="approved">{t('leave.approved')}</option>
-                    <option value="rejected">{t('leave.rejected')}</option>
-                  </select>
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[120px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('leave.statusAll')}</SelectItem>
+                      <SelectItem value="approved">{t('leave.approved')}</SelectItem>
+                      <SelectItem value="rejected">{t('leave.rejected')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 {/* Buttons */}
-                <div className="flex gap-3 mt-2 w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.9s' }}>
+                <div className="col-span-2 md:col-span-1 flex gap-3 mt-2 w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.9s' }}>
                   <button
                     className="flex-1 md:flex-none bg-gradient-to-r from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 text-blue-900 dark:text-white px-6 py-2 rounded-xl shadow-lg hover:from-gray-300 hover:to-gray-400 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 transform hover:scale-105 hover:shadow-xl animate-bounce-in btn-press hover-glow min-w-[100px]"
                     onClick={clearHistoryFilters}
@@ -1383,7 +1411,7 @@ const ApproveLeave = () => {
                     <Clock className="w-6 h-6" />
                     {t('admin.recentApprovalHistory')}
                   </CardTitle>
-                  <CardDescription className="text-blue-100 text-sm animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
+                  <CardDescription className="text-white text-sm animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
                     {t('admin.recentApprovalHistoryDesc')}
                   </CardDescription>
                 </CardHeader>
@@ -1409,12 +1437,12 @@ const ApproveLeave = () => {
                         return (
                           <div
                             key={request.id}
-                            className={`relative glass bg-gradient-to-br from-white/80 via-blue-50/80 to-indigo-100/80 border-0 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all flex flex-col md:flex-row md:items-center md:justify-between gap-4 animate-fade-in-up hover-lift`}
+                            className={`relative glass bg-gradient-to-br from-white/80 via-blue-50/80 to-indigo-100/80 border-0 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 animate-fade-in-up hover-lift`}
                             style={{ animationDelay: `${0.1 + idx * 0.07}s` }}
                           >
                             {/* ย้ายสถานะมาอยู่ข้างประเภทการลา */}
                             <div className="flex-1 min-w-0">
-                              <div className="font-bold text-lg text-blue-900 mb-1 truncate animate-slide-in-left">
+                              <div className="font-bold text-lg text-blue-900 dark:text-white mb-1 truncate animate-slide-in-left">
                                 {request.user?.name === 'deleted_user' ? t('admin.deletedUser') : (request.user?.name || "-")}
                               </div>
                               {/* ประเภทการลา (leaveType) */}
@@ -1438,8 +1466,8 @@ const ApproveLeave = () => {
                                   {t('leave.backdated')}
                                 </Badge>
                               )}
-                              <div className="text-sm text-gray-700 mb-1 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>{t('leave.date')}: {startStr} - {endStr} ({leaveDays} {t('leave.days')})</div>
-                              <div className="text-xs text-gray-500 animate-fade-in-up break-words" style={{ animationDelay: '0.4s' }}>
+                              <div className="text-sm text-gray-700 dark:text-gray-200 mb-1 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>{t('leave.date')}: {startStr} - {endStr} ({leaveDays} {t('leave.days')})</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 animate-fade-in-up break-words" style={{ animationDelay: '0.4s' }}>
                                 {t('leave.reason')}: {request.reason && request.reason.length > 50
                                   ? request.reason.slice(0, 50) + '...'
                                   : request.reason || '-'
@@ -1447,7 +1475,7 @@ const ApproveLeave = () => {
                               </div>
                             </div>
                             {/* ปุ่มดูรายละเอียดและลบ */}
-                            <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0 mt-2 md:mt-0 w-full md:w-auto">
+                            <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0 mt-2 lg:mt-0 w-full lg:w-auto">
                               <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetailsWithFetch(request)}>
                                 <Eye className="w-4 h-4 mr-1" />{t('admin.viewDetails')}
                               </Button>
@@ -1462,9 +1490,9 @@ const ApproveLeave = () => {
                       })}
                       {/* --- ปุ่มเปลี่ยนหน้า --- */}
                       {(historyTotalPages >= 1 || historyRequests.length > 0) && (
-                        <div className="flex flex-col sm:flex-row justify-center items-center mt-8 gap-4 p-6 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 backdrop-blur rounded-2xl border border-blue-100 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+                        <div className="flex flex-col lg:flex-row justify-center items-center mt-8 gap-4 p-6 bg-gradient-to-r from-white/80 via-blue-50/30 to-indigo-50/30 dark:from-gray-800/60 dark:via-gray-900/60 dark:to-indigo-900/40 backdrop-blur rounded-2xl border border-blue-100 dark:border-gray-700 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
                           {/* Pagination Info */}
-                          <div className="flex items-center gap-3 text-sm text-gray-600">
+                          <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                             <div className="flex items-center gap-2">
                               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                               <span>{t('admin.pageInfo', { page: historyPage || 1, totalPages: historyTotalPages || 1 })}</span>
@@ -1485,16 +1513,16 @@ const ApproveLeave = () => {
                                 size="sm"
                                 onClick={() => setHistoryPage(Math.max(1, historyPage - 1))}
                                 disabled={historyPage === 1}
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-3 py-2 transform hover:scale-105 hover:shadow-md btn-press"
+                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 transform hover:scale-105 hover:shadow-md btn-press"
                               >
                                 <ChevronLeft className="w-4 h-4" />
                               </Button>
 
                               {/* Page Numbers */}
-                              <div className="flex items-center gap-1">
+                              <div className="flex items-center gap-0.5 sm:gap-1">
                                 {(() => {
                                   const pages = [];
-                                  const maxPageButtons = 5;
+                                  const maxPageButtons = 3; // Reduced from 5 for narrow screens
                                   let start = Math.max(1, historyPage - 2);
                                   const end = Math.min(historyTotalPages, start + maxPageButtons - 1);
                                   if (end - start < maxPageButtons - 1) {
@@ -1507,13 +1535,13 @@ const ApproveLeave = () => {
                                         variant={historyPage === 1 ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => setHistoryPage(1)}
-                                        className={`rounded-xl px-3 py-2 transition-all duration-300 transform hover:scale-105 hover:shadow-md ${historyPage === 1 ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
+                                        className={`rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-md ${historyPage === 1 ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
                                       >
                                         1
                                       </Button>
                                     );
                                     if (start > 2) pages.push(
-                                      <span key="start-ellipsis" className="px-2 text-gray-400">...</span>
+                                      <span key="start-ellipsis" className="px-1 text-gray-400 text-xs">...</span>
                                     );
                                   }
                                   for (let i = start; i <= end; i++) {
@@ -1523,7 +1551,7 @@ const ApproveLeave = () => {
                                         variant={historyPage === i ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => setHistoryPage(i)}
-                                        className={`rounded-xl px-3 py-2 transition-all duration-300 transform hover:scale-105 hover:shadow-md ${historyPage === i ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
+                                        className={`rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-md ${historyPage === i ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
                                       >
                                         {i}
                                       </Button>
@@ -1531,7 +1559,7 @@ const ApproveLeave = () => {
                                   }
                                   if (end < historyTotalPages) {
                                     if (end < historyTotalPages - 1) pages.push(
-                                      <span key="end-ellipsis" className="px-2 text-gray-400">...</span>
+                                      <span key="end-ellipsis" className="px-1 text-gray-400 text-xs">...</span>
                                     );
                                     pages.push(
                                       <Button
@@ -1539,7 +1567,7 @@ const ApproveLeave = () => {
                                         variant={historyPage === historyTotalPages ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => setHistoryPage(historyTotalPages)}
-                                        className={`rounded-xl px-3 py-2 transition-all duration-300 transform hover:scale-105 hover:shadow-md ${historyPage === historyTotalPages ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
+                                        className={`rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-md ${historyPage === historyTotalPages ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}`}
                                       >
                                         {historyTotalPages}
                                       </Button>
@@ -1555,7 +1583,7 @@ const ApproveLeave = () => {
                                 size="sm"
                                 onClick={() => setHistoryPage(Math.min(historyTotalPages, historyPage + 1))}
                                 disabled={historyPage === historyTotalPages}
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-3 py-2 transform hover:scale-105 hover:shadow-md btn-press"
+                                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl px-2 sm:px-3 py-1.5 sm:py-2 transform hover:scale-105 hover:shadow-md btn-press"
                               >
                                 <ChevronRight className="w-4 h-4" />
                               </Button>
@@ -1580,7 +1608,7 @@ const ApproveLeave = () => {
                                 ))}
                               </SelectContent>
                             </Select>
-                            <span className="text-sm text-gray-600">{t('admin.itemsPerPage')}</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-300">{t('admin.itemsPerPage')}</span>
                           </div>
                         </div>
                       )}
