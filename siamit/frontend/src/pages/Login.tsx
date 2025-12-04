@@ -36,13 +36,12 @@ const Login = () => {
         title: t('auth.loginSuccess'),
         description: t('auth.welcomeToSystem'),
       });
-      if (userInfo.role === 'admin') {
-        navigate('/admin', { replace: true });
-      } else if (userInfo.role === 'superadmin') {
-        navigate('/', { replace: true });
-      } else {
-        navigate('/', { replace: true });
-      }
+
+      // Navigate based on user role - simplified logic
+      const destination = (userInfo.role === 'admin' || userInfo.role === 'superadmin')
+        ? (userInfo.role === 'admin' ? '/admin' : '/')
+        : '/';
+      navigate(destination, { replace: true });
     } catch (error: any) {
       toast({
         title: t('auth.loginError'),
@@ -53,6 +52,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:dark-gradient-bg flex items-center justify-center p-4 relative overflow-x-hidden transition-all duration-500">

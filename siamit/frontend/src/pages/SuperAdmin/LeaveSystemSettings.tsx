@@ -124,7 +124,9 @@ const LeaveSystemSettings: React.FC = () => {
         ));
       }
     } catch (error) {
-      console.error('Error fetching departments:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching departments:', error);
+      }
       setDepartments([]);
     }
   };
@@ -453,7 +455,9 @@ const LeaveSystemSettings: React.FC = () => {
           setPositions(data.data);
         }
       } catch (error) {
-        console.error('Error fetching positions:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching positions:', error);
+        }
         setPositions([]);
       }
     };
@@ -474,7 +478,9 @@ const LeaveSystemSettings: React.FC = () => {
           })));
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching data:', error);
+        }
         setLeaveTypes([]);
       }
     };

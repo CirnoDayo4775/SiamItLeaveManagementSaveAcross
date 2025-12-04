@@ -110,7 +110,9 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
           setUsers(usersList);
         }
       } catch (error) {
-        console.error('Error fetching users:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching users:', error);
+        }
         toast({
           title: t('common.error'),
           description: t('leave.errorFetchingUsers'),
@@ -131,7 +133,9 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
           setLeaveTypes(data.data);
         }
       } catch (error) {
-        console.error('Error fetching leave types:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching leave types:', error);
+        }
       }
     };
 
@@ -147,7 +151,9 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
           setDepartments(data.data);
         }
       } catch (error) {
-        console.error('Error fetching departments:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching departments:', error);
+        }
       }
     };
 
@@ -163,7 +169,9 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
           setPositions(data.data);
         }
       } catch (error) {
-        console.error('Error fetching positions:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching positions:', error);
+        }
       }
     };
 
@@ -403,7 +411,9 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
         });
       }
     } catch (error: any) {
-      console.error('Error submitting leave request:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error submitting leave request:', error);
+      }
       toast({
         title: t('leave.submitError'),
         description: error.message || t('leave.submitError'),
@@ -627,8 +637,8 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                   <h4 className="text-base font-semibold text-gray-800 dark:text-gray-100">{t('leave.backdatedControl')}</h4>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-xs font-medium ${allowBackdated === 0
-                    ? 'bg-green-100 text-green-700 border border-green-200'
-                    : 'bg-red-100 text-red-700 border border-red-200'
+                  ? 'bg-green-100 text-green-700 border border-green-200'
+                  : 'bg-red-100 text-red-700 border border-red-200'
                   }`}>
                   {allowBackdated === 0 ? t('leave.disallowBackdated') : t('leave.allowBackdated')}
                 </div>
@@ -638,8 +648,8 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                 {/* ไม่อนุญาตการย้อนหลัง */}
                 <div
                   className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${allowBackdated === 0
-                      ? 'border-green-400 bg-green-50 shadow-md'
-                      : 'border-gray-200 bg-white hover:border-green-300 hover:bg-green-25'
+                    ? 'border-green-400 bg-green-50 shadow-md'
+                    : 'border-gray-200 bg-white hover:border-green-300 hover:bg-green-25'
                     }`}
                   onClick={() => setAllowBackdated(0)}
                 >
@@ -668,8 +678,8 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                 {/* อนุญาตการย้อนหลัง */}
                 <div
                   className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${allowBackdated === 1
-                      ? 'border-red-400 bg-red-50 shadow-md'
-                      : 'border-gray-200 bg-white hover:border-red-300 hover:bg-red-25'
+                    ? 'border-red-400 bg-red-50 shadow-md'
+                    : 'border-gray-200 bg-white hover:border-red-300 hover:bg-red-25'
                     }`}
                   onClick={() => setAllowBackdated(1)}
                 >

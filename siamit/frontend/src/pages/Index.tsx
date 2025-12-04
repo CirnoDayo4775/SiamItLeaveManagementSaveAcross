@@ -181,7 +181,9 @@ const Index = () => {
         setBackdatedCount(backdatedRes.data.count || 0);
       }
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching dashboard stats:', error);
+      }
     } finally {
       setLoadingDashboard(false);
     }
@@ -236,7 +238,9 @@ const Index = () => {
           }
         }
       } catch (error) {
-        console.error('Error fetching user profile:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching user profile:', error);
+        }
       } finally {
         setLoadingUserProfile(false);
       }
@@ -291,7 +295,9 @@ const Index = () => {
           setErrorAnnouncements(t('error.cannotLoadStats'));
         }
       } catch (error) {
-        console.error('Error fetching announcements:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching announcements:', error);
+        }
         setErrorAnnouncements(t('error.apiConnectionError'));
       } finally {
         setLoadingAnnouncements(false);
@@ -321,7 +327,9 @@ const Index = () => {
           setCompanyHolidaysOfMonth([]);
         }
       } catch (error) {
-        console.error('Error fetching company holidays:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching company holidays:', error);
+        }
         setCompanyHolidaysOfMonth([]);
       } finally {
         setLoadingCompanyHolidays(false);

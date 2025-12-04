@@ -60,14 +60,14 @@ const CompanyCalendarPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch company events
         const result = await apiService.get(apiEndpoints.customHolidaysByYear(year));
         setCompanyEvents(result.data || []);
-        
+
         // Get Thai holidays for the year
         const thaiHolidaysData = getAllThaiHolidays(year, t);
-        
+
         // Debug: Add test holiday for July 28th, 2025 to test dual highlighting
         if (year === 2025) {
           console.log('All Thai holidays for 2025:', thaiHolidaysData);
@@ -76,7 +76,7 @@ const CompanyCalendarPage = () => {
             return date.getMonth() === 6; // July
           });
           console.log('July 2025 Thai holidays:', julyHolidays);
-          
+
           // Add test holiday on July 28th
           thaiHolidaysData.push({
             date: '2025-07-28',
@@ -84,11 +84,13 @@ const CompanyCalendarPage = () => {
             type: 'public'
           });
         }
-        
+
         setThaiHolidays(thaiHolidaysData);
-        
+
       } catch (error) {
-        console.error('Error fetching data:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching data:', error);
+        }
         setCompanyEvents([]);
         setThaiHolidays([]);
       } finally {
@@ -102,7 +104,7 @@ const CompanyCalendarPage = () => {
   // Get all events (company + Thai holidays) for a specific month
   const getEventsByMonth = (year: number, month: number): CalendarEvent[] => {
     const allEvents: CalendarEvent[] = [];
-    
+
     // Add company events if enabled
     if (showCompanyHolidays && Array.isArray(companyEvents)) {
       const monthCompanyEvents = companyEvents.filter(event => {
@@ -115,7 +117,7 @@ const CompanyCalendarPage = () => {
         isThaiHoliday: false
       })));
     }
-    
+
     // Add Thai holidays if enabled
     if (showAnnualHolidays && Array.isArray(thaiHolidays)) {
       const monthThaiHolidays = thaiHolidays.filter(holiday => {
@@ -133,14 +135,14 @@ const CompanyCalendarPage = () => {
         isThaiHoliday: true
       })));
     }
-    
+
     // Debug: Log events for July 2025
     if (year === 2025 && month === 6) { // July
       console.log('Company events for July 2025:', companyEvents);
       console.log('Thai holidays for July 2025:', thaiHolidays);
       console.log('All events for July 2025:', allEvents);
     }
-    
+
     return allEvents;
   };
 
@@ -151,7 +153,7 @@ const CompanyCalendarPage = () => {
 
   // Get weekday names based on current language
   const getWeekdayNames = () => {
-    return currentLang === 'th' 
+    return currentLang === 'th'
       ? ['', '', '', '', '', '', '']
       : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   };
@@ -175,12 +177,12 @@ const CompanyCalendarPage = () => {
           <button onClick={() => navigate(-1)} className="absolute left-4 top-4 md:left-10 md:top-10 p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600 shadow">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          
+
           {/* Language Switcher */}
           <div className="absolute right-4 top-4 md:right-10 md:top-10">
             <LanguageSwitcher />
           </div>
-          
+
           <img src="/lovable-uploads/siamit.png" alt="Logo" className="w-24 h-24 rounded-full bg-white/80 shadow-2xl border-4 border-white mb-4" />
           <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 drop-shadow mb-2 flex items-center gap-3">
             {t('navigation.companyCalendar')}
@@ -203,11 +205,11 @@ const CompanyCalendarPage = () => {
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>
-        
+
         {/* Filter Switches */}
         <div className="flex items-center justify-center gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
           <div className="flex items-center gap-3">
-            <Switch 
+            <Switch
               checked={showAnnualHolidays}
               onCheckedChange={setShowAnnualHolidays}
               className="data-[state=checked]:bg-red-500"
@@ -215,7 +217,7 @@ const CompanyCalendarPage = () => {
             <span className="text-sm font-medium text-red-700">{t('calendar.annualHolidays')}</span>
           </div>
           <div className="flex items-center gap-3">
-            <Switch 
+            <Switch
               checked={showCompanyHolidays}
               onCheckedChange={setShowCompanyHolidays}
               className="data-[state=checked]:bg-blue-500"
@@ -223,7 +225,7 @@ const CompanyCalendarPage = () => {
             <span className="text-sm font-medium text-blue-700">{t('calendar.companyHolidays')}</span>
           </div>
         </div>
-        
+
         {/* Legend */}
         <div className="flex items-center justify-center gap-6 mb-6 bg-white/60 rounded-xl p-4 shadow-lg">
           <div className="flex items-center gap-2">
@@ -239,7 +241,7 @@ const CompanyCalendarPage = () => {
             <span className="text-sm text-purple-700">{t('calendar.dualEvents')}</span>
           </div>
         </div>
-        
+
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -260,26 +262,26 @@ const CompanyCalendarPage = () => {
                 }
               }
               if (week.length > 0) weeks.push([...week, ...Array(7 - week.length).fill(null)]);
-              
+
               // Get all events for this month
               const events = getEventsByMonth(year, mIdx);
               const eventDates = events.map(e => e.date);
               const eventMap: Record<string, CalendarEvent> = {};
               const eventCountMap: Record<string, number> = {};
-              
+
               // First pass: count events per date
-              events.forEach(e => { 
+              events.forEach(e => {
                 eventCountMap[e.date] = (eventCountMap[e.date] || 0) + 1;
               });
-              
+
               // Debug: Log events for July 2025
               if (year === 2025 && mIdx === 6) { // July
                 console.log('Events for July 2025:', events);
                 console.log('Event count map:', eventCountMap);
               }
-              
+
               // Second pass: create event map with dual flag
-              events.forEach(e => { 
+              events.forEach(e => {
                 if (eventCountMap[e.date] > 1) {
                   // If there are multiple events on this date, mark as dual
                   eventMap[e.date] = { ...e, isDual: true };
@@ -287,7 +289,7 @@ const CompanyCalendarPage = () => {
                   eventMap[e.date] = e;
                 }
               });
-              
+
               return (
                 <div key={month} className="bg-white/80 rounded-2xl shadow-xl p-4 flex flex-col items-center">
                   <div className="flex items-center gap-2 mb-2">
@@ -313,15 +315,15 @@ const CompanyCalendarPage = () => {
                         <tr key={wIdx}>
                           {week.map((d, dIdx) => {
                             if (!d) return <td key={dIdx} className="py-1"> </td>;
-                            const dateStr = `${year}-${(mIdx+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
-                            
+                            const dateStr = `${year}-${(mIdx + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+
                             // Check for company event using multiple date formats
-                            const event = eventMap[dateStr] || 
-                                         eventMap[`${year}-${mIdx+1}-${d}`] ||
-                                         eventMap[`${year}-${(mIdx+1).toString().padStart(2,'0')}-${d}`] ||
-                                         eventMap[`${dateStr} 00:00:00`] ||
-                                         eventMap[`${year}-${(mIdx+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')} 00:00:00`];
-                            
+                            const event = eventMap[dateStr] ||
+                              eventMap[`${year}-${mIdx + 1}-${d}`] ||
+                              eventMap[`${year}-${(mIdx + 1).toString().padStart(2, '0')}-${d}`] ||
+                              eventMap[`${dateStr} 00:00:00`] ||
+                              eventMap[`${year}-${(mIdx + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')} 00:00:00`];
+
                             return (
                               <td
                                 key={dIdx}
@@ -329,13 +331,12 @@ const CompanyCalendarPage = () => {
                                 title={event?.title || ''}
                               >
                                 {event ? (
-                                  <span className={`${
-                                    event.isDual
+                                  <span className={`${event.isDual
                                       ? 'bg-purple-500' // Purple for dual events
-                                      : event.type === 'annual' 
-                                        ? 'bg-red-500' 
+                                      : event.type === 'annual'
+                                        ? 'bg-red-500'
                                         : 'bg-blue-500'
-                                  } text-white rounded-full w-7 h-7 flex items-center justify-center mx-auto font-bold shadow`}>
+                                    } text-white rounded-full w-7 h-7 flex items-center justify-center mx-auto font-bold shadow`}>
                                     {d}
                                   </span>
                                 ) : (
@@ -362,18 +363,17 @@ const CompanyCalendarPage = () => {
                         const eventType = e.type || 'company';
                         return (
                           <li key={e.id || `event-${e.date}`} className="flex items-center gap-2">
-                            <span className={`inline-block w-2 h-2 rounded-full ${
-                              e.isDual 
-                                ? 'bg-purple-500' 
-                                : eventType === 'annual' 
-                                  ? 'bg-red-500' 
+                            <span className={`inline-block w-2 h-2 rounded-full ${e.isDual
+                                ? 'bg-purple-500'
+                                : eventType === 'annual'
+                                  ? 'bg-red-500'
                                   : 'bg-blue-500'
-                            }`}></span>
+                              }`}></span>
                             <span className={
-                              e.isDual 
-                                ? 'text-purple-600' 
-                                : eventType === 'annual' 
-                                  ? 'text-red-600' 
+                              e.isDual
+                                ? 'text-purple-600'
+                                : eventType === 'annual'
+                                  ? 'text-red-600'
                                   : 'text-blue-600'
                             }>
                               {e.title} ({day}/{monthNum})

@@ -12,9 +12,32 @@ import { useToast } from '@/hooks/use-toast';
 import { apiService } from '@/lib/api';
 import { showToastMessage } from '@/lib/toast';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+
+// Utility function to sort items by language-specific name
+const sortByNameField = <T extends { [key: string]: any }>(
+  items: T[],
+  nameField: string,
+  lang: string
+): T[] => {
+  return items.sort((a, b) => {
+    const nameA = lang === 'th' ? a[`${nameField}_th`] : a[`${nameField}_en`];
+    const nameB = lang === 'th' ? b[`${nameField}_th`] : b[`${nameField}_en`];
+    return (nameA || '').localeCompare(nameB || '');
+  });
+};
+
+// Extract password strength calculation
+const calculatePasswordStrength = (password: string): 'weak' | 'medium' | 'strong' => {
+  if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
+    return 'strong';
+  } else if (password.length >= 6 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
+    return 'medium';
+  }
+  return 'weak';
+};
 
 const Register = () => {
   const { t, i18n } = useTranslation();
@@ -50,16 +73,6 @@ const Register = () => {
   // Password strength logic
   const [passwordStrength, setPasswordStrength] = useState<'weak' | 'medium' | 'strong'>('weak');
 
-  const getPasswordStrength = (password: string) => {
-    let strength: 'weak' | 'medium' | 'strong' = 'weak';
-    if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
-      strength = 'strong';
-    } else if (password.length >= 6 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
-      strength = 'medium';
-    }
-    return strength;
-  };
-
   const getPasswordStrengthColor = () => {
     if (passwordStrength === 'weak') return 'text-red-500';
     if (passwordStrength === 'medium') return 'text-yellow-500';
@@ -75,7 +88,7 @@ const Register = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const password = e.target.value;
     setFormData(prev => ({ ...prev, password }));
-    setPasswordStrength(getPasswordStrength(password));
+    setPasswordStrength(calculatePasswordStrength(password));
   };
 
   // ดึงข้อมูลจาก API
@@ -85,15 +98,14 @@ const Register = () => {
         // Fetch departments
         const deptData = await apiService.get(apiEndpoints.departments);
         if (deptData && deptData.data && Array.isArray(deptData.data)) {
-          const depts = deptData.data.map((d: any) => ({ id: d.id, department_name_th: d.department_name_th, department_name_en: d.department_name_en }));
+          const depts = deptData.data.map((d: any) => ({
+            id: d.id,
+            department_name_th: d.department_name_th,
+            department_name_en: d.department_name_en
+          }));
           const noDepartmentItem = depts.find(d => d.department_name_en === 'No Department');
           const otherDepts = depts.filter(d => d.department_name_en !== 'No Department');
-          otherDepts.sort((a, b) => {
-            const nameA = lang === 'th' ? a.department_name_th : a.department_name_en;
-            const nameB = lang === 'th' ? b.department_name_th : b.department_name_en;
-            return (nameA || '').localeCompare(nameB || '');
-          });
-          const sortedDepts = [...otherDepts];
+          const sortedDepts = [...sortByNameField(otherDepts, 'department_name', lang)];
           if (noDepartmentItem) {
             sortedDepts.push(noDepartmentItem);
           }
@@ -103,22 +115,24 @@ const Register = () => {
         // Fetch positions
         const posData = await apiService.get(apiEndpoints.positions);
         if (posData && posData.data && Array.isArray(posData.data)) {
-          const pos = posData.data.map((p: any) => ({ id: p.id, position_name_th: p.position_name_th, position_name_en: p.position_name_en, require_enddate: !!p.require_enddate }));
+          const pos = posData.data.map((p: any) => ({
+            id: p.id,
+            position_name_th: p.position_name_th,
+            position_name_en: p.position_name_en,
+            require_enddate: !!p.require_enddate
+          }));
           const noPositionItem = pos.find(p => p.position_name_en === 'No Position');
           const otherPos = pos.filter(p => p.position_name_en !== 'No Position');
-          otherPos.sort((a, b) => {
-            const nameA = lang === 'th' ? a.position_name_th : a.position_name_en;
-            const nameB = lang === 'th' ? b.position_name_th : b.position_name_en;
-            return (nameA || '').localeCompare(nameB || '');
-          });
-          const sortedPositions = [...otherPos];
+          const sortedPositions = [...sortByNameField(otherPos, 'position_name', lang)];
           if (noPositionItem) {
             sortedPositions.push(noPositionItem);
           }
           setPositions(sortedPositions);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        if (import.meta.env.DEV) {
+          console.error('Error fetching data:', error);
+        }
         setDepartments([]);
         setPositions([]);
       }
@@ -332,7 +346,6 @@ const Register = () => {
               <div className="space-y-2 mb-4 mt-4">
                 <Label htmlFor="full_name" className="mb-2 block dark:text-gray-200">{t('auth.fullName')}</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     id="full_name"
                     placeholder={t('auth.fullName')}
@@ -467,7 +480,6 @@ const Register = () => {
               <div className="space-y-2 mb-4">
                 <Label htmlFor="email" className="mb-2 block dark:text-gray-200">{t('auth.email')}</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     id="email"
                     type="email"
@@ -509,7 +521,7 @@ const Register = () => {
                 {formData.password && (
                   <div className={`flex items-center gap-2 text-sm mt-1 ${getPasswordStrengthColor()}`}>
                     <div className={`w-2 h-2 rounded-full ${passwordStrength === 'weak' ? 'bg-red-500' :
-                        passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                      passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
                       }`}></div>
                     {getPasswordStrengthText()}
                   </div>

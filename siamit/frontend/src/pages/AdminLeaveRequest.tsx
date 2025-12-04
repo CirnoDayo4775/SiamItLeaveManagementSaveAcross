@@ -1,7 +1,18 @@
 import { AdminLeaveForm } from '@/components/leave/AdminLeaveForm';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Calendar, FileText, Send, Users } from 'lucide-react';
+import { Calendar, FileText, LucideIcon, Send, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+interface FeatureItem {
+  Icon: LucideIcon;
+  translationKey: string;
+}
+
+const ADMIN_FEATURES: FeatureItem[] = [
+  { Icon: Users, translationKey: 'leave.employeeSelection' },
+  { Icon: Calendar, translationKey: 'leave.dateManagement' },
+  { Icon: FileText, translationKey: 'leave.approvalControl' },
+];
 
 const AdminLeaveRequest = () => {
   const { t } = useTranslation();
@@ -46,20 +57,15 @@ const AdminLeaveRequest = () => {
             </p>
 
             {/* Feature Icons */}
-            <div className="flex items-center gap-2 mb-1.5 text-blue-900/80 dark:text-blue-200 bg-white/50 dark:bg-gray-800/60 px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm border border-blue-100 dark:border-blue-800">
-              <Users className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="text-xs md:text-sm font-medium whitespace-nowrap">{t('leave.employeeSelection')}</span>
-            </div>
-
-            <div className="flex items-center gap-2 mb-1.5 text-blue-900/80 dark:text-blue-200 bg-white/50 dark:bg-gray-800/60 px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm border border-blue-100 dark:border-blue-800">
-              <Calendar className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="text-xs md:text-sm font-medium whitespace-nowrap">{t('leave.dateManagement')}</span>
-            </div>
-
-            <div className="flex items-center gap-2 mb-1.5 text-blue-900/80 dark:text-blue-200 bg-white/50 dark:bg-gray-800/60 px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm border border-blue-100 dark:border-blue-800">
-              <FileText className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="text-xs md:text-sm font-medium whitespace-nowrap">{t('leave.approvalControl')}</span>
-            </div>
+            {ADMIN_FEATURES.map(({ Icon, translationKey }) => (
+              <div
+                key={translationKey}
+                className="flex items-center gap-2 mb-1.5 text-blue-900/80 dark:text-blue-200 bg-white/50 dark:bg-gray-800/60 px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm border border-blue-100 dark:border-blue-800"
+              >
+                <Icon className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="text-xs md:text-sm font-medium whitespace-nowrap">{t(translationKey)}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -67,7 +73,6 @@ const AdminLeaveRequest = () => {
       {/* Main Content */}
       <div className="w-full max-w-6xl md:max-w-4xl mx-auto px-2 py-4 md:py-8">
         <div className="relative">
-
           <AdminLeaveForm mode="create" />
         </div>
       </div>

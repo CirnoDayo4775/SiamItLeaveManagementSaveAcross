@@ -14,12 +14,12 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function getImageUrl(imageName: string, apiBaseUrl: string): string {
   if (!imageName) return '';
-  
+
   // If imageName starts with /, it's already a path, just combine with API_BASE_URL
   if (imageName.startsWith('/')) {
     return `${apiBaseUrl}${imageName}`;
   }
-  
+
   // If imageName doesn't start with /, assume it's just a filename
   return `${apiBaseUrl}${config.upload.uploadPath}/announcements/${imageName}`;
 }
@@ -32,10 +32,12 @@ export function getImageUrl(imageName: string, apiBaseUrl: string): string {
  */
 export function handleImageError(e: React.SyntheticEvent<HTMLImageElement, Event>, imageName: string, apiBaseUrl: string): void {
   const target = e.target as HTMLImageElement;
-  console.error('Image load error for:', imageName);
-  console.error('Current URL:', target.src);
-  console.error('API_BASE_URL:', apiBaseUrl);
-  
+  if (import.meta.env.DEV) {
+    console.error('Image load error for:', imageName);
+    console.error('Current URL:', target.src);
+    console.error('API_BASE_URL:', apiBaseUrl);
+  }
+
   // Try alternative paths
   const possiblePaths = [
     // If imageName starts with /, use API_BASE_URL + imageName
@@ -50,15 +52,19 @@ export function handleImageError(e: React.SyntheticEvent<HTMLImageElement, Event
     `${config.upload.publicPath}/uploads/announcements/${imageName}`,
     `${config.upload.publicPath}/uploads/${imageName}`
   ];
-  
+
   const currentIndex = possiblePaths.findIndex(path => target.src.includes(path));
   const nextIndex = currentIndex + 1;
-  
+
   if (nextIndex < possiblePaths.length) {
-    console.log('Trying next path:', possiblePaths[nextIndex]);
+    if (import.meta.env.DEV) {
+      console.log('Trying next path:', possiblePaths[nextIndex]);
+    }
     target.src = possiblePaths[nextIndex];
   } else {
-    console.log('All paths failed, using placeholder');
+    if (import.meta.env.DEV) {
+      console.log('All paths failed, using placeholder');
+    }
     target.src = '/placeholder.svg';
   }
 }
@@ -72,11 +78,11 @@ export function handleImageError(e: React.SyntheticEvent<HTMLImageElement, Event
  */
 export function formatDate(dateStr: string, language: string, showTime: boolean = false): string {
   if (!dateStr) return '';
-  
+
   try {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return '';
-    
+
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: 'long',
@@ -86,10 +92,12 @@ export function formatDate(dateStr: string, language: string, showTime: boolean 
         minute: '2-digit'
       })
     };
-    
+
     return date.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', options);
   } catch (error) {
-    console.error('Error formatting date:', error);
+    if (import.meta.env.DEV) {
+      console.error('Error formatting date:', error);
+    }
     return dateStr;
   }
 }
@@ -134,7 +142,7 @@ export function handleImageClick(
     // ถ้าเป็น File object ปกติ ใช้ URL.createObjectURL
     url = URL.createObjectURL(file);
   }
-  
+
   setPreviewImage({ url, name: file.name });
   setImageDialogOpen(true);
 }
@@ -158,7 +166,7 @@ export function handleFileSelect(
   if (file) {
     // ตรวจสอบประเภทไฟล์ - อนุญาตเฉพาะไฟล์รูปภาพ
     const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    
+
     if (!allowedImageTypes.includes(file.type)) {
       setError?.('กรุณาเลือกไฟล์รูปภาพเท่านั้น (JPG, PNG, GIF, WebP)');
       setIsValidFile?.(false);
@@ -168,7 +176,7 @@ export function handleFileSelect(
       e.target.value = '';
       return;
     }
-    
+
     // ตรวจสอบขนาดไฟล์ (จำกัดที่ 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
@@ -179,12 +187,12 @@ export function handleFileSelect(
       e.target.value = '';
       return;
     }
-    
+
     // ไฟล์ผ่านการตรวจสอบ
     setError?.(null);
     setIsValidFile?.(true);
     setFile(file);
-    
+
     if (file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file);
       setPreview(url);
@@ -211,7 +219,7 @@ export function removeSelectedFile(
   setPreview(null);
   setError?.(null);
   setIsValidFile?.(false);
-  
+
   // รีเซ็ต file input
   if (fileInputRef?.current) {
     fileInputRef.current.value = '';

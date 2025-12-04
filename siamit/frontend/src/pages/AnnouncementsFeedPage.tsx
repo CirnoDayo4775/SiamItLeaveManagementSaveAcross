@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useSocket } from '@/contexts/SocketContext';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar, Image, Newspaper, Plus, Settings, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { apiService } from '../lib/api';
@@ -21,8 +21,8 @@ interface Announcement {
   subject: string;
   detail: string;
   createdAt: string;
-  createdBy: string; // This is now the user ID
-  createdByName: string; // This is the display name
+  createdBy: string;
+  createdByName: string;
   Image?: string;
   avatar?: string;
 }
@@ -49,36 +49,36 @@ const AnnouncementsFeedPage = () => {
   const [previewImageName, setPreviewImageName] = useState<string>('');
   const [fileError, setFileError] = useState<string | null>(null);
   const [isValidFile, setIsValidFile] = useState<boolean>(false);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Socket.io event listeners for real-time announcements
   useEffect(() => {
     if (socket && isConnected) {
       // Listen for new announcements
       socket.on('newAnnouncement', (data) => {
-        console.log('Received new announcement:', data);
+        if (import.meta.env.DEV) {
+          console.log('Received new announcement:', data);
+        }
 
-        // Show toast notification
         toast({
           title: t('notification.newAnnouncement'),
           description: data.subject,
           variant: 'default'
         });
 
-        // Add new announcement to the list with createdByName
         const newAnnouncement = {
           ...data,
-          id: data.id || `temp-${Date.now()}`, // Ensure ID exists
-          createdByName: user?.full_name || 'Unknown User' // Use current user's name for new announcements
+          id: data.id || `temp-${Date.now()}`,
+          createdByName: user?.full_name || 'Unknown User'
         };
         setAnnouncements(prev => [newAnnouncement, ...prev]);
       });
 
       // Listen for announcement updates
       socket.on('announcementUpdated', (data) => {
-        console.log('Received announcement update:', data);
-
-        // Show toast notification
+        if (import.meta.env.DEV) {
+          console.log('Received announcement update:', data);
+        }
         toast({
           title: t('notifications.announcementUpdated'),
           description: data.subject,
@@ -95,9 +95,9 @@ const AnnouncementsFeedPage = () => {
 
       // Listen for announcement deletions
       socket.on('announcementDeleted', (data) => {
-        console.log('Received announcement deletion:', data);
-
-        // Show toast notification
+        if (import.meta.env.DEV) {
+          console.log('Received announcement deletion:', data);
+        }
         toast({
           title: t('notifications.announcementDeleted'),
           description: data.subject,
@@ -118,25 +118,27 @@ const AnnouncementsFeedPage = () => {
     }
   }, [socket, isConnected, toast, t, user]);
 
-  useEffect(() => {
-    const fetchAnnouncements = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await apiService.get(apiEndpoints.announcements + '/feed', undefined, showSessionExpiredDialog);
-        if (data.status === 'success') {
-          setAnnouncements(data.data);
-        } else {
-          setError(data.message || t('common.error'));
-        }
-      } catch (err: any) {
-        setError(t('common.error'));
-      } finally {
-        setLoading(false);
+  // Memoized fetch function
+  const fetchAnnouncements = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiService.get(apiEndpoints.announcements + '/feed', undefined, showSessionExpiredDialog);
+      if (data.status === 'success') {
+        setAnnouncements(data.data);
+      } else {
+        setError(data.message || t('common.error'));
       }
-    };
-    fetchAnnouncements();
+    } catch (err: any) {
+      setError(t('common.error'));
+    } finally {
+      setLoading(false);
+    }
   }, [t, showSessionExpiredDialog]);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, [fetchAnnouncements]);
 
   const handleAnnouncementImageClick = (imageName: string) => {
     const imageUrl = getImageUrl(imageName, import.meta.env.VITE_API_BASE_URL);
@@ -174,21 +176,6 @@ const AnnouncementsFeedPage = () => {
         setFileError(null);
         setIsValidFile(false);
         // Refresh the announcements list
-        const fetchAnnouncements = async () => {
-          try {
-            const response = await apiService.get(
-              apiEndpoints.announcements + '/feed',
-              undefined,
-              showSessionExpiredDialog
-            );
-
-            if (response.status === 'success') {
-              setAnnouncements(response.data);
-            }
-          } catch (err) {
-            console.error('Error refreshing announcements:', err);
-          }
-        };
         fetchAnnouncements();
       } else {
         setError(data.message || t('common.error'));
@@ -403,8 +390,6 @@ const AnnouncementsFeedPage = () => {
                           className="object-cover"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
-                          }}
-                          onLoad={() => {
                           }}
                         />
                         <AvatarFallback className="bg-blue-100 text-blue-600 font-bold text-lg">

@@ -12,13 +12,17 @@ const getAuthToken = (): string | null => {
     const token = currentUser?.token;
 
     if (!token) {
-      console.warn("No token found in localStorage");
+      if (import.meta.env.DEV) {
+        console.warn("No token found in localStorage");
+      }
       return null; // คืน null ถ้าไม่มี token
     }
 
     return token; // คืน string ของ token
   } catch (e) {
-    console.error("Error parsing currentUser from localStorage", e);
+    if (import.meta.env.DEV) {
+      console.error("Error parsing currentUser from localStorage", e);
+    }
     return null;
   }
 };
@@ -28,7 +32,7 @@ const getAuthToken = (): string | null => {
 export const createAuthenticatedFileUrl = (filePath: string): string => {
   const token = getAuthToken();
   if (!token) return filePath;
-  
+
   const url = new URL(filePath, API_BASE_URL);
   url.searchParams.set('token', token);
   return url.toString();
@@ -80,16 +84,20 @@ const fetchWithAuth = async (
       }
       return null;
     }
-    
+
     // Check for other error status codes
     if (!response.ok) {
-      console.error(`API request failed with status: ${response.status}`);
+      if (import.meta.env.DEV) {
+        console.error(`API request failed with status: ${response.status}`);
+      }
       // Still return the response so safeJsonParse can handle it
     }
-    
+
     return response;
   } catch (error) {
-    console.error('API request failed:', error);
+    if (import.meta.env.DEV) {
+      console.error('API request failed:', error);
+    }
     throw error;
   }
 };
@@ -101,21 +109,23 @@ const safeJsonParse = async (response: Response) => {
     if (!text) {
       return { success: false, message: 'Empty response' };
     }
-    
+
     // Check if response is HTML (error page)
     if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         message: 'Server returned HTML instead of JSON. This usually indicates a server error.',
-        status: response.status 
+        status: response.status
       };
     }
-    
+
     return JSON.parse(text);
   } catch (error) {
-    console.error('JSON parsing error:', error);
-    return { 
-      success: false, 
+    if (import.meta.env.DEV) {
+      console.error('JSON parsing error:', error);
+    }
+    return {
+      success: false,
       message: 'Invalid JSON response from server',
       error: error instanceof Error ? error.message : 'Unknown error'
     };

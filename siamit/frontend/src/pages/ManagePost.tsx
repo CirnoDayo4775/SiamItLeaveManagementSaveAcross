@@ -7,38 +7,29 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { apiEndpoints } from '@/constants/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { Calendar, ChevronLeft, Clock, Edit, Eye, FileText, Image, Newspaper, Plus, Trash2, User, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { apiService } from '../lib/api';
-import { apiEndpoints } from '@/constants/api';
 import { hasAdminRole } from '../lib/authUtils';
+import { apiService } from '../lib/api';
 import { showToastMessage } from '../lib/toast';
 import { formatDate, getImageUrl, handleFileSelect, handleImageError } from '../lib/utils';
 
-// Interface for news items
 interface NewsItem {
   id: string;
   subject: string;
   detail: string;
   createdAt: string;
-  createdBy: string; // User ID
-  createdByName: string; // User display name
+  createdBy: string;
+  createdByName: string;
   Image?: string;
   avatar?: string;
-  contact?: string; // Optional contact info
-  attachments?: any[]; // Optional attachments array
+  contact?: string;
+  attachments?: any[];
 }
-
-// ฟังก์ชันสำหรับจัดการวันที่ให้รองรับ i18n
-const formatTime = (date: Date, locale: string) => {
-  return date.toLocaleTimeString(locale, {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
 
 export default function ManagePost() {
   const { t, i18n } = useTranslation();
@@ -74,22 +65,25 @@ export default function ManagePost() {
   const [deleting, setDeleting] = useState(false);
 
 
-  // โหลดข่าวสารจาก backend
-  const fetchNews = async () => {
+  // Memoized fetch function
+  const fetchNews = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      // Use the feed endpoint to get announcements with user names
       const data = await apiService.get(apiEndpoints.announcements + '/feed');
-      console.log('=== Fetch News Response ===');
-      console.log('API Response:', data);
-      if (data.data && data.data.length > 0) {
-        console.log('First news item:', data.data[0]);
-        console.log('Image field:', data.data[0].Image);
-        console.log('Created by ID:', data.data[0].createdBy);
-        console.log('Created by name:', data.data[0].createdByName);
+      if (import.meta.env.DEV) {
+        if (import.meta.env.DEV) {
+          console.log('=== Fetch News Response ===');
+          console.log('API Response:', data);
+          if (data.data && data.data.length > 0) {
+            console.log('First news item:', data.data[0]);
+            console.log('Image field:', data.data[0].Image);
+            console.log('Created by ID:', data.data[0].createdBy);
+            console.log('Created by name:', data.data[0].createdByName);
+          }
+          console.log('==========================');
+        }
       }
-      console.log('==========================');
 
       if (data.status === 'success') {
         setNewsList(data.data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
@@ -103,13 +97,11 @@ export default function ManagePost() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    console.log('===============================');
     fetchNews();
-    // eslint-disable-next-line
-  }, []);
+  }, [fetchNews]);
 
   // เพิ่มข่าวสารใหม่
   const handleAddNews = async (e: React.FormEvent) => {

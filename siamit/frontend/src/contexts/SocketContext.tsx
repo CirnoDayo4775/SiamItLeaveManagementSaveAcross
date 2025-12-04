@@ -26,12 +26,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     newSocket.on('connect', () => {
       setIsConnected(true);
-      
+
       // Join user room if user is logged in
       if (user?.id) {
         newSocket.emit('joinRoom', user.id);
       }
-      
+
       // Join admin room if user is admin
       if (user?.role === 'admin' || user?.role === 'superadmin') {
         newSocket.emit('joinAdminRoom');
@@ -43,7 +43,9 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
 
     newSocket.on('connect_error', (error) => {
-      console.error('Socket.io connection error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Socket.io connection error:', error);
+      }
       setIsConnected(false);
     });
 
@@ -58,7 +60,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     if (socket && user?.id) {
       socket.emit('joinRoom', user.id);
-      
+
       if (user?.role === 'admin' || user?.role === 'superadmin') {
         socket.emit('joinAdminRoom');
       }
@@ -75,7 +77,9 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 export const useSocket = () => {
   const context = useContext(SocketContext);
   if (!context) {
-    console.warn('useSocket must be used within a SocketProvider');
+    if (import.meta.env.DEV) {
+      console.warn('useSocket must be used within a SocketProvider');
+    }
     // Return a default context to prevent crashes
     return {
       socket: null,

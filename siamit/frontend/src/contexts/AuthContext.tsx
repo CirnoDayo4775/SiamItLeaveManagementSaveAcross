@@ -43,12 +43,12 @@ export const useAuth = () => {
     // Return a default context to prevent crashes
     return {
       user: null,
-      login: async () => {},
-      signup: async () => {},
-      logout: async () => {},
-      updateUser: () => {},
+      login: async () => { },
+      signup: async () => { },
+      logout: async () => { },
+      updateUser: () => { },
       loading: true,
-      showSessionExpiredDialog: () => {},
+      showSessionExpiredDialog: () => { },
     };
   }
   return context;
@@ -127,15 +127,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user, t]);
 
   const login = async (email: string, password: string) => {
-    console.log(email);
-    console.log(password);
-          const response = await fetch(`${API_BASE_URL}/api/login`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-          });
+    const response = await fetch(`${API_BASE_URL}/api/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
     const data = await response.json();
 
     if (!response.ok || !data.success) {
@@ -151,61 +149,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     setUser(userInfo);
     localStorage.setItem('currentUser', JSON.stringify(userInfo));
- 
-    // Fetch profile info after login
+
+    // Parallelize Profile and Avatar fetching for faster login
     try {
-      const profileRes = await fetch(`${API_BASE_URL}/api/profile`, {
-        headers: { 'Authorization': `Bearer ${data.data?.token}` }
-      });
+      const [profileRes, avatarRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/profile`, {
+          headers: { 'Authorization': `Bearer ${data.data?.token}` }
+        }),
+        fetch(`${API_BASE_URL}/api/avatar`, {
+          headers: { 'Authorization': `Bearer ${data.data?.token}` }
+        })
+      ]);
+
+      let updatedUser = { ...userInfo };
+
+      // Process Profile
       if (profileRes.ok) {
         const profileData = await profileRes.json();
         if (profileData.success) {
           const d = profileData.data;
-          const updatedUser = {
-            ...userInfo,
+          updatedUser = {
+            ...updatedUser,
             full_name: d.name,
             position: d.position,
             department: d.department,
             email: d.email,
           };
-          setUser(updatedUser);
-          localStorage.setItem('currentUser', JSON.stringify(updatedUser));
         }
       }
-    } catch (err) {
-     console.log(err);
-    }
 
-    // Fetch avatar URL after login
-    try {
-      const avatarResponse = await fetch(`${API_BASE_URL}/api/avatar`, {
-         headers: { 'Authorization': `Bearer ${data.data?.token}` }
-      });
-      if (avatarResponse.ok) {
-        const avatarData = await avatarResponse.json();
+      // Process Avatar
+      if (avatarRes.ok) {
+        const avatarData = await avatarRes.json();
         if (avatarData.success && avatarData.avatar_url) {
-          setUser(prev => {
-            if (!prev) return prev;
-            const updatedUserInfo = { ...prev, avatar_url: avatarData.avatar_url };
-            localStorage.setItem('currentUser', JSON.stringify(updatedUserInfo));
-            return updatedUserInfo;
-          });
+          updatedUser = { ...updatedUser, avatar_url: avatarData.avatar_url };
         }
       }
+
+      // Update state once
+      setUser(updatedUser);
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
     } catch (err) {
-      // Avatar fetch failed, but login is still successful
+      // Non-critical errors, login still successful
+      if (import.meta.env.DEV) {
+        console.error("Error fetching user details:", err);
+      }
     }
   };
 
   const signup = async (email: string, password: string, userData: Partial<User>) => {
     // เรียก API backend
-      const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const token = currentUser?.token;
+    const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+    const token = currentUser?.token;
 
 
     const response = await fetch(`${API_BASE_URL}/api/register`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' ,
+      headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
@@ -223,10 +225,6 @@ const token = currentUser?.token;
       }),
     });
     const data = await response.json();
-    
-    // Debug logging
-    console.log('Registration response status:', response.status);
-    console.log('Registration response data:', data);
 
     if (!response.ok) {
       // Check if the error is in data.data.errors (array) or data.message
@@ -237,7 +235,9 @@ const token = currentUser?.token;
       } else {
         errorMessage = data.errors || data.message || data.error || 'สมัครสมาชิกไม่สำเร็จ';
       }
-      console.log('Extracted error message:', errorMessage);
+      if (import.meta.env.DEV) {
+        console.log('Extracted error message:', errorMessage);
+      }
       throw new Error(errorMessage);
     }
     // สมัครสมาชิกสำเร็จ ไม่ต้อง login อัตโนมัติ ให้ user ไป login เอง
@@ -276,9 +276,9 @@ const token = currentUser?.token;
   return (
     <AuthContext.Provider value={value}>
       {children}
-      <SessionExpiredDialog 
-        open={showSessionExpiredDialog} 
-        onOpenChange={setShowSessionExpiredDialog} 
+      <SessionExpiredDialog
+        open={showSessionExpiredDialog}
+        onOpenChange={setShowSessionExpiredDialog}
       />
     </AuthContext.Provider>
   );

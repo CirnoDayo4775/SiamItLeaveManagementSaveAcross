@@ -1,0 +1,25 @@
+{
+  "watch": [
+    "EnityTable/**/*.js",
+    "api/**/*.js",
+    "utils/**/*.js",
+    "middleware/**/*.js",
+    "routes/**/*.js",
+    "index.js",
+    "config.js"
+  ],
+  "ext": "js,json",
+  "ignore": [
+    "node_modules/**/*",
+    "uploads/**/*",
+    "migrations/**/*",
+    "scripts/**/*"
+  ],
+  "exec": "node index.js",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "delay": 1000,
+  "verbose": true,
+  "restartable": "rs"
+}

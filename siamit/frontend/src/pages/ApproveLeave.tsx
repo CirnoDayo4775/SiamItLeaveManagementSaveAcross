@@ -31,13 +31,6 @@ const ApproveLeave = () => {
   const { user, showSessionExpiredDialog } = useAuth();
   const { socket, isConnected } = useSocket();
 
-  // ลบ state ที่ไม่ได้ใช้จริง
-  // const [adminName, setAdminName] = useState<string>("");
-  // const [userCount, setUserCount] = useState<number>(0);
-  // const [approvedThisMonth, setApprovedThisMonth] = useState<number>(0);
-  // const [pendingCount, setPendingCount] = useState<number>(0);
-  // const [averageDayOff, setAverageDayOff] = useState<number>(0);
-
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   // --- เพิ่ม state สำหรับ paging ---
   const [pendingPage, setPendingPage] = useState(1);
@@ -153,11 +146,7 @@ const ApproveLeave = () => {
     },
   ];
 
-  // Derived statistics previously calculated inline were removed as unused
 
-
-
-  // Note: calcHours removed as unused in this component
 
   const handleApprove = (id: string, employeeName: string) => {
     setApprovingRequest({ id, employeeName });
@@ -571,8 +560,9 @@ const ApproveLeave = () => {
         setSelectedRequest({ ...data.data, ...request });
       }
     } catch {
-      // Keep the original request data if API call fails
-      console.error('Error fetching leave detail:', request.id);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching leave detail:', request.id);
+      }
     }
   };
 
@@ -612,9 +602,9 @@ const ApproveLeave = () => {
     if (socket && isConnected) {
       // Listen for leave request status changes
       socket.on('leaveRequestStatusChanged', (data) => {
-        console.log('Received leave request status change:', data);
-
-        // Show toast notification
+        if (import.meta.env.DEV) {
+          console.log('Received leave request status change:', data);
+        }
         toast({
           title: t('notifications.statusChanged'),
           description: `${t('notifications.request')} ${data.requestId} ${t('notifications.hasBeen')} ${data.status === 'approved' ? t('notifications.approved') : t('notifications.rejected')}`,

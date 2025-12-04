@@ -25,12 +25,14 @@ export default function SessionExpiredDialog({ open, onOpenChange }: SessionExpi
 
   const handleLogout = async () => {
     try {
-    await logout();
-    // Redirect to root (login page for unauthenticated users)
-    navigate('/', { replace: true });
+      await logout();
+      // Redirect to root (login page for unauthenticated users)
+      navigate('/', { replace: true });
       onOpenChange(false);
     } catch (error) {
-      console.error('Logout error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Logout error:', error);
+      }
       // Force redirect even if logout fails
       navigate('/', { replace: true });
     }
@@ -54,7 +56,7 @@ export default function SessionExpiredDialog({ open, onOpenChange }: SessionExpi
             </div>
           </div>
         </DialogHeader>
-        
+
         <div className="py-4">
           <p className="text-sm text-gray-700">
             {t('auth.pleaseLoginAgain')}
@@ -62,7 +64,7 @@ export default function SessionExpiredDialog({ open, onOpenChange }: SessionExpi
         </div>
 
         <DialogFooter>
-          <Button 
+          <Button
             onClick={handleLogout}
             className="w-full bg-red-600 hover:bg-red-700 text-white"
           >

@@ -319,7 +319,9 @@ const Profile = () => {
         }, 50);
       }
     } catch (err) {
-      console.error('Failed to reload avatar:', err);
+      if (import.meta.env.DEV) {
+        console.error('Failed to reload avatar:', err);
+      }
     }
   };
 
@@ -335,7 +337,9 @@ const Profile = () => {
         await forceReloadAvatar();
       }, 100);
     } catch (err) {
-      console.error('Failed to force complete avatar refresh:', err);
+      if (import.meta.env.DEV) {
+        console.error('Failed to force complete avatar refresh:', err);
+      }
     }
   };
 
@@ -376,7 +380,9 @@ const Profile = () => {
 
       setProfileLoaded(true);
     } catch (err: any) {
-      console.error('Failed to refresh profile data:', err);
+      if (import.meta.env.DEV) {
+        console.error('Failed to refresh profile data:', err);
+      }
       if (err.response?.status === 401) {
         showSessionExpiredDialog();
         return;
@@ -659,7 +665,9 @@ const Profile = () => {
         throw new Error(res.message || t('profile.saveError'));
       }
     } catch (error: any) {
-      console.error('Profile update error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Profile update error:', error);
+      }
       toast({
         title: t('error.title'),
         description: error?.message || t('profile.saveError'),

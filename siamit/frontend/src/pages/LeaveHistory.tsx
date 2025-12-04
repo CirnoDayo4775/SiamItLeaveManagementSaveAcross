@@ -241,7 +241,9 @@ const LeaveHistory = () => {
 
     } catch (e) {
 
-      console.error('Error fetching leave detail:', e);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching leave detail:', e);
+      }
 
     }
 

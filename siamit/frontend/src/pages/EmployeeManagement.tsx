@@ -7,7 +7,7 @@ import { apiEndpoints } from '@/constants/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { ChevronDown, ChevronUp, Eye, User, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { apiService } from '../lib/api';
@@ -85,12 +85,20 @@ const EmployeeManagement = () => {
 
           setEmployees(employees);
         } else {
-          console.error('Invalid employees data format:', data);
+          if (import.meta.env.DEV) {
+            if (import.meta.env.DEV) {
+              console.error('Invalid employees data format:', data);
+            }
+          }
           setEmployees([]);
         }
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching employees:', error);
+        if (import.meta.env.DEV) {
+          if (import.meta.env.DEV) {
+            console.error('Error fetching employees:', error);
+          }
+        }
         setLoading(false);
       }
     };
@@ -107,7 +115,11 @@ const EmployeeManagement = () => {
         if (positionsData.success && Array.isArray(positionsData.data)) {
           setPositions(positionsData.data);
         } else {
-          console.error('Invalid positions data format:', positionsData);
+          if (import.meta.env.DEV) {
+            if (import.meta.env.DEV) {
+              console.error('Invalid positions data format:', positionsData);
+            }
+          }
         }
 
         // ดึงข้อมูลแผนก
@@ -115,10 +127,18 @@ const EmployeeManagement = () => {
         if (departmentsData.success && Array.isArray(departmentsData.data)) {
           setDepartments(departmentsData.data);
         } else {
-          console.error('Invalid departments data format:', departmentsData);
+          if (import.meta.env.DEV) {
+            if (import.meta.env.DEV) {
+              console.error('Invalid departments data format:', departmentsData);
+            }
+          }
         }
       } catch (error) {
-        console.error('Error fetching positions/departments:', error);
+        if (import.meta.env.DEV) {
+          if (import.meta.env.DEV) {
+            console.error('Error fetching positions/departments:', error);
+          }
+        }
         toast({
           title: t('system.error'),
           description: t('system.fetchDataError'),
@@ -351,7 +371,9 @@ const EmployeeManagement = () => {
         });
       }
     } catch (e) {
-      console.error('Delete employee error:', e);
+      if (import.meta.env.DEV) {
+        console.error('Delete employee error:', e);
+      }
       toast({
         title: t('system.deleteFailed'),
         description: t('system.deleteFailed'),

@@ -118,14 +118,18 @@ const EmployeeDetail = () => {
     const query = params.length > 0 ? `?${params.join("&")}` : "";
 
     // เพิ่ม debug log
-    console.log('🔍 Fetching leave history with params:', params);
-    console.log('🔍 filterBackdated value:', filterBackdated);
-    console.log('🔍 Full URL:', `${API_BASE_URL}${apiEndpoints.employees.leaveHistory(id, query)}`);
+    if (import.meta.env.DEV) {
+      console.log('🔍 Fetching leave history with params:', params);
+      console.log('🔍 filterBackdated value:', filterBackdated);
+      console.log('🔍 Full URL:', `${API_BASE_URL}${apiEndpoints.employees.leaveHistory(id, query)}`);
+    }
 
     try {
       const data = await apiService.get(apiEndpoints.employees.leaveHistory(id, query));
       // เพิ่ม log เพื่อตรวจสอบ response
-      console.log('🟢 Leave history API response:', data);
+      if (import.meta.env.DEV) {
+        console.log('🟢 Leave history API response:', data);
+      }
       if (data.success) {
         // แก้ตรงนี้: data.data.data
         const leaveData = Array.isArray(data.data?.data) ? data.data.data : [];
@@ -134,13 +138,17 @@ const EmployeeDetail = () => {
         setLeaveSummary(data.data?.summary || null); // <--- เก็บ summary
       } else {
         // เพิ่ม log กรณี error
-        console.error('🔴 Leave history API error:', data);
+        if (import.meta.env.DEV) {
+          console.error('🔴 Leave history API error:', data);
+        }
         setLeaveHistory([]);
         setLeaveTotalPages(1);
         setLeaveSummary(null); // <--- reset summary
       }
     } catch (error) {
-      console.error('Error fetching leave history:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching leave history:', error);
+      }
       setLeaveHistory([]);
       setLeaveTotalPages(1);
       setLeaveSummary(null); // <--- reset summary
@@ -150,10 +158,12 @@ const EmployeeDetail = () => {
   // useEffect สำหรับ fetch leaveHistory เฉพาะเมื่อ filter จริง (active) เปลี่ยน
   useEffect(() => {
     // เพิ่ม debug log
-    console.log('🔄 useEffect triggered');
-    console.log('🔄 filterBackdated:', filterBackdated);
-    console.log('🔄 filterType:', filterType);
-    console.log('🔄 filterStatus:', filterStatus);
+    if (import.meta.env.DEV) {
+      console.log('🔄 useEffect triggered');
+      console.log('🔄 filterBackdated:', filterBackdated);
+      console.log('🔄 filterType:', filterType);
+      console.log('🔄 filterStatus:', filterStatus);
+    }
 
     fetchLeaveHistory();
     // eslint-disable-next-line
@@ -311,7 +321,9 @@ const EmployeeDetail = () => {
   };
 
   const handleViewLeaveDetails = async (leave) => {
-    console.log('View Details clicked. leave:', leave, 'leave.id:', leave.id);
+    if (import.meta.env.DEV) {
+      console.log('View Details clicked. leave:', leave, 'leave.id:', leave.id);
+    }
 
     // First try to use the existing leave data
     const leaveData = leaveHistory.find(l => l.id === leave.id);
@@ -336,7 +348,9 @@ const EmployeeDetail = () => {
         setSelectedLeave(leaveDetail);
       }
     } catch (e) {
-      console.error('Error fetching leave detail:', e);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching leave detail:', e);
+      }
     }
   };
 
@@ -951,10 +965,12 @@ const EmployeeDetail = () => {
                         setFilterWarning("");
 
                         // เพิ่ม debug log
-                        console.log('🔘 Confirm button clicked');
-                        console.log('🔘 pendingFilterBackdated:', pendingFilterBackdated);
-                        console.log('🔘 pendingFilterType:', pendingFilterType);
-                        console.log('🔘 pendingFilterStatus:', pendingFilterStatus);
+                        if (import.meta.env.DEV) {
+                          console.log('🔘 Confirm button clicked');
+                          console.log('🔘 pendingFilterBackdated:', pendingFilterBackdated);
+                          console.log('🔘 pendingFilterType:', pendingFilterType);
+                          console.log('🔘 pendingFilterStatus:', pendingFilterStatus);
+                        }
 
                         setFilterType(pendingFilterType);
                         setFilterMonth(pendingFilterMonth);

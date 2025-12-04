@@ -5,7 +5,8 @@ import { Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const LeaveRequest = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 flex flex-col">
