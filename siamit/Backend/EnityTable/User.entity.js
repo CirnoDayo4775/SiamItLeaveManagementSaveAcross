@@ -19,24 +19,24 @@ module.exports = new EntitySchema({
       unique: true,
       nullable: true,
     },
-    Email: {
+    email: {
       type: 'varchar',
       unique: true,
       nullable: true,
       default: null,
     },
-    Role: { 
+    role: { 
       type: 'varchar', 
       default: 'user' 
     },
     
     // Authentication & Security
-    Password: { 
+    password: { 
       type: 'varchar',
       nullable: true,
       default: null,
     },
-    Token: { 
+    token: { 
       type: 'varchar', 
       default: null 
     },

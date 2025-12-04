@@ -1,93 +1,107 @@
 const express = require('express');
 const authMiddleware = require('../middleware/authMiddleware');
-const router = express.Router();
 const { In } = require('typeorm');
 
 module.exports = (AppDataSource) => {
-  // Get unread notifications for current user
+  const router = express.Router();
+  const leaveRepo = AppDataSource.getRepository('LeaveRequest');
+  const leaveTypeRepo = AppDataSource.getRepository('LeaveType');
+
+  // Constants to avoid magic strings
+  const TARGET_STATUSES = ['approved', 'rejected', 'deleted'];
+
+  // GET: Unread notifications for current user
   router.get('/notifications', authMiddleware, async (req, res) => {
     try {
-      const userId = req.user.userId;
-      const lang = (req.headers['accept-language'] || 'en').toLowerCase().startsWith('th') ? 'th' : 'en';
-      const leaveRepo = AppDataSource.getRepository('LeaveRequest');
-      const leaveTypeRepo = AppDataSource.getRepository('LeaveType');
-      
-      // First get the notifications
+      const { userId } = req.user;
+
+      // 1. Fetch unread notifications
       const notifications = await leaveRepo.find({
         where: {
           Repid: userId,
           isRead: false,
-          status: In(['approved', 'rejected', 'deleted'])
+          status: In(TARGET_STATUSES)
         },
-        select: ['id', 'startDate', 'endDate', 'status', 'leaveType']
+        select: ['id', 'startDate', 'endDate', 'status', 'leaveType'],
+        order: { createdAt: 'DESC' } // Added sorting usually needed for notifications
       });
 
-      // Get all leave types to map them
+      // Optimization: Return early if no notifications
+      if (!notifications.length) {
+        return res.json({ status: 'success', data: [] });
+      }
+
+      // 2. Extract unique LeaveType IDs to fetch only what's needed
+      const leaveTypeIds = [...new Set(notifications.map(n => n.leaveType).filter(Boolean))];
+      
+      // 3. Fetch related LeaveTypes
       const leaveTypes = await leaveTypeRepo.find({
+        where: { id: In(leaveTypeIds) },
         select: ['id', 'leave_type_th', 'leave_type_en']
       });
 
-      // Create a map of leave type IDs to names
-      const leaveTypeMap = {};
-      leaveTypes.forEach(type => {
-        leaveTypeMap[type.id] = {
+      // 4. Create lookup map (O(1) access)
+      const leaveTypeMap = leaveTypes.reduce((acc, type) => {
+        acc[type.id] = {
           name_th: type.leave_type_th,
           name_en: type.leave_type_en
         };
-      });
+        return acc;
+      }, {});
 
-      // Transform the data to match the expected format
-      const transformedNotifications = notifications.map(notification => ({
-        id: notification.id,
-        startDate: notification.startDate,
-        endDate: notification.endDate,
-        status: notification.status,
-        leaveType: leaveTypeMap[notification.leaveType] || {
-          name_th: '',
-          name_en: ''
-        }
+      // 5. Transform data
+      const data = notifications.map(n => ({
+        id: n.id,
+        startDate: n.startDate,
+        endDate: n.endDate,
+        status: n.status,
+        leaveType: leaveTypeMap[n.leaveType] || { name_th: 'Unknown', name_en: 'Unknown' }
       }));
 
-      res.json({ status: 'success', data: transformedNotifications });
+      res.json({ status: 'success', data });
     } catch (err) {
+      console.error('Error fetching notifications:', err);
       res.status(500).json({ status: 'error', data: null, message: err.message });
     }
   });
 
-  // Mark all notifications as read for current user
+  // POST: Mark ALL notifications as read
   router.post('/notifications/read', authMiddleware, async (req, res) => {
     try {
-      const userId = req.user.userId;
-      const leaveRepo = AppDataSource.getRepository('LeaveRequest');
-      await leaveRepo
-        .createQueryBuilder()
-        .update()
-        .set({ isRead: true })
-        .where('Repid = :userId', { userId })
-        .andWhere('isRead = false')
-        .andWhere('status IN (:...statuses)', { statuses: ['approved', 'rejected', 'deleted'] })
-        .execute();
+      const { userId } = req.user;
+
+      // Use repo.update for cleaner syntax than QueryBuilder
+      await leaveRepo.update(
+        {
+          Repid: userId,
+          isRead: false,
+          status: In(TARGET_STATUSES)
+        },
+        { isRead: true }
+      );
+
       res.json({ status: 'success' });
     } catch (err) {
       res.status(500).json({ status: 'error', message: err.message });
     }
   });
 
-  // Mark a single notification as read for current user
+  // POST: Mark SINGLE notification as read
   router.post('/notifications/:id/read', authMiddleware, async (req, res) => {
     try {
-      const userId = req.user.userId;
+      const { userId } = req.user;
       const notificationId = req.params.id;
-      const leaveRepo = AppDataSource.getRepository('LeaveRequest');
-      const result = await leaveRepo
-        .createQueryBuilder()
-        .update()
-        .set({ isRead: true })
-        .where('id = :id', { id: notificationId })
-        .andWhere('Repid = :userId', { userId })
-        .andWhere('isRead = false')
-        .andWhere('status IN (:...statuses)', { statuses: ['approved', 'rejected', 'deleted'] })
-        .execute();
+
+      const result = await leaveRepo.update(
+        {
+          id: notificationId,
+          Repid: userId,
+          isRead: false,
+          status: In(TARGET_STATUSES)
+        },
+        { isRead: true }
+      );
+
       if (result.affected > 0) {
         res.json({ status: 'success' });
       } else {
@@ -99,4 +113,4 @@ module.exports = (AppDataSource) => {
   });
 
   return router;
-}; 
+};
