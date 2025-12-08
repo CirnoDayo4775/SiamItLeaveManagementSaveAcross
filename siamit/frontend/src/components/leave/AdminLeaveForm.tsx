@@ -532,8 +532,8 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
                 return (
                   <SelectItem key={user.id} value={user.id}>
                     <div className="flex flex-col py-1">
-                      <span className="font-medium text-gray-900">{user.name}</span>
-                      <span className="text-sm text-gray-500">
+                      <span className="font-medium text-gray-900 dark:text-white">{user.name}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-300">
                         {user.email} • {localizedRole} • {departmentName} • {positionName}
                       </span>
                     </div>
