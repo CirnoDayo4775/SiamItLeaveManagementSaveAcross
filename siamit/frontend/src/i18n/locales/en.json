@@ -1,4 +1,3 @@
-
 {
   "auth": {
     "login": "Login",
@@ -64,7 +63,7 @@
     "superAdminFunctions": "Super Admin Functions",
     "allEmployees": "All Employees",
     "createUser": "Create User",
-    "manageAll": "Leave System Settings", 
+    "manageAll": "Leave System Settings",
     "companyNews": "Company News",
     "announcementsFeed": "Announcements Feed",
     "calendar": "Calendar",
@@ -151,12 +150,12 @@
     "searchEmployee": "Search employee by name or id",
     "showSelectedOnly": "Show selected only",
     "selectAllFiltered": "Select all",
-                "cleanupSuccess": "Deleted successfully",
-        "cleanupError": "Error deleting old data",
-        "cleanupTitle": "Delete old data",
-        "cleanupDescription": "Delete old leave request data older than 2 years to maintain database performance",
-        "cleanupButton": "Delete",
-        "cleanupButtonLoading": "Deleting...",
+    "cleanupSuccess": "Deleted successfully",
+    "cleanupError": "Error deleting old data",
+    "cleanupTitle": "Delete old data",
+    "cleanupDescription": "Delete old leave request data older than 2 years to maintain database performance",
+    "cleanupButton": "Delete",
+    "cleanupButtonLoading": "Deleting...",
     "clearFiltered": "Clear",
     "showing": "Showing",
     "selected": "Selected",
@@ -673,7 +672,7 @@
     "other": "Other",
     "dateOfBirth": "Date of Birth",
     "startWork": "Start Work ",
-    "endWork":"end Work",
+    "endWork": "end Work",
     "personalInfo": "Personal Information",
     "workInfo": "Work Information",
     "loginInfo": "Login Information",
@@ -835,7 +834,7 @@
     "loadError": "Cannot load employee data",
     "noProcessCheckId": "No process check ID found",
     "newPassword": "New password",
-    "futureDateNotAllowed":"Date from the future is not available."
+    "futureDateNotAllowed": "Date from the future is not available."
   },
   "notification": {
     "notifications": "Notifications",
@@ -1094,5 +1093,22 @@
     "downloadSuccessDesc": "File downloaded successfully",
     "downloadError": "Download Failed",
     "downloadErrorDesc": "Unable to download file"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "We're sorry, but something unexpected happened.",
+    "reload": "Reload Page"
+  },
+  "validation": {
+    "password": {
+      "minLength": "Must be at least 8 characters",
+      "uppercase": "Must have at least 1 uppercase letter",
+      "lowercase": "Must have at least 1 lowercase letter",
+      "number": "Must have at least 1 number"
+    },
+    "file": {
+      "imageOnly": "Please select an image file only (JPG, PNG, GIF, WebP)",
+      "tooLarge": "File size is too large. Please select a file under 10MB"
+    }
   }
 }

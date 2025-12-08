@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiService } from '../lib/api';
 import { getDaysInMonth } from '@/lib/dateUtils';
 import { apiEndpoints } from '@/constants/api';
+import { logger } from '@/lib/logger';
 
 const CalendarPage = () => {
   const { t, i18n } = useTranslation();
@@ -150,7 +151,7 @@ const CalendarPage = () => {
     if (socket && isConnected) {
       // Listen for new leave requests
       socket.on('newLeaveRequest', (data) => {
-        console.log('Received new leave request:', data);
+        logger.debug('Received new leave request:', data);
 
         // Show toast notification
         toast({
@@ -165,7 +166,7 @@ const CalendarPage = () => {
 
       // Listen for leave request status changes
       socket.on('leaveRequestStatusChanged', (data) => {
-        console.log('Received leave request status change:', data);
+        logger.debug('Received leave request status change:', data);
 
         // Show toast notification
         toast({
@@ -180,7 +181,7 @@ const CalendarPage = () => {
 
       // Listen for new company events
       socket.on('newCompanyEvent', (data) => {
-        console.log('Received new company event:', data);
+        logger.debug('Received new company event:', data);
 
         // Show toast notification
         toast({

@@ -20,6 +20,7 @@ import { Bell, Building, Camera, Crown, Lock, Mail, Save, Shield } from 'lucide-
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { logger } from '@/lib/logger';
 
 const Profile = () => {
   const { t, i18n } = useTranslation();
@@ -320,7 +321,7 @@ const Profile = () => {
       }
     } catch (err) {
       if (import.meta.env.DEV) {
-        console.error('Failed to reload avatar:', err);
+        logger.error('Failed to reload avatar:', err);
       }
     }
   };
@@ -338,7 +339,7 @@ const Profile = () => {
       }, 100);
     } catch (err) {
       if (import.meta.env.DEV) {
-        console.error('Failed to force complete avatar refresh:', err);
+        logger.error('Failed to force complete avatar refresh:', err);
       }
     }
   };
@@ -381,7 +382,7 @@ const Profile = () => {
       setProfileLoaded(true);
     } catch (err: any) {
       if (import.meta.env.DEV) {
-        console.error('Failed to refresh profile data:', err);
+        logger.error('Failed to refresh profile data:', err);
       }
       if (err.response?.status === 401) {
         showSessionExpiredDialog();
@@ -626,7 +627,6 @@ const Profile = () => {
         end_work: (positions.find(p => String(p.id) === formData.position)?.require_enddate ? (formData.end_work || null) : null),
       };
 
-
       const res = await apiService.put(apiEndpoints.auth.profile, requestData);
       if (res.success) {
         toast({
@@ -666,7 +666,7 @@ const Profile = () => {
       }
     } catch (error: any) {
       if (import.meta.env.DEV) {
-        console.error('Profile update error:', error);
+        logger.error('Profile update error:', error);
       }
       toast({
         title: t('error.title'),
@@ -677,7 +677,6 @@ const Profile = () => {
       setSaving(false);
     }
   };
-
 
   // Define a color palette for leave types
   const leaveTypeColors = [

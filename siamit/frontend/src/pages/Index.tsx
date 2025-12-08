@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiService } from '../lib/api';
 import { showToastMessage } from '../lib/toast';
+import { logger } from '@/lib/logger';
 
 const Index = () => {
   const { t, i18n } = useTranslation();
@@ -182,7 +183,7 @@ const Index = () => {
       }
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Error fetching dashboard stats:', error);
+        logger.error('Error fetching dashboard stats:', error);
       }
     } finally {
       setLoadingDashboard(false);
@@ -239,7 +240,7 @@ const Index = () => {
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching user profile:', error);
+          logger.error('Error fetching user profile:', error);
         }
       } finally {
         setLoadingUserProfile(false);
@@ -296,7 +297,7 @@ const Index = () => {
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching announcements:', error);
+          logger.error('Error fetching announcements:', error);
         }
         setErrorAnnouncements(t('error.apiConnectionError'));
       } finally {
@@ -328,7 +329,7 @@ const Index = () => {
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching company holidays:', error);
+          logger.error('Error fetching company holidays:', error);
         }
         setCompanyHolidaysOfMonth([]);
       } finally {

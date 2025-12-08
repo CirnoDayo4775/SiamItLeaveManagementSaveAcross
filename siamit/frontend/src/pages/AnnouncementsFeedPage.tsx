@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { apiService } from '../lib/api';
 import { formatDate, getImageUrl, handleFileSelect, handleImageError, removeSelectedFile } from '../lib/utils';
+import { logger } from '@/lib/logger';
 
 interface Announcement {
   id: string;
@@ -57,7 +58,7 @@ const AnnouncementsFeedPage = () => {
       // Listen for new announcements
       socket.on('newAnnouncement', (data) => {
         if (import.meta.env.DEV) {
-          console.log('Received new announcement:', data);
+          logger.debug('Received new announcement:', data);
         }
 
         toast({
@@ -77,7 +78,7 @@ const AnnouncementsFeedPage = () => {
       // Listen for announcement updates
       socket.on('announcementUpdated', (data) => {
         if (import.meta.env.DEV) {
-          console.log('Received announcement update:', data);
+          logger.debug('Received announcement update:', data);
         }
         toast({
           title: t('notifications.announcementUpdated'),
@@ -96,7 +97,7 @@ const AnnouncementsFeedPage = () => {
       // Listen for announcement deletions
       socket.on('announcementDeleted', (data) => {
         if (import.meta.env.DEV) {
-          console.log('Received announcement deletion:', data);
+          logger.debug('Received announcement deletion:', data);
         }
         toast({
           title: t('notifications.announcementDeleted'),

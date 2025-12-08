@@ -17,6 +17,7 @@ import { hasAdminRole } from '../lib/authUtils';
 import { apiService } from '../lib/api';
 import { showToastMessage } from '../lib/toast';
 import { formatDate, getImageUrl, handleFileSelect, handleImageError } from '../lib/utils';
+import { logger } from '@/lib/logger';
 
 interface NewsItem {
   id: string;
@@ -73,15 +74,15 @@ export default function ManagePost() {
       const data = await apiService.get(apiEndpoints.announcements + '/feed');
       if (import.meta.env.DEV) {
         if (import.meta.env.DEV) {
-          console.log('=== Fetch News Response ===');
-          console.log('API Response:', data);
+          logger.debug('=== Fetch News Response ===');
+          logger.debug('API Response:', data);
           if (data.data && data.data.length > 0) {
-            console.log('First news item:', data.data[0]);
-            console.log('Image field:', data.data[0].Image);
-            console.log('Created by ID:', data.data[0].createdBy);
-            console.log('Created by name:', data.data[0].createdByName);
+            logger.debug('First news item:', data.data[0]);
+            logger.debug('Image field:', data.data[0].Image);
+            logger.debug('Created by ID:', data.data[0].createdBy);
+            logger.debug('Created by name:', data.data[0].createdByName);
           }
-          console.log('==========================');
+          logger.debug('==========================');
         }
       }
 
@@ -235,7 +236,6 @@ export default function ManagePost() {
     setPreviewImageName(imageName);
     setPreviewImageOpen(true);
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 flex flex-col">

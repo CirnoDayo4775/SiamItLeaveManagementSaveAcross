@@ -9,6 +9,7 @@ import { apiService } from '@/lib/api';
 import { getDaysInMonth } from '@/lib/dateUtils';
 import { apiEndpoints } from '@/constants/api';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { logger } from '@/lib/logger';
 
 // getDaysInMonth moved to src/lib/dateUtils
 
@@ -70,12 +71,12 @@ const CompanyCalendarPage = () => {
 
         // Debug: Add test holiday for July 28th, 2025 to test dual highlighting
         if (year === 2025) {
-          console.log('All Thai holidays for 2025:', thaiHolidaysData);
+          logger.debug('All Thai holidays for 2025:', thaiHolidaysData);
           const julyHolidays = thaiHolidaysData.filter(h => {
             const date = new Date(h.date);
             return date.getMonth() === 6; // July
           });
-          console.log('July 2025 Thai holidays:', julyHolidays);
+          logger.debug('July 2025 Thai holidays:', julyHolidays);
 
           // Add test holiday on July 28th
           thaiHolidaysData.push({
@@ -89,7 +90,7 @@ const CompanyCalendarPage = () => {
 
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching data:', error);
+          logger.error('Error fetching data:', error);
         }
         setCompanyEvents([]);
         setThaiHolidays([]);
@@ -138,9 +139,9 @@ const CompanyCalendarPage = () => {
 
     // Debug: Log events for July 2025
     if (year === 2025 && month === 6) { // July
-      console.log('Company events for July 2025:', companyEvents);
-      console.log('Thai holidays for July 2025:', thaiHolidays);
-      console.log('All events for July 2025:', allEvents);
+      logger.debug('Company events for July 2025:', companyEvents);
+      logger.debug('Thai holidays for July 2025:', thaiHolidays);
+      logger.debug('All events for July 2025:', allEvents);
     }
 
     return allEvents;
@@ -276,8 +277,8 @@ const CompanyCalendarPage = () => {
 
               // Debug: Log events for July 2025
               if (year === 2025 && mIdx === 6) { // July
-                console.log('Events for July 2025:', events);
-                console.log('Event count map:', eventCountMap);
+                logger.debug('Events for July 2025:', events);
+                logger.debug('Event count map:', eventCountMap);
               }
 
               // Second pass: create event map with dual flag

@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { API_BASE_URL, apiService } from '../lib/api';
+import { logger } from '@/lib/logger';
 
 const EmployeeDetail = () => {
   const { id } = useParams();
@@ -119,16 +120,16 @@ const EmployeeDetail = () => {
 
     // เพิ่ม debug log
     if (import.meta.env.DEV) {
-      console.log('🔍 Fetching leave history with params:', params);
-      console.log('🔍 filterBackdated value:', filterBackdated);
-      console.log('🔍 Full URL:', `${API_BASE_URL}${apiEndpoints.employees.leaveHistory(id, query)}`);
+      logger.debug('🔍 Fetching leave history with params:', params);
+      logger.debug('🔍 filterBackdated value:', filterBackdated);
+      logger.debug('🔍 Full URL:', `${API_BASE_URL}${apiEndpoints.employees.leaveHistory(id, query)}`);
     }
 
     try {
       const data = await apiService.get(apiEndpoints.employees.leaveHistory(id, query));
       // เพิ่ม log เพื่อตรวจสอบ response
       if (import.meta.env.DEV) {
-        console.log('🟢 Leave history API response:', data);
+        logger.debug('🟢 Leave history API response:', data);
       }
       if (data.success) {
         // แก้ตรงนี้: data.data.data
@@ -139,7 +140,7 @@ const EmployeeDetail = () => {
       } else {
         // เพิ่ม log กรณี error
         if (import.meta.env.DEV) {
-          console.error('🔴 Leave history API error:', data);
+          logger.error('🔴 Leave history API error:', data);
         }
         setLeaveHistory([]);
         setLeaveTotalPages(1);
@@ -147,7 +148,7 @@ const EmployeeDetail = () => {
       }
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Error fetching leave history:', error);
+        logger.error('Error fetching leave history:', error);
       }
       setLeaveHistory([]);
       setLeaveTotalPages(1);
@@ -159,10 +160,10 @@ const EmployeeDetail = () => {
   useEffect(() => {
     // เพิ่ม debug log
     if (import.meta.env.DEV) {
-      console.log('🔄 useEffect triggered');
-      console.log('🔄 filterBackdated:', filterBackdated);
-      console.log('🔄 filterType:', filterType);
-      console.log('🔄 filterStatus:', filterStatus);
+      logger.debug('🔄 useEffect triggered');
+      logger.debug('🔄 filterBackdated:', filterBackdated);
+      logger.debug('🔄 filterType:', filterType);
+      logger.debug('🔄 filterStatus:', filterStatus);
     }
 
     fetchLeaveHistory();
@@ -322,7 +323,7 @@ const EmployeeDetail = () => {
 
   const handleViewLeaveDetails = async (leave) => {
     if (import.meta.env.DEV) {
-      console.log('View Details clicked. leave:', leave, 'leave.id:', leave.id);
+      logger.debug('View Details clicked. leave:', leave, 'leave.id:', leave.id);
     }
 
     // First try to use the existing leave data
@@ -349,7 +350,7 @@ const EmployeeDetail = () => {
       }
     } catch (e) {
       if (import.meta.env.DEV) {
-        console.error('Error fetching leave detail:', e);
+        logger.error('Error fetching leave detail:', e);
       }
     }
   };
@@ -966,10 +967,10 @@ const EmployeeDetail = () => {
 
                         // เพิ่ม debug log
                         if (import.meta.env.DEV) {
-                          console.log('🔘 Confirm button clicked');
-                          console.log('🔘 pendingFilterBackdated:', pendingFilterBackdated);
-                          console.log('🔘 pendingFilterType:', pendingFilterType);
-                          console.log('🔘 pendingFilterStatus:', pendingFilterStatus);
+                          logger.debug('🔘 Confirm button clicked');
+                          logger.debug('🔘 pendingFilterBackdated:', pendingFilterBackdated);
+                          logger.debug('🔘 pendingFilterType:', pendingFilterType);
+                          logger.debug('🔘 pendingFilterStatus:', pendingFilterStatus);
                         }
 
                         setFilterType(pendingFilterType);

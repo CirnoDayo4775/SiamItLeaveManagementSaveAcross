@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { apiService } from '../lib/api';
 import { getImageUrl } from '../lib/utils';
+import { logger } from '@/lib/logger';
 
 // เพิ่ม type สำหรับข้อมูลพนักงาน
 interface Employee {
@@ -87,7 +88,7 @@ const EmployeeManagement = () => {
         } else {
           if (import.meta.env.DEV) {
             if (import.meta.env.DEV) {
-              console.error('Invalid employees data format:', data);
+              logger.error('Invalid employees data format:', data);
             }
           }
           setEmployees([]);
@@ -96,7 +97,7 @@ const EmployeeManagement = () => {
       } catch (error) {
         if (import.meta.env.DEV) {
           if (import.meta.env.DEV) {
-            console.error('Error fetching employees:', error);
+            logger.error('Error fetching employees:', error);
           }
         }
         setLoading(false);
@@ -117,7 +118,7 @@ const EmployeeManagement = () => {
         } else {
           if (import.meta.env.DEV) {
             if (import.meta.env.DEV) {
-              console.error('Invalid positions data format:', positionsData);
+              logger.error('Invalid positions data format:', positionsData);
             }
           }
         }
@@ -129,14 +130,14 @@ const EmployeeManagement = () => {
         } else {
           if (import.meta.env.DEV) {
             if (import.meta.env.DEV) {
-              console.error('Invalid departments data format:', departmentsData);
+              logger.error('Invalid departments data format:', departmentsData);
             }
           }
         }
       } catch (error) {
         if (import.meta.env.DEV) {
           if (import.meta.env.DEV) {
-            console.error('Error fetching positions/departments:', error);
+            logger.error('Error fetching positions/departments:', error);
           }
         }
         toast({
@@ -372,7 +373,7 @@ const EmployeeManagement = () => {
       }
     } catch (e) {
       if (import.meta.env.DEV) {
-        console.error('Delete employee error:', e);
+        logger.error('Delete employee error:', e);
       }
       toast({
         title: t('system.deleteFailed'),

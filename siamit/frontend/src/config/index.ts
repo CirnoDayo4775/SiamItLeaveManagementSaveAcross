@@ -71,17 +71,18 @@ export const config = {
     enableAnalytics: import.meta.env.VITE_ENABLE_ANALYTICS === 'true',
   },
 } as const;
+import { logger } from '@/lib/logger';
 
 // Helper function to get environment variable with type safety
 export const getEnvVar = <T>(key: string, defaultValue: T, transformer?: (value: string) => T): T => {
   const value = import.meta.env[key];
   if (value === undefined) return defaultValue;
-  
+
   if (transformer) {
     try {
       return transformer(value);
     } catch (error) {
-      console.warn(`Failed to parse environment variable ${key}:`, error);
+      logger.warn(`Failed to parse environment variable ${key}:`, error);
       return defaultValue;
     }
   }

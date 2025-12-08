@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { config } from "@/config";
+import { logger } from '@/lib/logger';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -33,9 +34,9 @@ export function getImageUrl(imageName: string, apiBaseUrl: string): string {
 export function handleImageError(e: React.SyntheticEvent<HTMLImageElement, Event>, imageName: string, apiBaseUrl: string): void {
   const target = e.target as HTMLImageElement;
   if (import.meta.env.DEV) {
-    console.error('Image load error for:', imageName);
-    console.error('Current URL:', target.src);
-    console.error('API_BASE_URL:', apiBaseUrl);
+    logger.error('Image load error for:', imageName);
+    logger.error('Current URL:', target.src);
+    logger.error('API_BASE_URL:', apiBaseUrl);
   }
 
   // Try alternative paths
@@ -58,12 +59,12 @@ export function handleImageError(e: React.SyntheticEvent<HTMLImageElement, Event
 
   if (nextIndex < possiblePaths.length) {
     if (import.meta.env.DEV) {
-      console.log('Trying next path:', possiblePaths[nextIndex]);
+      logger.debug('Trying next path:', possiblePaths[nextIndex]);
     }
     target.src = possiblePaths[nextIndex];
   } else {
     if (import.meta.env.DEV) {
-      console.log('All paths failed, using placeholder');
+      logger.debug('All paths failed, using placeholder');
     }
     target.src = '/placeholder.svg';
   }
@@ -96,7 +97,7 @@ export function formatDate(dateStr: string, language: string, showTime: boolean 
     return date.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', options);
   } catch (error) {
     if (import.meta.env.DEV) {
-      console.error('Error formatting date:', error);
+      logger.error('Error formatting date:', error);
     }
     return dateStr;
   }
@@ -128,23 +129,35 @@ export function formatDateLocalized(dateStr: string, language: string, showTime:
  * @param file - The image file to preview
  * @param setPreviewImage - Function to set preview image state
  * @param setImageDialogOpen - Function to set dialog open state
+ * @returns Cleanup function to revoke object URL (call when dialog closes)
  */
 export function handleImageClick(
   file: File,
   setPreviewImage: (preview: { url: string; name: string } | null) => void,
   setImageDialogOpen: (open: boolean) => void
-): void {
-  // ตรวจสอบว่ามี custom url property หรือไม่ (สำหรับโหมด view)
+): (() => void) | void {
+  // Check if file has custom url property (for view mode)
   let url: string;
-  if ((file as any).url) {
-    url = (file as any).url;
+  let isObjectUrl = false;
+
+  const fileWithUrl = file as File & { url?: string };
+  if (fileWithUrl.url) {
+    url = fileWithUrl.url;
   } else {
-    // ถ้าเป็น File object ปกติ ใช้ URL.createObjectURL
+    // For normal File objects, use URL.createObjectURL
     url = URL.createObjectURL(file);
+    isObjectUrl = true;
   }
 
   setPreviewImage({ url, name: file.name });
   setImageDialogOpen(true);
+
+  // Return cleanup function to revoke object URL when dialog closes
+  if (isObjectUrl) {
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }
 }
 
 /**
@@ -154,50 +167,74 @@ export function handleImageClick(
  * @param setPreview - Function to set preview URL
  * @param setError - Function to set error message
  * @param setIsValidFile - Function to set file validation status
+ * @param t - Optional translation function for error messages
+ * @returns Cleanup function to revoke object URL (IMPORTANT: call this in useEffect cleanup)
+ * 
+ * @example
+ * // In your component:
+ * const cleanupRef = useRef<(() => void) | null>(null);
+ * 
+ * const handleChange = (e) => {
+ *   // Clean up previous object URL if it exists
+ *   if (cleanupRef.current) {
+ *     cleanupRef.current();
+ *   }
+ *   // Store new cleanup function
+ *   cleanupRef.current = handleFileSelect(e, setFile, setPreview);
+ * };
+ * 
+ * // In component cleanup:
+ * useEffect(() => {
+ *   return () => {
+ *     if (cleanupRef.current) {
+ *       cleanupRef.current();
+ *     }
+ *   };
+ * }, []);
  */
 export function handleFileSelect(
   e: React.ChangeEvent<HTMLInputElement>,
   setFile: (file: File | null) => void,
   setPreview: (url: string | null) => void,
   setError?: (error: string | null) => void,
-  setIsValidFile?: (isValid: boolean) => void
-): void {
+  setIsValidFile?: (isValid: boolean) => void,
+  t?: (key: string) => string
+): (() => void) | void {
   const file = e.target.files?.[0];
-  if (file) {
-    // ตรวจสอบประเภทไฟล์ - อนุญาตเฉพาะไฟล์รูปภาพ
-    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
-    if (!allowedImageTypes.includes(file.type)) {
-      setError?.('กรุณาเลือกไฟล์รูปภาพเท่านั้น (JPG, PNG, GIF, WebP)');
-      setIsValidFile?.(false);
-      setFile(null);
-      setPreview(null);
-      // รีเซ็ต input file
-      e.target.value = '';
-      return;
-    }
+  if (!file) return;
 
-    // ตรวจสอบขนาดไฟล์ (จำกัดที่ 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      setError?.('ขนาดไฟล์ใหญ่เกินไป กรุณาเลือกไฟล์ที่มีขนาดไม่เกิน 10MB');
-      setIsValidFile?.(false);
-      setFile(null);
-      setPreview(null);
-      e.target.value = '';
-      return;
-    }
-
-    // ไฟล์ผ่านการตรวจสอบ
-    setError?.(null);
-    setIsValidFile?.(true);
-    setFile(file);
-
-    if (file.type.startsWith('image/')) {
-      const url = URL.createObjectURL(file);
-      setPreview(url);
-    }
+  // Validate file type
+  const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+  if (!validImageTypes.includes(file.type)) {
+    setFile(null);
+    setPreview(null);
+    if (setError) setError(t ? t('leave.invalidFileType') : 'กรุณาอัปโหลดไฟล์ภาพ (.jpg, .png, .gif, .webp)');
+    if (setIsValidFile) setIsValidFile(false);
+    return;
   }
+
+  // Validate file size (10MB)
+  const maxSize = 10 * 1024 * 1024; // 10MB
+  if (file.size > maxSize) {
+    setFile(null);
+    setPreview(null);
+    if (setError) setError(t ? t('leave.fileTooLarge') : 'ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 10MB)');
+    if (setIsValidFile) setIsValidFile(false);
+    return;
+  }
+
+  setFile(file);
+  const previewUrl = URL.createObjectURL(file);
+  setPreview(previewUrl);
+  if (setError) setError(null);
+  if (setIsValidFile) setIsValidFile(true);
+
+  // Return cleanup function to revoke object URL
+  // IMPORTANT: Caller must call this function when component unmounts or when changing files
+  return () => {
+    URL.revokeObjectURL(previewUrl);
+  };
 }
 
 /**
@@ -226,20 +263,5 @@ export function removeSelectedFile(
   }
 }
 
-export async function fetchWithAuth(input: RequestInfo, init?: RequestInit, logoutFn?: () => void, sessionExpiredFn?: () => void) {
-  const token = localStorage.getItem("token");
-  const headers = {
-    ...(init?.headers || {}),
-    Authorization: token ? `Bearer ${token}` : undefined,
-  };
-  const response = await fetch(input, { ...init, headers });
-  if (response.status === 401) {
-    if (sessionExpiredFn) {
-      sessionExpiredFn();
-    } else if (logoutFn) {
-      logoutFn();
-    }
-    return null;
-  }
-  return response;
-}
+// NOTE: fetchWithAuth has been removed from here.
+// Use the version from '@/lib/api' instead which is properly maintained.

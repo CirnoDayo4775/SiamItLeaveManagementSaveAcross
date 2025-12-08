@@ -22,6 +22,7 @@ import { monthNames } from '../constants/common';
 import { apiService } from '../lib/api';
 import { showToastMessage } from '../lib/toast';
 import { formatDateLocalized } from '../lib/utils';
+import { logger } from '@/lib/logger';
 
 // Note: Local inline types and helpers removed if unused
 
@@ -561,7 +562,7 @@ const ApproveLeave = () => {
       }
     } catch {
       if (import.meta.env.DEV) {
-        console.error('Error fetching leave detail:', request.id);
+        logger.error('Error fetching leave detail:', request.id);
       }
     }
   };
@@ -603,7 +604,7 @@ const ApproveLeave = () => {
       // Listen for leave request status changes
       socket.on('leaveRequestStatusChanged', (data) => {
         if (import.meta.env.DEV) {
-          console.log('Received leave request status change:', data);
+          logger.debug('Received leave request status change:', data);
         }
         toast({
           title: t('notifications.statusChanged'),

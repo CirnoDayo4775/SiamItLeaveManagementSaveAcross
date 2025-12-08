@@ -11,10 +11,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { apiService } from '@/lib/api';
 import { showToastMessage } from '@/lib/toast';
+import { checkPasswordStrength, isValidEmail, isValidName, sanitizeName } from '@/lib/validators';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { logger } from '@/lib/logger';
 
 // Utility function to sort items by language-specific name
 const sortByNameField = <T extends { [key: string]: any }>(
@@ -29,15 +31,6 @@ const sortByNameField = <T extends { [key: string]: any }>(
   });
 };
 
-// Extract password strength calculation
-const calculatePasswordStrength = (password: string): 'weak' | 'medium' | 'strong' => {
-  if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
-    return 'strong';
-  } else if (password.length >= 6 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
-    return 'medium';
-  }
-  return 'weak';
-};
 
 const Register = () => {
   const { t, i18n } = useTranslation();
@@ -63,8 +56,9 @@ const Register = () => {
   const [positions, setPositions] = useState<{ id: string; position_name_en: string; position_name_th: string; require_enddate?: boolean }[]>([]);
   const [newDepartment, setNewDepartment] = useState('');
   const [newPosition, setNewPosition] = useState('');
-  const [error, setError] = useState<{ email?: string; full_name?: string; general?: string }>({});
+  const [error, setError] = useState<{ email?: string; full_name?: string; password?: string; general?: string }>({});
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [passwordIssues, setPasswordIssues] = useState<string[]>([]);
 
   const { signup } = useAuth();
   const { toast } = useToast();
@@ -88,7 +82,9 @@ const Register = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const password = e.target.value;
     setFormData(prev => ({ ...prev, password }));
-    setPasswordStrength(calculatePasswordStrength(password));
+    const result = checkPasswordStrength(password);
+    setPasswordStrength(result.score);
+    setPasswordIssues(result.issues);
   };
 
   // ดึงข้อมูลจาก API
@@ -131,7 +127,7 @@ const Register = () => {
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching data:', error);
+          logger.error('Error fetching data:', error);
         }
         setDepartments([]);
         setPositions([]);
@@ -171,9 +167,22 @@ const Register = () => {
     e.preventDefault();
     setError({});
 
-    // ตรวจสอบรูปแบบอีเมล
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    // ตรวจสอบชื่อ (Name validation and sanitization)
+    const sanitizedName = sanitizeName(formData.full_name);
+    if (!isValidName(sanitizedName)) {
+      toast({
+        title: t('common.error'),
+        description: lang === 'th' ? 'ชื่อไม่ถูกต้อง กรุณากรอกชื่อจริง' : 'Invalid name. Please enter a valid name.',
+        variant: "destructive",
+      });
+      setError({ full_name: lang === 'th' ? 'ชื่อไม่ถูกต้อง' : 'Invalid name' });
+      return;
+    }
+    // Update formData with sanitized name
+    setFormData(prev => ({ ...prev, full_name: sanitizedName }));
+
+    // ตรวจสอบรูปแบบอีเมล (Enhanced email validation)
+    if (!isValidEmail(formData.email)) {
       toast({
         title: t('common.error'),
         description: t('auth.invalidEmailFormat'),
@@ -183,26 +192,18 @@ const Register = () => {
       return;
     }
 
-    // ตรวจสอบเพิ่มเติมว่าอีเมลไม่ใช่รูปแบบที่ไม่สมบูรณ์ เช่น @g, @gmail
-    if (formData.email.includes('@') && !formData.email.includes('.')) {
+    // ตรวจสอบความแข็งแรงของรหัสผ่าน (Password strength enforcement)
+    const passwordResult = checkPasswordStrength(formData.password);
+    if (!passwordResult.isStrong) {
+      const passwordError = lang === 'th'
+        ? `รหัสผ่านไม่ปลอดภัยเพียงพอ: ${passwordResult.issues.join(', ')}`
+        : `Password is not strong enough: ${passwordResult.issues.join(', ')}`;
       toast({
         title: t('common.error'),
-        description: t('auth.invalidEmailFormat'),
+        description: passwordError,
         variant: "destructive",
       });
-      setError({ email: t('auth.invalidEmailFormat') });
-      return;
-    }
-
-    // ตรวจสอบว่าโดเมนต้องมีอย่างน้อย 2 ตัวอักษรหลังจุด (เช่น .com, .co.th)
-    const domainMatch = formData.email.match(/@[^@]+\.([^.]+)$/);
-    if (domainMatch && domainMatch[1].length < 2) {
-      toast({
-        title: t('common.error'),
-        description: t('auth.invalidEmailFormat'),
-        variant: "destructive",
-      });
-      setError({ email: t('auth.invalidEmailFormat') });
+      setError({ password: passwordError });
       return;
     }
 

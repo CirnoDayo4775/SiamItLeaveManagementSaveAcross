@@ -3,13 +3,14 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import enTranslations from './locales/en.json';
 import thTranslations from './locales/th.json';
+import { logger } from '@/lib/logger';
 
 // Safe localStorage access
 const getStoredLanguage = () => {
   try {
     return localStorage.getItem('i18nextLng') || 'th';
   } catch (error) {
-    console.warn('Failed to access localStorage for i18n:', error);
+    logger.warn('Failed to access localStorage for i18n:', error);
     return 'th';
   }
 };

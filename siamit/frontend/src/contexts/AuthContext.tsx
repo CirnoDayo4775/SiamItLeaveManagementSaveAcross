@@ -1,55 +1,63 @@
+import { rateLimiter, RateLimitKeys, formatRemainingTime } from '@/lib/rateLimiter';
+import { logger } from '@/lib/logger';
 import SessionExpiredDialog from '@/components/dialogs/SessionExpiredDialog';
 import { API_BASE_URL } from '@/constants/api';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-interface User {
+export interface User {
   id: string;
   email: string;
   full_name?: string;
-  avatar_url?: string;
-  role?: 'employee' | 'admin' | 'superadmin';
-  department?: string;
-  department_name_th?: string;
-  department_name_en?: string;
+  role?: string;
   position?: string;
-  position_name_th?: string;
-  position_name_en?: string;
-  gender?: 'male' | 'female' | 'other';
-  dob?: string;
-  phone_number?: string;
-  start_work?: string;
-  end_work?: string;
+  department?: string;
+  token?: string;
+  avatar_url?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, userData: Partial<User>) => Promise<void>;
-  logout: () => Promise<void>;
-  updateUser: (userData: Partial<User>) => void;
   loading: boolean;
-  showSessionExpiredDialog: () => void;
-  avatarPreviewUrl?: string | null;
-  setAvatarPreviewUrl?: (url: string | null) => void;
+  login: (email: string, password: string) => Promise<{ role?: string; id: string }>;
+  signup: (email: string, password: string, userData: Partial<User>) => Promise<void>;
+  logout: () => void;
+  updateUser: (updates: Partial<User>) => void;
+  isSessionExpired: boolean;
+  closeSessionExpiredDialog: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+/**
+ * Create a safer default context that throws an error if accessed outside provider
+ * This prevents silent failures from using undefined methods
+ */
+const createDefaultContext = (): AuthContextType => ({
+  user: null,
+  loading: true,
+  login: async () => {
+    throw new Error('AuthContext not initialized. Ensure component is wrapped in AuthProvider.');
+  },
+  signup: async () => {
+    throw new Error('AuthContext not initialized. Ensure component is wrapped in AuthProvider.');
+  },
+  logout: () => {
+    throw new Error('AuthContext not initialized. Ensure component is wrapped in AuthProvider.');
+  },
+  updateUser: () => {
+    throw new Error('AuthContext not initialized. Ensure component is wrapped in AuthProvider.');
+  },
+  isSessionExpired: false,
+  closeSessionExpiredDialog: () => {
+    throw new Error('AuthContext not initialized. Ensure component is wrapped in AuthProvider.');
+  }
+});
+
+const AuthContext = createContext<AuthContextType>(createDefaultContext());
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    console.warn('useAuth must be used within an AuthProvider');
-    // Return a default context to prevent crashes
-    return {
-      user: null,
-      login: async () => { },
-      signup: async () => { },
-      logout: async () => { },
-      updateUser: () => { },
-      loading: true,
-      showSessionExpiredDialog: () => { },
-    };
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
@@ -73,8 +81,7 @@ function parseJwt(token: string) {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showSessionExpiredDialog, setShowSessionExpiredDialog] = useState(false);
-  const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(null);
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
   const logoutTimer = useRef<NodeJS.Timeout | null>(null);
   const { t } = useTranslation();
 
@@ -110,14 +117,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const now = Date.now();
 
     if (exp <= now) {
-      setShowSessionExpiredDialog(true);
+      setIsSessionExpired(true);
       return;
     }
 
     // ตั้ง timer auto logout
     const timeout = exp - now;
     logoutTimer.current = setTimeout(() => {
-      setShowSessionExpiredDialog(true);
+      setIsSessionExpired(true);
     }, timeout);
 
     // cleanup timer
@@ -126,7 +133,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, [user, t]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<{ role?: string; id: string }> => {
+    // Check rate limiting
+    if (!rateLimiter.isAllowed(RateLimitKeys.LOGIN)) {
+      const remainingTime = rateLimiter.getBlockedTimeRemaining(RateLimitKeys.LOGIN);
+      const formattedTime = formatRemainingTime(remainingTime);
+      throw new Error(
+        t('auth.rateLimitExceeded', `คุณพยายาม login ล้มเหลวหลายครั้งเกินไป กรุณารออีก ${formattedTime}`)
+      );
+    }
+
     const response = await fetch(`${API_BASE_URL}/api/login`, {
       method: 'POST',
       headers: {
@@ -137,8 +153,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const data = await response.json();
 
     if (!response.ok || !data.success) {
+      // Login failed - rate limiter already recorded this attempt
       throw new Error(data.message || t('auth.loginError'));
     }
+
+    // Login successful - reset rate limiter for this user
+    rateLimiter.reset(RateLimitKeys.LOGIN);
 
     // Initial user info from login
     const userInfo = {
@@ -192,17 +212,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     } catch (err) {
       // Non-critical errors, login still successful
-      if (import.meta.env.DEV) {
-        console.error("Error fetching user details:", err);
-      }
+      logger.error("Error fetching user details:", err);
     }
+    // Return basic user info for immediate use in Login component
+    return { role: userInfo.role, id: userInfo.id };
   };
 
   const signup = async (email: string, password: string, userData: Partial<User>) => {
-    // เรียก API backend
     const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
     const token = currentUser?.token;
-
 
     const response = await fetch(`${API_BASE_URL}/api/register`, {
       method: 'POST',
@@ -214,72 +232,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         name: userData.full_name,
         position: userData.position,
         department: userData.department,
-        email: email,         // <-- แก้ตรงนี้
-        password: password,   // <-- แก้ตรงนี้
+        email: email,
+        password: password,
         Role: userData.role || 'employee',
-        gender: userData.gender,
-        dob: userData.dob,
-        phone_number: userData.phone_number,
-        start_work: userData.start_work,
-        end_work: userData.end_work,
       }),
     });
     const data = await response.json();
 
     if (!response.ok) {
-      // Check if the error is in data.data.errors (array) or data.message
-      let errorMessage;
-      if (data.data && data.data.errors && Array.isArray(data.data.errors)) {
-        // Get the first error message from the array
-        errorMessage = data.data.errors[0];
-      } else {
-        errorMessage = data.errors || data.message || data.error || 'สมัครสมาชิกไม่สำเร็จ';
-      }
-      if (import.meta.env.DEV) {
-        console.log('Extracted error message:', errorMessage);
-      }
-      throw new Error(errorMessage);
+      throw new Error(data.message || 'Registration failed');
     }
-    // สมัครสมาชิกสำเร็จ ไม่ต้อง login อัตโนมัติ ให้ user ไป login เอง
   };
 
-  const logout = async () => {
+  const logout = () => {
     setUser(null);
     localStorage.removeItem('currentUser');
-
-    if (logoutTimer.current) {
-      clearTimeout(logoutTimer.current);
-      logoutTimer.current = null;
-    }
   };
 
-  const updateUser = (userData: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-    }
+  const updateUser = (updates: Partial<User>) => {
+    setUser(prevUser => ({ ...prevUser, ...updates } as User));
   };
 
-  const value = {
-    user,
-    login,
-    signup,
-    logout,
-    updateUser,
-    loading,
-    showSessionExpiredDialog: () => setShowSessionExpiredDialog(true),
-    avatarPreviewUrl,
-    setAvatarPreviewUrl,
+  const closeSessionExpiredDialog = () => {
+    setIsSessionExpired(false);
+    logout();
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ user, login, signup, logout, updateUser, loading, isSessionExpired, closeSessionExpiredDialog }}>
+      <SessionExpiredDialog open={isSessionExpired} onClose={closeSessionExpiredDialog} />
       {children}
-      <SessionExpiredDialog
-        open={showSessionExpiredDialog}
-        onOpenChange={setShowSessionExpiredDialog}
-      />
     </AuthContext.Provider>
   );
 };
+
+export default AuthContext;

@@ -22,6 +22,7 @@ import { monthNames } from '../constants/common';
 import { apiService } from '../lib/api';
 import { calcHours, getLeaveTypeLabel, getTypeColor, isRetroactiveLeave, translateLeaveType } from '../lib/leaveUtils';
 import { formatDateLocalized } from '../lib/utils';
+import { logger } from '@/lib/logger';
 
 const LeaveHistory = () => {
 
@@ -242,14 +243,12 @@ const LeaveHistory = () => {
     } catch (e) {
 
       if (import.meta.env.DEV) {
-        console.error('Error fetching leave detail:', e);
+        logger.error('Error fetching leave detail:', e);
       }
 
     }
 
   };
-
-
 
   // Fetch leave types and filter options from backend
 

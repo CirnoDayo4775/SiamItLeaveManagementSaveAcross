@@ -8,10 +8,11 @@ import { apiEndpoints } from '@/constants/api';
 import { Calendar, CheckCircle, Clock, FileText, History, User, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { apiService, createAuthenticatedFileUrl } from '../../lib/api';
+import { apiService, fetchAuthenticatedFile } from '../../lib/api';
 import { calcHours, getLeaveTypeDisplay, getTypeColor, isRetroactiveLeave } from '../../lib/leaveUtils';
 import { formatDateLocalized } from '../../lib/utils';
 import { getRetroactiveBadge, getStatusBadge } from '../leave/LeaveBadges';
+import { logger } from '@/lib/logger';
 
 interface LeaveRequest {
   id: string;
@@ -61,6 +62,8 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
   const [leaveTypesLoading, setLeaveTypesLoading] = useState(false);
   const [leaveTypesError, setLeaveTypesError] = useState<string | null>(null);
   const [preview, setPreview] = useState<{ url: string; name: string } | null>(null);
+  // State for securely loaded attachment URLs (using Authorization header instead of token in URL)
+  const [attachmentUrls, setAttachmentUrls] = useState<Record<string, string>>({});
 
   // Use centralized API service and endpoints (avoid hard-coded URLs)
 
@@ -71,10 +74,10 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
         .then((data: any) => {
           if (data.success) {
             if (import.meta.env.DEV) {
-              console.log('Leave Detail Data:', data.data);
-              console.log('Days from API:', data.data.days);
-              console.log('StartDate:', data.data.startDate);
-              console.log('EndDate:', data.data.endDate);
+              logger.debug('Leave Detail Data:', data.data);
+              logger.debug('Days from API:', data.data.days);
+              logger.debug('StartDate:', data.data.startDate);
+              logger.debug('EndDate:', data.data.endDate);
             }
             setLeaveDetail(data.data);
           } else {
@@ -118,6 +121,39 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
     fetchLeaveTypes();
   }, []);
 
+  // Securely load attachment URLs using Authorization header (not exposing token in URL)
+  useEffect(() => {
+    const loadAttachments = async () => {
+      if (!leaveDetail?.attachments || leaveDetail.attachments.length === 0) return;
+
+      const urls: Record<string, string> = {};
+      await Promise.all(
+        leaveDetail.attachments.map(async (attachment: string) => {
+          const filePath = attachment.startsWith('/leave-uploads/') ? attachment : `/leave-uploads/${attachment}`;
+          try {
+            const secureUrl = await fetchAuthenticatedFile(filePath);
+            urls[attachment] = secureUrl;
+          } catch (error) {
+            if (import.meta.env.DEV) {
+              logger.error('Failed to load attachment:', attachment, error);
+            }
+          }
+        })
+      );
+      setAttachmentUrls(urls);
+    };
+    loadAttachments();
+
+    // Cleanup blob URLs on unmount
+    return () => {
+      Object.values(attachmentUrls).forEach(url => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [leaveDetail?.attachments]);
+
   // Note: getStatusBadge, getRetroactiveBadge, getTypeColor, calcHours functions moved to src/lib/leaveUtils.ts
 
   // Note: getLeaveTypeLabel and getLeaveTypeDisplay functions moved to src/lib/leaveUtils.ts
@@ -143,7 +179,7 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
       return diffDays;
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Error calculating days:', error);
+        logger.error('Error calculating days:', error);
       }
       return 1;
     }
@@ -302,7 +338,7 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
                                   // ใช้ข้อมูล days จากฐานข้อมูลเป็นหลัก
                                   if (leaveDetail.days !== null && leaveDetail.days !== undefined) {
                                     if (import.meta.env.DEV) {
-                                      console.log('Using days from database:', leaveDetail.days);
+                                      logger.debug('Using days from database:', leaveDetail.days);
                                     }
                                     return `${leaveDetail.days} ${t('leave.days')}`;
                                   }
@@ -311,7 +347,7 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
                                   if (leaveDetail.startDate && leaveDetail.endDate) {
                                     const calculatedDays = calculateDays(leaveDetail.startDate, leaveDetail.endDate);
                                     if (import.meta.env.DEV) {
-                                      console.log('Calculated days from dates:', calculatedDays);
+                                      logger.debug('Calculated days from dates:', calculatedDays);
                                     }
                                     return `${calculatedDays} ${t('leave.days')}`;
                                   }
@@ -319,13 +355,13 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
                                   // ถ้ามีแค่ startDate ให้เป็น 1 วัน
                                   if (leaveDetail.startDate) {
                                     if (import.meta.env.DEV) {
-                                      console.log('Only startDate available, returning 1 day');
+                                      logger.debug('Only startDate available, returning 1 day');
                                     }
                                     return `1 ${t('leave.days')}`;
                                   }
 
                                   if (import.meta.env.DEV) {
-                                    console.log('No date information, returning 1 day');
+                                    logger.debug('No date information, returning 1 day');
                                   }
                                   return `1 ${t('leave.days')}`;
                                 })()}
@@ -453,19 +489,27 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
                         const fileExtension = fileName.split('.').pop()?.toLowerCase();
                         const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension || '');
 
-                        // Construct the correct file path - always prepend /leave-uploads/ if not already present
-                        const filePath = attachment.startsWith('/leave-uploads/') ? attachment : `/leave-uploads/${attachment}`;
-                        const authenticatedFilePath = createAuthenticatedFileUrl(filePath);
+                        // Use securely loaded URL from state (loaded via Authorization header)
+                        const secureUrl = attachmentUrls[attachment];
+
+                        // Show loading state if URL not yet loaded
+                        if (!secureUrl) {
+                          return (
+                            <div key={index} className="border rounded-lg p-4 bg-gray-50 flex items-center justify-center h-32">
+                              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                            </div>
+                          );
+                        }
 
                         return (
                           <div key={index} className="border rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
                             {isImage ? (
                               <div className="space-y-3">
                                 <img
-                                  src={authenticatedFilePath}
+                                  src={secureUrl}
                                   alt={fileName}
                                   className="w-full h-32 object-cover rounded-lg border cursor-zoom-in"
-                                  onClick={() => setPreview({ url: authenticatedFilePath, name: fileName })}
+                                  onClick={() => setPreview({ url: secureUrl, name: fileName })}
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
                                     target.style.display = 'none';
@@ -477,14 +521,14 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
                                     <Button
                                       size="sm"
                                       variant="outline"
-                                      onClick={() => setPreview({ url: authenticatedFilePath, name: fileName })}
+                                      onClick={() => setPreview({ url: secureUrl, name: fileName })}
                                     >
                                       {t('common.view')}
                                     </Button>
                                     <Button
                                       size="sm"
                                       variant="outline"
-                                      onClick={() => handleDownload(authenticatedFilePath, fileName)}
+                                      onClick={() => handleDownload(secureUrl, fileName)}
                                     >
                                       {t('common.download')}
                                     </Button>
@@ -495,21 +539,19 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
                               <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition group">
                                 <FileText className="w-8 h-8 text-indigo-500 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                  <a
-                                    href={authenticatedFilePath}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block text-base font-medium text-gray-800 hover:underline truncate"
+                                  <span
+                                    className="block text-base font-medium text-gray-800 truncate cursor-pointer hover:underline"
                                     title={fileName}
+                                    onClick={() => window.open(secureUrl, '_blank')}
                                   >
                                     {fileName}
-                                  </a>
+                                  </span>
                                 </div>
                                 <Button
                                   size="sm"
                                   variant="outline"
                                   className="ml-2"
-                                  onClick={() => handleDownload(authenticatedFilePath, fileName)}
+                                  onClick={() => handleDownload(secureUrl, fileName)}
                                 >
                                   {t('common.download')}
                                 </Button>

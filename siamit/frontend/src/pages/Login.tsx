@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { isValidEmail } from '@/lib/validators';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,19 +28,32 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate email format before submitting
+    if (!isValidEmail(email)) {
+      toast({
+        title: t('common.error'),
+        description: t('auth.invalidEmailFormat'),
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await login(email, password);
-      const userInfo = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      // Use the returned user info instead of reading localStorage (fixes race condition)
+      const userInfo = await login(email, password);
       toast({
         title: t('auth.loginSuccess'),
         description: t('auth.welcomeToSystem'),
       });
 
       // Navigate based on user role - simplified logic
-      const destination = (userInfo.role === 'admin' || userInfo.role === 'superadmin')
-        ? (userInfo.role === 'admin' ? '/admin' : '/')
+      // userInfo is always defined on successful login
+      const role = userInfo && 'role' in userInfo ? userInfo.role : undefined;
+      const destination = (role === 'admin' || role === 'superadmin')
+        ? (role === 'admin' ? '/admin' : '/')
         : '/';
       navigate(destination, { replace: true });
     } catch (error: any) {

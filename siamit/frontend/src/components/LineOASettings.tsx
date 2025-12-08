@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, XCircle, MessageSquare, Settings, TestTube, Grid3X3, Menu } from 'lucide-react';
 import axios from 'axios';
+import { logger } from '@/lib/logger';
 
 interface LineOASettingsProps {
   className?: string;
@@ -211,7 +212,7 @@ const LineOASettings: React.FC<LineOASettingsProps> = ({ className }) => {
         setRichMenuList(response.data.richMenuList);
       }
     } catch (error) {
-      console.error('Error loading rich menu list:', error);
+      logger.error('Error loading rich menu list:', error);
     }
   };
 

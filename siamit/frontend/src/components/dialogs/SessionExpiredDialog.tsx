@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { AlertTriangle } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 interface SessionExpiredDialogProps {
   open: boolean;
@@ -31,7 +32,7 @@ export default function SessionExpiredDialog({ open, onOpenChange }: SessionExpi
       onOpenChange(false);
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Logout error:', error);
+        logger.error('Logout error:', error);
       }
       // Force redirect even if logout fails
       navigate('/', { replace: true });

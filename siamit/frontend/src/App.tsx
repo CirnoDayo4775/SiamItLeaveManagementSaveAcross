@@ -34,6 +34,7 @@ const AdminLeaveRequest = lazy(() => import('./pages/AdminLeaveRequest'));
 
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { LazyLoadWrapper } from "@/components/LazyErrorBoundary";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -52,13 +53,15 @@ const AppContent = () => {
 
   if (!user) {
     return (
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Navigate to="/" replace />} />
-        {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
-      </Routes>
+      <LazyLoadWrapper>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Navigate to="/" replace />} />
+          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
+        </Routes>
+      </LazyLoadWrapper>
     );
   }
 
@@ -75,7 +78,7 @@ const AppContent = () => {
         </div>
         <AppSidebar />
         <main className="flex-1 min-w-0">
-          <Suspense fallback={<LoadingSpinner />}>
+          <LazyLoadWrapper>
             <Routes>
               {/* Support '/dashboard' as an alias for the root dashboard */}
               <Route path="/dashboard" element={<Navigate to="/" replace />} />
@@ -141,7 +144,7 @@ const AppContent = () => {
               <Route path="/login" element={<Navigate to="/" replace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </Suspense>
+          </LazyLoadWrapper>
         </main>
       </div>
     </SidebarProvider>

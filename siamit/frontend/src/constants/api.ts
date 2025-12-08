@@ -1,9 +1,11 @@
-// api.ts
+// API Constants
+// This file contains API endpoint constants and base URL
+// For API service methods (get, post, put, delete), use apiService from '@/lib/api'
 
 // ===== Base URL =====
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// ===== API Endpoints (เก็บเหมือนเดิม) =====
+// ===== API Endpoints =====
 export const apiEndpoints = {
   auth: {
     login: '/api/login',
@@ -75,79 +77,8 @@ export const apiEndpoints = {
   },
 };
 
-// ===== Helper ดึง Token =====
-const getAuthHeader = () => {
-  try {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-    const token = currentUser?.token;
-
-    if (!token) {
-      console.warn("No token found in localStorage");
-      return {}; // หรือ throw new Error("No token available");
-    }
-
-    return { Authorization: `Bearer ${token}` };
-  } catch (e) {
-    console.error("Error parsing currentUser from localStorage", e);
-    return {};
-  }
-};
-
-// ===== Join URL =====
-const joinUrl = (base: string, path: string) => {
-  if (!base) throw new Error("API_BASE_URL is undefined");
-  if (!path) throw new Error("API path is undefined");
-
-  const formattedBase = base.endsWith("/") ? base.slice(0, -1) : base;
-  const formattedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${formattedBase}${formattedPath}`;
-};
-
-// ===== Fetch Wrapper =====
-export const api = {
-  get: async (path: string) => {
-    const res = await fetch(joinUrl(API_BASE_URL, path), {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeader(),
-      },
-    });
-    return res.json();
-  },
-
-  post: async (path: string, body: any) => {
-    const res = await fetch(joinUrl(API_BASE_URL, path), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeader(),
-      },
-      body: JSON.stringify(body),
-    });
-    return res.json();
-  },
-
-  put: async (path: string, body: any) => {
-    const res = await fetch(joinUrl(API_BASE_URL, path), {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeader(),
-      },
-      body: JSON.stringify(body),
-    });
-    return res.json();
-  },
-
-  delete: async (path: string) => {
-    const res = await fetch(joinUrl(API_BASE_URL, path), {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeader(),
-      },
-    });
-    return res.json();
-  },
-};
+// NOTE: The 'api' service object has been removed from this file.
+// Use 'apiService' from '@/lib/api' instead for all API calls.
+// Example:
+//   import { apiService } from '@/lib/api';
+//   const data = await apiService.get(apiEndpoints.leave.requests);

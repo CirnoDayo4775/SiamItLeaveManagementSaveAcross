@@ -3,6 +3,7 @@
 
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { logger } from '@/lib/logger';
 
 // Helper function to get auth token
 
@@ -13,7 +14,7 @@ const getAuthToken = (): string | null => {
 
     if (!token) {
       if (import.meta.env.DEV) {
-        console.warn("No token found in localStorage");
+        logger.warn("No token found in localStorage");
       }
       return null; // คืน null ถ้าไม่มี token
     }
@@ -21,22 +22,39 @@ const getAuthToken = (): string | null => {
     return token; // คืน string ของ token
   } catch (e) {
     if (import.meta.env.DEV) {
-      console.error("Error parsing currentUser from localStorage", e);
+      logger.error("Error parsing currentUser from localStorage", e);
     }
     return null;
   }
 };
 
-
-// Helper function to create authenticated file URL
-export const createAuthenticatedFileUrl = (filePath: string): string => {
+// Helper function to fetch authenticated file using Authorization header (secure)
+export const fetchAuthenticatedFile = async (filePath: string): Promise<string> => {
   const token = getAuthToken();
-  if (!token) return filePath;
+  const url = joinUrl(API_BASE_URL, filePath);
 
-  const url = new URL(filePath, API_BASE_URL);
-  url.searchParams.set('token', token);
-  return url.toString();
+  try {
+    const response = await fetch(url, {
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch file: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      logger.error('Error fetching authenticated file:', error);
+    }
+    // Fallback: return direct URL without token (may fail if auth required)
+    return url;
+  }
 };
+
+// NOTE: createAuthenticatedFileUrl was removed due to security concerns (token exposure in URL).
+// Always use fetchAuthenticatedFile() which sends tokens via Authorization header.
 
 // Helper to join base URL and endpoint safely
 function joinUrl(base: string, endpoint: string): string {
@@ -88,7 +106,7 @@ const fetchWithAuth = async (
     // Check for other error status codes
     if (!response.ok) {
       if (import.meta.env.DEV) {
-        console.error(`API request failed with status: ${response.status}`);
+        logger.error(`API request failed with status: ${response.status}`);
       }
       // Still return the response so safeJsonParse can handle it
     }
@@ -96,7 +114,7 @@ const fetchWithAuth = async (
     return response;
   } catch (error) {
     if (import.meta.env.DEV) {
-      console.error('API request failed:', error);
+      logger.error('API request failed:', error);
     }
     throw error;
   }
@@ -122,7 +140,7 @@ const safeJsonParse = async (response: Response) => {
     return JSON.parse(text);
   } catch (error) {
     if (import.meta.env.DEV) {
-      console.error('JSON parsing error:', error);
+      logger.error('JSON parsing error:', error);
     }
     return {
       success: false,

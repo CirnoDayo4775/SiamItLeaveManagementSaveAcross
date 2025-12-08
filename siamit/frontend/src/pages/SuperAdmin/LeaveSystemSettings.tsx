@@ -15,6 +15,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { logger } from '@/lib/logger';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/lib/api';
@@ -22,8 +23,6 @@ import { apiEndpoints } from '@/constants/api';
 import { showToast, showToastMessage } from '@/lib/toast';
 import { config } from '@/config';
 import { QUOTA_RESET_STRATEGIES, POSITION_SETTINGS, CLEANUP_OPERATIONS } from '@/constants/business';
-
-
 
 // Mock data for demonstration
 // Remove mockDepartments
@@ -125,7 +124,7 @@ const LeaveSystemSettings: React.FC = () => {
       }
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Error fetching departments:', error);
+        logger.error('Error fetching departments:', error);
       }
       setDepartments([]);
     }
@@ -456,7 +455,7 @@ const LeaveSystemSettings: React.FC = () => {
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching positions:', error);
+          logger.error('Error fetching positions:', error);
         }
         setPositions([]);
       }
@@ -479,7 +478,7 @@ const LeaveSystemSettings: React.FC = () => {
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching data:', error);
+          logger.error('Error fetching data:', error);
         }
         setLeaveTypes([]);
       }

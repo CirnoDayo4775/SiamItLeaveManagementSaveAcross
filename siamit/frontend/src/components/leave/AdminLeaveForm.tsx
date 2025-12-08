@@ -17,6 +17,7 @@ import { isValidTimeFormat, autoFormatTimeInput } from '../../lib/leaveUtils';
 import { format } from "date-fns";
 import { formatDateLocal } from '@/lib/dateUtils';
 import { isValidPhoneNumber, isValidEmail } from '@/lib/validators';
+import { logger } from '@/lib/logger';
 
 // formatDateLocal, isValidPhoneNumber, isValidEmail moved to shared utils
 
@@ -111,7 +112,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching users:', error);
+          logger.error('Error fetching users:', error);
         }
         toast({
           title: t('common.error'),
@@ -134,7 +135,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching leave types:', error);
+          logger.error('Error fetching leave types:', error);
         }
       }
     };
@@ -152,7 +153,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching departments:', error);
+          logger.error('Error fetching departments:', error);
         }
       }
     };
@@ -170,7 +171,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching positions:', error);
+          logger.error('Error fetching positions:', error);
         }
       }
     };
@@ -412,7 +413,7 @@ export const AdminLeaveForm = ({ initialData, onSubmit, mode = 'create' }: Admin
       }
     } catch (error: any) {
       if (import.meta.env.DEV) {
-        console.error('Error submitting leave request:', error);
+        logger.error('Error submitting leave request:', error);
       }
       toast({
         title: t('leave.submitError'),

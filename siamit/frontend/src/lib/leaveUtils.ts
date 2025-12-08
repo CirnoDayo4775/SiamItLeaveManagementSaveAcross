@@ -4,11 +4,46 @@
  */
 
 /**
+ * Interface for leave request objects
+ */
+export interface LeaveRequestData {
+  id?: string;
+  backdated?: boolean | number | string;
+  startDate?: string;
+  endDate?: string;
+  startTime?: string;
+  endTime?: string;
+  durationType?: string;
+  durationHours?: number;
+  days?: number;
+  status?: string;
+  type?: string;
+  leaveType?: string;
+  leaveTypeName?: string;
+  leaveTypeName_th?: string;
+  leaveTypeName_en?: string;
+  leaveTypeEn?: string;
+  reason?: string;
+  createdAt?: string;
+  submittedDate?: string;
+}
+
+/**
+ * Interface for leave type from backend
+ */
+export interface LeaveType {
+  id: string;
+  leave_type: string;
+  leave_type_th: string;
+  leave_type_en: string;
+}
+
+/**
  * Check if a leave request is retroactive
  * @param leave - Leave request object with backdated property
  * @returns boolean indicating if the leave is retroactive
  */
-export const isRetroactiveLeave = (leave: any): boolean => {
+export const isRetroactiveLeave = (leave: LeaveRequestData): boolean => {
   return leave.backdated === true || leave.backdated === 1 || leave.backdated === "1";
 };
 
@@ -67,7 +102,7 @@ export const getTypeColor = (type: string): string => {
  */
 export const getLeaveTypeLabel = (
   typeId: string,
-  leaveTypes: any[],
+  leaveTypes: LeaveType[],
   i18n: { language: string },
   t: (key: string) => string
 ): string => {
@@ -97,8 +132,8 @@ export const getLeaveTypeLabel = (
  * @returns Localized leave type display name
  */
 export const getLeaveTypeDisplay = (
-  leaveDetail: any,
-  leaveTypes: any[],
+  leaveDetail: LeaveRequestData,
+  leaveTypes: LeaveType[],
   i18n: { language: string },
   t: (key: string) => string
 ): string => {
@@ -139,7 +174,7 @@ export const getLeaveTypeDisplay = (
  */
 export const translateLeaveType = (
   type: string,
-  leaveTypes: any[],
+  leaveTypes: LeaveType[],
   i18n: { language: string },
   t: (key: string) => string
 ): string => {
@@ -170,7 +205,8 @@ export const translateLeaveType = (
   if (i18nKey) return t(i18nKey);
 
   // Final fallback: try direct translation or return type as is
-  return t(`leaveTypes.${type}`, type);
+  const translatedType = t(`leaveTypes.${type}`);
+  return translatedType !== `leaveTypes.${type}` ? translatedType : type;
 };
 
 /**

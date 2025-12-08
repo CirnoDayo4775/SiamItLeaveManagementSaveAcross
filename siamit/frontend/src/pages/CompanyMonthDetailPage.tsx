@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getDaysInMonth } from '@/lib/dateUtils';
-
+import { logger } from '@/lib/logger';
 
 // getDaysInMonth moved to src/lib/dateUtils
 
@@ -134,7 +134,7 @@ const CompanyMonthDetailPage = () => {
 
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error('Error fetching data:', error);
+          logger.error('Error fetching data:', error);
         }
         setCompanyEvents([]);
         setThaiHolidays([]);
@@ -321,7 +321,7 @@ const CompanyMonthDetailPage = () => {
       showToastMessage.crud.createSuccess(t('companyEvent.event'));
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Error creating company event:', error);
+        logger.error('Error creating company event:', error);
       }
       showToastMessage.crud.createError(t('companyEvent.event'));
     }
@@ -352,7 +352,7 @@ const CompanyMonthDetailPage = () => {
       showToastMessage.crud.updateSuccess(t('companyEvent.event'));
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Error updating company event:', error);
+        logger.error('Error updating company event:', error);
       }
       showToastMessage.crud.updateError(t('companyEvent.event'));
     }
@@ -372,7 +372,7 @@ const CompanyMonthDetailPage = () => {
       showToastMessage.crud.deleteSuccess(t('companyEvent.event'));
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Error deleting company event:', error);
+        logger.error('Error deleting company event:', error);
       }
       showToastMessage.crud.deleteError(t('companyEvent.event'));
     } finally {

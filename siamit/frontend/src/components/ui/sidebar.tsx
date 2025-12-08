@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
@@ -39,7 +40,7 @@ const SidebarContext = React.createContext<SidebarContext | null>(null)
 function useSidebar() {
   const context = React.useContext(SidebarContext)
   if (!context) {
-    console.warn("useSidebar must be used within a SidebarProvider.")
+    logger.warn("useSidebar must be used within a SidebarProvider.")
     // Return a default context to prevent crashes
     return {
       state: "expanded" as const,

@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { logger } from '@/lib/logger';
 
 const items = [
   // Dashboard at the top of the main menu
@@ -122,7 +123,7 @@ export function AppSidebar() {
         const data = await response.json();
         setPositions(data.data || []);
       } catch (error) {
-        console.error('Error fetching positions:', error);
+        logger.error('Error fetching positions:', error);
       } finally {
         setIsLoading(false);
       }
