@@ -7,6 +7,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const config = require('../config');
+const sharp = require('sharp');
+
+// Image MIME types handled by compression
+const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+const DEFAULT_IMAGE_TARGET_BYTES = parseInt(process.env.IMAGE_MAX_FILE_SIZE) || 1024; // 1KB default
 
 /**
  * Create multer storage configuration
@@ -62,7 +67,7 @@ const createUpload = (options = {}) => {
 
   const storage = createStorage(destination, filenamePrefix);
 
-  return multer({
+  const upload = multer({
     storage: storage,
     limits: {
       fileSize: maxFileSize,
@@ -77,6 +82,106 @@ const createUpload = (options = {}) => {
       }
     }
   });
+
+  // Helper: compress/convert a single image file to webp target size
+  const compressFileToWebp = async (filePath, targetBytes) => {
+    const dir = path.dirname(filePath);
+    const base = path.basename(filePath, path.extname(filePath));
+    const tmpOut = path.join(dir, base + '.webp');
+
+    // Iteratively reduce quality and dimensions until target reached or limits hit
+    let quality = 80;
+    let metadata = await sharp(filePath).metadata();
+    let width = metadata.width || null;
+    let height = metadata.height || null;
+
+    for (let attempt = 0; attempt < 10; attempt++) {
+      let transformer = sharp(filePath).webp({ quality });
+      if (width && height && attempt > 0) {
+        // progressively downscale
+        const scale = Math.pow(0.8, attempt);
+        transformer = transformer.resize(Math.max(1, Math.round(width * scale)));
+      }
+
+      await transformer.toFile(tmpOut);
+      const stats = fs.statSync(tmpOut);
+      if (stats.size <= targetBytes) {
+        return { outPath: tmpOut, size: stats.size };
+      }
+
+      // reduce quality for next attempt
+      quality = Math.max(10, Math.floor(quality * 0.7));
+    }
+
+    // Final attempt: return last output even if larger than target
+    const finalStats = fs.existsSync(tmpOut) ? fs.statSync(tmpOut) : null;
+    return { outPath: tmpOut, size: finalStats ? finalStats.size : null };
+  };
+
+  // Post-process uploaded files (convert images to webp with target size)
+  const postProcessFiles = async (req) => {
+    const processSingle = async (file) => {
+      if (!file || !file.path) return;
+      if (!IMAGE_MIME_TYPES.includes(file.mimetype)) return; // only images
+
+      const target = parseInt(process.env.IMAGE_MAX_FILE_SIZE) || DEFAULT_IMAGE_TARGET_BYTES;
+      try {
+        const { outPath, size } = await compressFileToWebp(file.path, target);
+        if (outPath && fs.existsSync(outPath)) {
+          // remove original file if different
+          if (path.resolve(outPath) !== path.resolve(file.path)) {
+            try { fs.unlinkSync(file.path); } catch (e) { /* ignore */ }
+          }
+
+          // Update file metadata so controllers see the webp file
+          file.filename = path.basename(outPath);
+          file.path = outPath;
+          file.mimetype = 'image/webp';
+        }
+      } catch (e) {
+        // If compression fails, leave original file and continue
+        console.error('Image compression error:', e.message || e);
+      }
+    };
+
+    if (req.file) {
+      await processSingle(req.file);
+    }
+
+    if (req.files) {
+      // multer may provide array or object
+      if (Array.isArray(req.files)) {
+        for (const f of req.files) await processSingle(f);
+      } else if (typeof req.files === 'object') {
+        // fields() returns object of arrays
+        for (const key of Object.keys(req.files)) {
+          const arr = req.files[key];
+          if (Array.isArray(arr)) {
+            for (const f of arr) await processSingle(f);
+          }
+        }
+      }
+    }
+  };
+
+  // Wrap multer methods so we can run post-processing after multer finishes
+  const wrapper = {};
+  ['single', 'array', 'fields', 'any'].forEach((method) => {
+    wrapper[method] = function(...args) {
+      const mw = upload[method](...args);
+      return function(req, res, next) {
+        mw(req, res, function(err) {
+          if (err) return next(err);
+          // run post-processing, but don't block error handling
+          postProcessFiles(req).then(() => next()).catch(next);
+        });
+      };
+    };
+  });
+
+  // expose storage and other props if needed
+  wrapper._multer = upload;
+  return wrapper;
 };
 
 /**
