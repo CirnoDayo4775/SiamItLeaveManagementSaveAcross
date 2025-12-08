@@ -91,10 +91,10 @@ module.exports = (AppDataSource) => {
       const userData = {
         id: userId,
         name,
-        Email: email,
-        Password: hashedPassword,
-        Token: token,
-        Role: 'user', // Default role
+        email: email,
+        password: hashedPassword,
+        token: token,
+        role: 'user', // Default role
         department: departmentId,
         position: positionId,
         gender: gender || null,

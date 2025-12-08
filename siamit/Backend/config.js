@@ -26,7 +26,7 @@ const config = {
     port: process.env.PORT,
     jwtSecret: process.env.JWT_SECRET || 'your_jwt_secret_here',
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '24h',
-    apiBaseUrl: process.env.VITE_API_BASE_URL || 'http://localhost:3001',
+    apiBaseUrl: process.env.VITE_API_BASE_URL || 'https://api-leave-management.flowmisite.com/',
   },
 
   // CORS Configuration
@@ -35,30 +35,22 @@ const config = {
       process.env.CORS_ORIGINS.split(',') : 
       [
         'http://localhost:8081',
-        'http://192.168.50.64:8081',
-        'http://192.168.50.125:8081',
-        'http://192.168.50.90:8081',
-        'http://192.168.50.54:8081',
-        'http://localhost:3000',
+        'https://api-leave-management.flowmisite.com/',
         'http://localhost:3001',
         'http://localhost:8080',
-        'http://localhost:8001',
-        // Common Vite dev servers
-        'http://localhost:5173',
-        'http://127.0.0.1:5173'
       ]
   },
 
   // Pagination Configuration
   pagination: {
-    defaultLimit: parseInt(process.env.DEFAULT_PAGINATION_LIMIT) || 6,
-    maxLimit: parseInt(process.env.MAX_PAGINATION_LIMIT) || 50,
+    defaultLimit:  6,
+    maxLimit: 50,
   },
 
   // Application Configuration
   app: {
-    title: process.env.APP_TITLE || 'SiamITLeave API',
-    version: process.env.APP_VERSION || '1.0.0',
+    title: 'SiamITLeave API',
+    version: '1.0.0',
   },
 
   // Business Logic Configuration

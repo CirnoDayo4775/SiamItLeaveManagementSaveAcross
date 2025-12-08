@@ -99,7 +99,7 @@ module.exports = (AppDataSource) => {
       const { email, password, name, department, position } = req.body;
 
       // Check duplicate email
-      const exist = await userRepo.findOneBy({ Email: email });
+      const exist = await userRepo.findOneBy({ email: email });
       if (exist) return sendValidationError(res, 'Email already exists');
 
       // Hash password
@@ -117,10 +117,10 @@ module.exports = (AppDataSource) => {
       const admin = userRepo.create({
         id: adminId,
         name,
-        Email: email,
-        Password: hashedPassword,
-        Token: token,
-        Role: 'admin',
+        email: email,
+        password: hashedPassword,
+        token: token,
+        role: 'admin',
         department,
         position,
         avatar_url: null

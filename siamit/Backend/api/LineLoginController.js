@@ -204,7 +204,7 @@ class LineLoginController {
       return {
         success: true,
         message: 'LINE account linked successfully',
-        user: { id: user.id, email: user.Email, lineUserId, displayName }
+        user: { id: user.id, email: user.email, lineUserId, displayName }
       };
     } catch (error) {
       return { success: false, error: error.message };

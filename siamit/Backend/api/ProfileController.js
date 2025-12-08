@@ -40,7 +40,7 @@ module.exports = (AppDataSource) => {
       throw { status: 403, message: 'Invalid token' };
     }
 
-    const user = await userRepo.findOne({ where: { Token: token } });
+    const user = await userRepo.findOne({ where: { token: token } });
     if (!user) throw { status: 404, message: 'User not found' };
     
     return user;
