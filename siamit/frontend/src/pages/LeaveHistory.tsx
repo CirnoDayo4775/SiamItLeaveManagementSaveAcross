@@ -1114,7 +1114,7 @@ const LeaveHistory = () => {
 
                   <div className="flex items-center gap-3">
 
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
 
                       {leaveHistory.length} {t('history.results')}
 
@@ -1271,7 +1271,7 @@ const LeaveHistory = () => {
 
                     </div>
 
-                    <div className="text-sm text-blue-400 font-medium sm:text-right">
+                    <div className="text-sm text-blue-400 dark:text-gray-200 font-medium sm:text-right">
 
                       {formatDateLocalized(leave.submittedDate, i18n.language)}
 
@@ -1285,7 +1285,7 @@ const LeaveHistory = () => {
 
                       <div className="space-y-3">
 
-                        <div className="flex items-center gap-3 text-base text-blue-900">
+                        <div className="flex items-center gap-3 text-base text-blue-900 dark:text-white">
 
                           <Calendar className="w-5 h-5 text-blue-400" />
 
@@ -1295,7 +1295,7 @@ const LeaveHistory = () => {
 
                         </div>
 
-                        <div className="flex items-center gap-3 text-base text-blue-900">
+                        <div className="flex items-center gap-3 text-base text-blue-900 dark:text-white">
 
                           <Calendar className="w-5 h-5 text-blue-400" />
 
@@ -1313,7 +1313,7 @@ const LeaveHistory = () => {
 
                           <div className="space-y-2">
 
-                            <div className="flex items-center gap-3 text-base text-blue-900">
+                            <div className="flex items-center gap-3 text-base text-blue-900 dark:text-white">
 
                               <Clock className="w-5 h-5 text-blue-400" />
 
@@ -1323,7 +1323,7 @@ const LeaveHistory = () => {
 
                             </div>
 
-                            <div className="flex items-center gap-3 text-sm text-blue-700">
+                            <div className="flex items-center gap-3 text-sm text-blue-700 dark:text-gray-200">
 
                               <Clock className="w-4 h-4 text-blue-400" />
 
@@ -1345,7 +1345,7 @@ const LeaveHistory = () => {
 
                           // ถ้าไม่มีเวลา แสดงเป็นวัน
 
-                          <div className="flex items-center gap-3 text-base text-blue-900">
+                          <div className="flex items-center gap-3 text-base text-blue-900 dark:text-white">
 
                             <Clock className="w-5 h-5 text-blue-400" />
 
@@ -1371,7 +1371,7 @@ const LeaveHistory = () => {
 
                       <div className="space-y-3">
 
-                        <div className="flex items-start gap-3 text-base text-blue-900">
+                        <div className="flex items-start gap-3 text-base text-blue-900 dark:text-white">
 
                           <FileText className="w-5 h-5 text-blue-400 mt-0.5" />
                           <div className="flex-1 min-w-0">
@@ -1379,7 +1379,7 @@ const LeaveHistory = () => {
                             <div className="mt-1">
                               {leave.reason && leave.reason.length > 100 ? (
                                 <div>
-                                  <p className="text-blue-500 text-sm break-all overflow-wrap-anywhere whitespace-pre-wrap max-w-full">
+                                  <p className="text-blue-500 dark:text-gray-200 text-sm break-all overflow-wrap-anywhere whitespace-pre-wrap max-w-full">
                                     {expandedReason === leave.id
                                       ? leave.reason
                                       : leave.reason.slice(0, 100) + '...'
@@ -1396,7 +1396,7 @@ const LeaveHistory = () => {
                                   </button>
                                 </div>
                               ) : (
-                                <p className="text-blue-500 text-sm break-all overflow-wrap-anywhere whitespace-pre-wrap max-w-full">{leave.reason || '-'}</p>
+                                <p className="text-blue-500 dark:text-gray-200 text-sm break-all overflow-wrap-anywhere whitespace-pre-wrap max-w-full">{leave.reason || '-'}</p>
                               )}
                             </div>
                           </div>

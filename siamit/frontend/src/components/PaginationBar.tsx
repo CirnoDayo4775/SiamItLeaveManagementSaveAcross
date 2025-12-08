@@ -88,14 +88,14 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
   if (!totalPages && !totalResults) return null;
 
   const containerBase = compact
-    ? "flex flex-col sm:flex-row justify-center items-center mt-4 gap-2 px-3 py-3 bg-white/70 backdrop-blur rounded-xl border border-blue-100"
-    : "flex flex-col sm:flex-row justify-center items-center mt-8 gap-4 p-6 glass shadow-xl border-0";
+    ? "flex flex-col sm:flex-row justify-center items-center mt-4 gap-2 px-3 py-3 bg-white/70 dark:bg-gray-800/70 backdrop-blur rounded-xl border border-blue-100 dark:border-gray-700"
+    : "flex flex-col sm:flex-row justify-center items-center mt-8 gap-4 p-6 glass dark:bg-gray-800/80 shadow-xl border-0";
 
   return (
     <div className={`${containerBase} ${className || ""}`}>
       {/* Page info */}
       {showInfo && (
-        <div className={`flex items-center ${compact ? "gap-2 text-xs" : "gap-4 text-sm"} text-gray-600`}>
+        <div className={`flex items-center ${compact ? "gap-2 text-xs" : "gap-4 text-sm"} text-gray-600 dark:text-white`}>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             <span>{t('history.pageInfo', { page: page || 1, totalPages: totalPages || 1 })}</span>
@@ -152,16 +152,16 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
               }
             }}
           >
-            <SelectTrigger className={`w-20 bg-white/90 backdrop-blur border-blue-200 ${compact ? "h-8 rounded-md" : "h-9 rounded-lg"}`}>
+            <SelectTrigger className={`w-20 bg-white/90 dark:bg-gray-700 dark:text-white backdrop-blur border-blue-200 dark:border-gray-600 ${compact ? "h-8 rounded-md" : "h-9 rounded-lg"}`}>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="border-0 shadow-xl rounded-xl">
+            <SelectContent className="border-0 shadow-xl rounded-xl dark:bg-gray-800 dark:text-white">
               {pageSizeOptions.map((n) => (
                 <SelectItem key={n} value={String(n)} className="rounded-lg">{n}</SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <span className={`${compact ? "text-xs" : "text-sm"} text-gray-600`}>{t('admin.itemsPerPage')}</span>
+          <span className={`${compact ? "text-xs" : "text-sm"} text-gray-600 dark:text-white`}>{t('admin.itemsPerPage')}</span>
         </div>
       )}
     </div>

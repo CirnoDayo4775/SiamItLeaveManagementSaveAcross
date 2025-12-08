@@ -485,12 +485,12 @@ const EmployeeDetail = () => {
   if (!employee) return <div>{t('employee.notFound')}</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 relative overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-x-hidden">
       {/* Floating/Parallax Background Shapes */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-[350px] h-[350px] rounded-full bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-100 opacity-30 blur-2xl animate-float-slow" />
-        <div className="absolute bottom-0 right-0 w-[250px] h-[250px] rounded-full bg-gradient-to-tr from-purple-200 via-blue-100 to-indigo-100 opacity-20 blur-xl animate-float-slow2" />
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 opacity-10 blur-xl animate-pulse-slow" style={{ transform: 'translate(-50%,-50%)' }} />
+        <div className="absolute -top-32 -left-32 w-[350px] h-[350px] rounded-full bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-100 dark:from-blue-900/30 dark:via-indigo-900/20 dark:to-purple-900/20 opacity-30 blur-2xl animate-float-slow" />
+        <div className="absolute bottom-0 right-0 w-[250px] h-[250px] rounded-full bg-gradient-to-tr from-purple-200 via-blue-100 to-indigo-100 dark:from-purple-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 opacity-20 blur-xl animate-float-slow2" />
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900/30 opacity-10 blur-xl animate-pulse-slow" style={{ transform: 'translate(-50%,-50%)' }} />
       </div>
       {/* Topbar */}
       <div className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-10 relative shadow-lg">
@@ -511,7 +511,7 @@ const EmployeeDetail = () => {
       <div className="p-4 md:p-6 animate-fade-in">
         <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
           {/* Personal Info Card */}
-          <Card className="glass shadow-2xl border-0 animate-fade-in-up">
+          <Card className="glass dark:bg-gray-800/90 shadow-2xl border-0 animate-fade-in-up">
             <CardHeader className="bg-gradient-to-r from-blue-500 via-indigo-400 to-purple-400 text-white rounded-t-2xl p-4 md:p-5 shadow-lg">
               <CardTitle className="flex items-center gap-2 md:gap-3 text-lg md:text-xl font-bold animate-slide-in-left">
                 <User className="h-5 w-5 md:h-6 md:w-6" />
@@ -607,14 +607,14 @@ const EmployeeDetail = () => {
                 {/* Information Grid - Enhanced 2 columns for better usability */}
                 <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl">
                   {/* Column 1: Personal Info */}
-                  <div className="space-y-6 bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100">
-                    <h3 className="text-lg font-bold text-blue-800 mb-6 flex items-center gap-2">
+                  <div className="space-y-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 p-6 rounded-2xl border border-blue-100 dark:border-gray-600">
+                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-6 flex items-center gap-2">
                       <User className="w-5 h-5" />
                       {t('employee.personalInfo')}
                     </h3>
                     {/* Full Name */}
                     <div>
-                      <Label className="text-sm font-semibold text-blue-700 mb-2 block">{t('employee.fullName')}</Label>
+                      <Label className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2 block">{t('employee.fullName')}</Label>
                       {isEditing ? (
                         <input
                           className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
@@ -623,12 +623,12 @@ const EmployeeDetail = () => {
                           placeholder={t('employee.fullName')}
                         />
                       ) : (
-                        <p className="text-xl font-bold text-blue-900">{employee.name}</p>
+                        <p className="text-xl font-bold text-blue-900 dark:text-white">{employee.name}</p>
                       )}
                     </div>
                     {/* Position */}
                     <div>
-                      <Label className="text-sm font-semibold text-blue-700 mb-2 block">{t('employee.position')}</Label>
+                      <Label className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2 block">{t('employee.position')}</Label>
                       {isEditing ? (
                         <select
                           className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
@@ -645,12 +645,12 @@ const EmployeeDetail = () => {
                             ))}
                         </select>
                       ) : (
-                        <p className="text-lg text-blue-700">{getPositionLabel(employee.position_id || employee.position)}</p>
+                        <p className="text-lg text-blue-700 dark:text-blue-200">{getPositionLabel(employee.position_id || employee.position)}</p>
                       )}
                     </div>
                     {/* Department */}
                     <div>
-                      <Label className="text-sm font-semibold text-blue-700 mb-2 block">{t('employee.department')}</Label>
+                      <Label className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2 block">{t('employee.department')}</Label>
                       {isEditing ? (
                         <select
                           className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
@@ -667,12 +667,12 @@ const EmployeeDetail = () => {
                             ))}
                         </select>
                       ) : (
-                        <p className="text-lg text-blue-700">{getDepartmentLabel(employee.department_id || employee.department)}</p>
+                        <p className="text-lg text-blue-700 dark:text-blue-200">{getDepartmentLabel(employee.department_id || employee.department)}</p>
                       )}
                     </div>
                     {/* Gender */}
                     <div>
-                      <Label className="text-sm font-semibold text-blue-700 mb-2 block">{t('employee.gender')}</Label>
+                      <Label className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2 block">{t('employee.gender')}</Label>
                       {isEditing ? (
                         <select
                           className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
@@ -684,14 +684,14 @@ const EmployeeDetail = () => {
                           <option value="other">{t('employee.other')}</option>
                         </select>
                       ) : (
-                        <p className="text-lg text-blue-700">
+                        <p className="text-lg text-blue-700 dark:text-blue-200">
                           {employee.gender === 'male' ? t('employee.male') : employee.gender === 'female' ? t('employee.female') : employee.gender === 'other' ? t('employee.other') : '-'}
                         </p>
                       )}
                     </div>
                     {/* Birthdate */}
                     <div>
-                      <Label className="text-sm font-semibold text-blue-700 mb-2 block">{t('employee.birthdate')}</Label>
+                      <Label className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2 block">{t('employee.birthdate')}</Label>
                       {isEditing ? (
                         <DatePicker
                           date={editData.birthdate}
@@ -700,20 +700,20 @@ const EmployeeDetail = () => {
                           className="w-full py-3 text-lg rounded-xl transition-all duration-300 hover:shadow-lg focus:ring-2 focus:ring-opacity-50 border-blue-200 border-2 bg-white/80 backdrop-blur-sm"
                         />
                       ) : (
-                        <p className="text-lg text-blue-700">{employee.dob ? format(new Date(employee.dob), 'dd/MM/yyyy') : '-'}</p>
+                        <p className="text-lg text-blue-700 dark:text-blue-200">{employee.dob ? format(new Date(employee.dob), 'dd/MM/yyyy') : '-'}</p>
                       )}
                     </div>
                   </div>
 
                   {/* Column 2: Contact & Actions */}
-                  <div className="space-y-6 bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-2xl border border-indigo-100">
-                    <h3 className="text-lg font-bold text-indigo-800 mb-6 flex items-center gap-2">
+                  <div className="space-y-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 p-6 rounded-2xl border border-indigo-100 dark:border-gray-600">
+                    <h3 className="text-lg font-bold text-indigo-800 dark:text-indigo-200 mb-6 flex items-center gap-2">
                       <Mail className="w-5 h-5" />
                       {t('employee.contactInfo')}
                     </h3>
                     {/* Email */}
                     <div>
-                      <Label className="text-sm font-semibold text-indigo-700 mb-2 block">{t('employee.email')}</Label>
+                      <Label className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 mb-2 block">{t('employee.email')}</Label>
                       {isEditing ? (
                         <input
                           className="w-full px-4 py-3 border-2 border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-white"
@@ -725,13 +725,13 @@ const EmployeeDetail = () => {
                       ) : (
                         <div className="flex items-center gap-3">
                           <Mail className="w-5 h-5 text-indigo-400" />
-                          <p className="text-lg text-indigo-700">{employee.email}</p>
+                          <p className="text-lg text-indigo-700 dark:text-indigo-200">{employee.email}</p>
                         </div>
                       )}
                     </div>
                     {/* Password */}
                     <div>
-                      <Label className="text-sm font-semibold text-indigo-700 mb-2 block">{t('employee.password')}</Label>
+                      <Label className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 mb-2 block">{t('employee.password')}</Label>
                       {isEditing ? (
                         <input
                           className="w-full px-4 py-3 border-2 border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-white"
@@ -741,12 +741,12 @@ const EmployeeDetail = () => {
                           placeholder={t('employee.password')}
                         />
                       ) : (
-                        <p className="text-lg text-indigo-700">********</p>
+                        <p className="text-lg text-indigo-700 dark:text-indigo-200">********</p>
                       )}
                     </div>
                     {/* Phone */}
                     <div>
-                      <Label className="text-sm font-semibold text-indigo-700 mb-2 block">{t('employee.phone')}</Label>
+                      <Label className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 mb-2 block">{t('employee.phone')}</Label>
                       {isEditing ? (
                         <input
                           type="tel"
@@ -755,13 +755,13 @@ const EmployeeDetail = () => {
                           onChange={e => setEditData({ ...editData, phone: e.target.value })}
                         />
                       ) : (
-                        <p className="text-lg text-indigo-700">{employee.phone_number || '-'}</p>
+                        <p className="text-lg text-indigo-700 dark:text-indigo-200">{employee.phone_number || '-'}</p>
                       )}
                     </div>
                     {/* Start Work Date (แสดงเมื่อไม่ใช่ Intern) */}
                     {!isInternPosition() && (
                       <div>
-                        <Label className="text-sm font-semibold text-indigo-700 mb-2 block">{t('employee.startWorkDate')}</Label>
+                        <Label className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 mb-2 block">{t('employee.startWorkDate')}</Label>
                         {isEditing ? (
                           <input
                             type="date"
@@ -770,7 +770,7 @@ const EmployeeDetail = () => {
                             onChange={e => setEditData({ ...editData, startWorkDate: e.target.value })}
                           />
                         ) : (
-                          <p className="text-lg text-indigo-700">{employee.start_work ? format(new Date(employee.start_work), 'dd/MM/yyyy') : '-'}</p>
+                          <p className="text-lg text-indigo-700 dark:text-indigo-200">{employee.start_work ? format(new Date(employee.start_work), 'dd/MM/yyyy') : '-'}</p>
                         )}
                       </div>
                     )}
@@ -778,7 +778,7 @@ const EmployeeDetail = () => {
                     {isInternPosition() && (
                       <div className="space-y-4">
                         <div>
-                          <Label className="text-sm font-semibold text-indigo-700 mb-2 block">{t('employee.internStartDate')}</Label>
+                          <Label className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 mb-2 block">{t('employee.internStartDate')}</Label>
                           {isEditing ? (
                             <DatePicker
                               date={editData.internStartDate}
@@ -791,7 +791,7 @@ const EmployeeDetail = () => {
                           )}
                         </div>
                         <div>
-                          <Label className="text-sm font-semibold text-indigo-700 mb-2 block">{t('employee.internEndDate')}</Label>
+                          <Label className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 mb-2 block">{t('employee.internEndDate')}</Label>
                           {isEditing ? (
                             <DatePicker
                               date={editData.internEndDate}
@@ -829,7 +829,7 @@ const EmployeeDetail = () => {
             </CardContent>
           </Card>
           {/* Leave History Card */}
-          <Card className="glass shadow-2xl border-0 animate-fade-in-up">
+          <Card className="glass dark:bg-gray-800/90 shadow-2xl border-0 animate-fade-in-up">
             <CardHeader className="bg-gradient-to-r from-blue-500 via-indigo-400 to-purple-400 text-white rounded-t-2xl p-5 shadow-lg">
               <CardTitle className="flex items-center gap-3 text-2xl font-bold animate-slide-in-left">
                 <Calendar className="h-6 w-6" />
@@ -840,10 +840,10 @@ const EmployeeDetail = () => {
               </CardDescription>
             </CardHeader>
             {leaveSummary && (
-              <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+              <div className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 px-6 py-4">
                 <div className="flex justify-end items-center gap-3">
-                  <Calendar className="w-6 h-6 text-gray-600" />
-                  <span className="text-base font-semibold text-gray-800">
+                  <Calendar className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+                  <span className="text-base font-semibold text-gray-800 dark:text-white">
                     {t('leave.usedLeaveDays')}: {leaveSummary.days || 0} {t('leave.days')} {leaveSummary.hours > 0 ? `${leaveSummary.hours} ${t('leave.hours')}` : ''}
                   </span>
                 </div>
@@ -851,15 +851,15 @@ const EmployeeDetail = () => {
             )}
             <CardContent className="p-0">
               {/* Filter Section */}
-              <div className="bg-white border-b border-gray-200 p-3">
+              <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-3">
                 <div className="grid grid-cols-8 gap-2 items-end">
                   {/* Leave Type Filter */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                       {t('leave.type')}
                     </label>
                     <select
-                      className="w-full py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full py-1.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       value={pendingFilterType}
                       onChange={(e) => setPendingFilterType(e.target.value)}
                     >
@@ -874,11 +874,11 @@ const EmployeeDetail = () => {
 
                   {/* Month Filter */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                       {t('common.month')}
                     </label>
                     <select
-                      className="w-full py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full py-1.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       value={pendingFilterMonth}
                       onChange={(e) => setPendingFilterMonth(e.target.value)}
                     >

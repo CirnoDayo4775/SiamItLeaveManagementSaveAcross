@@ -20,7 +20,7 @@ export const isRetroactiveLeave = (leave: any): boolean => {
  */
 export const calcHours = (start: string, end: string): string | null => {
   if (!start || !end) return null;
-  
+
   try {
     const [sh, sm] = start.split(":").map(Number);
     const [eh, em] = end.split(":").map(Number);
@@ -42,17 +42,19 @@ export const calcHours = (start: string, end: string): string | null => {
  * @returns CSS class string for text color
  */
 export const getTypeColor = (type: string): string => {
-  if (!type) return "text-gray-600";
-  
+  if (!type) return "text-gray-600 dark:text-gray-300";
+
   const typeLower = type.toLowerCase();
-  
-  if (typeLower === 'vacation' || typeLower === 'ลาพักร้อน') return "text-blue-600";
-  if (typeLower === 'sick' || typeLower === 'ลาป่วย') return "text-red-600";
-  if (typeLower === 'personal' || typeLower === 'ลากิจ') return "text-green-600";
-  if (typeLower === 'emergency' || typeLower === 'ลาฉุกเฉิน') return "text-orange-500";
-  if (typeLower === 'maternity' || typeLower === 'ลาคลอด') return "text-purple-600";
-  
-  return "text-gray-600";
+
+  if (typeLower === 'vacation' || typeLower === 'ลาพักร้อน') return "text-blue-600 dark:text-blue-300";
+  if (typeLower === 'sick' || typeLower === 'ลาป่วย') return "text-red-600 dark:text-red-300";
+  if (typeLower === 'personal' || typeLower === 'ลากิจ') return "text-green-600 dark:text-green-300";
+  if (typeLower === 'emergency' || typeLower === 'ลาฉุกเฉิน') return "text-orange-500 dark:text-orange-300";
+  if (typeLower === 'maternity' || typeLower === 'ลาคลอด') return "text-purple-600 dark:text-purple-300";
+  if (typeLower === 'hourly' || typeLower === 'ลารายชั่วโมง') return "text-indigo-700 dark:text-indigo-300";
+
+  // Default for other types - use darker color for better visibility
+  return "text-gray-800 dark:text-white";
 };
 
 /**
@@ -64,24 +66,24 @@ export const getTypeColor = (type: string): string => {
  * @returns Localized leave type name
  */
 export const getLeaveTypeLabel = (
-  typeId: string, 
-  leaveTypes: any[], 
-  i18n: { language: string }, 
+  typeId: string,
+  leaveTypes: any[],
+  i18n: { language: string },
   t: (key: string) => string
 ): string => {
   if (!typeId) return '';
-  
+
   // First try to find in leaveTypes array
   const found = leaveTypes.find(lt => lt.id === typeId || lt.leave_type === typeId);
   if (found) {
     return i18n.language.startsWith('th') ? found.leave_type_th : found.leave_type_en;
   }
-  
+
   // Fallback: try i18n translation
   if (t(`leaveTypes.${typeId}`) !== `leaveTypes.${typeId}`) {
     return t(`leaveTypes.${typeId}`);
   }
-  
+
   // Final fallback: return the typeId as is
   return typeId;
 };
@@ -108,7 +110,7 @@ export const getLeaveTypeDisplay = (
       return i18n.language.startsWith('th') ? found.leave_type_th : found.leave_type_en;
     }
   }
-  
+
   // Fallback: try i18n translation
   if (leaveTypeId) {
     const i18nKey = `leaveTypes.${leaveTypeId}`;
@@ -117,12 +119,12 @@ export const getLeaveTypeDisplay = (
       return translated;
     }
   }
-  
+
   // Final fallback: use API fields if available
   if (leaveDetail.leaveTypeName_th && leaveDetail.leaveTypeName_en) {
     return i18n.language.startsWith('th') ? leaveDetail.leaveTypeName_th : leaveDetail.leaveTypeName_en;
   }
-  
+
   // Last resort: single field or type
   return leaveDetail.leaveTypeName || leaveTypeId || 'Unknown';
 };
@@ -142,13 +144,13 @@ export const translateLeaveType = (
   t: (key: string) => string
 ): string => {
   if (!type) return '';
-  
+
   // Check if we have data from backend
   const found = leaveTypes.find(lt => lt.id === type || lt.leave_type === type);
   if (found) {
     return i18n.language.startsWith('th') ? found.leave_type_th : found.leave_type_en;
   }
-  
+
   // Fallback: use i18n translation
   const typeLower = type.toLowerCase();
   const typeMap: Record<string, string> = {
@@ -163,10 +165,10 @@ export const translateLeaveType = (
     'ลาฉุกเฉิน': 'leaveTypes.Emergency',
     'ลาคลอด': 'leaveTypes.Maternity',
   };
-  
+
   const i18nKey = typeMap[typeLower] || typeMap[type];
   if (i18nKey) return t(i18nKey);
-  
+
   // Final fallback: try direct translation or return type as is
   return t(`leaveTypes.${type}`, type);
 };
@@ -203,17 +205,17 @@ export const autoFormatTimeInput = (value: string): string => {
  * @returns Notice object with type, message, and className
  */
 export const getLeaveNotice = (
-  startDate: string | Date | undefined, 
+  startDate: string | Date | undefined,
   endDate?: string | Date | undefined,
   t?: (key: string) => string
 ) => {
   if (!startDate) return null;
-  
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const startDateOnly = new Date(startDate);
   startDateOnly.setHours(0, 0, 0, 0);
-  
+
   // ถ้าวันที่เริ่มลาน้อยกว่าวันนี้ (ไม่รวมวันนี้) = ลาย้อนหลัง
   if (startDateOnly < today) {
     return {
@@ -222,7 +224,7 @@ export const getLeaveNotice = (
       className: 'bg-yellow-50 border-yellow-200 text-yellow-800'
     };
   }
-  
+
   // ถ้าวันที่เริ่มลามากกว่าวันนี้ = ลาล่วงหน้า
   if (startDateOnly > today) {
     return {
@@ -231,7 +233,7 @@ export const getLeaveNotice = (
       className: 'bg-blue-50 border-blue-200 text-blue-800'
     };
   }
-  
+
   // ถ้าวันที่เริ่มลาเท่ากับวันนี้ = ลาปกติ
   return {
     type: 'current',
@@ -247,12 +249,12 @@ export const getLeaveNotice = (
  */
 export const isDateBackdated = (date: string | Date): boolean => {
   if (!date) return false;
-  
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const checkDate = new Date(date);
   checkDate.setHours(0, 0, 0, 0);
-  
+
   return checkDate < today;
 };
 
@@ -263,11 +265,11 @@ export const isDateBackdated = (date: string | Date): boolean => {
  */
 export const calculateBackdatedValue = (startDate: string): number => {
   if (!startDate) return 0;
-  
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const leaveStart = new Date(startDate);
   leaveStart.setHours(0, 0, 0, 0);
-  
+
   return leaveStart < today ? 1 : 0;
 };

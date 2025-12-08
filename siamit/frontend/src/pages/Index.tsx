@@ -408,7 +408,7 @@ const Index = () => {
           </div>
 
           {/* Calendar Filter */}
-          <div className="flex gap-2 w-full md:w-auto justify-end mt-1 md:mt-0 md:ml-auto">
+          <div className="flex gap-2 w-full md:w-auto justify-end mt-1 md:mt-0 md:ml-auto md:mr-14">
             <select
               className="flex-1 md:flex-none rounded-lg border px-2 py-1 text-xs md:text-sm text-blue-700 bg-white/80 shadow focus:ring-2 focus:ring-blue-400 outline-none"
               value={filterMonth}
@@ -710,11 +710,11 @@ const Index = () => {
           {/* Quick Actions */}
           <Card className="border-0 shadow-xl bg-white/70 dark:dark-card-gradient backdrop-blur-lg rounded-2xl p-0 flex flex-col animate-fade-in-up">
             <CardHeader className="pb-2 border-b border-gray-100">
-              <CardTitle className="flex items-center gap-2 text-blue-800 text-lg font-bold">
+              <CardTitle className="flex items-center gap-2 text-blue-800 dark:text-white text-lg font-bold">
                 <Calendar className="w-5 h-5 text-blue-600" />
                 {t('main.quickActions')}
               </CardTitle>
-              <CardDescription className="text-blue-500/80 text-xs md:text-sm">
+              <CardDescription className="text-blue-500/80 dark:text-blue-200 text-xs md:text-sm">
                 {t('main.quickActionsDesc')}
               </CardDescription>
             </CardHeader>
@@ -769,11 +769,11 @@ const Index = () => {
           {/* Recent Leave Stats */}
           <Card className="border-0 shadow-xl bg-white/70 dark:dark-card-gradient backdrop-blur-lg rounded-2xl p-0 flex flex-col animate-fade-in-up" style={{ animationDelay: '100ms' }}>
             <CardHeader className="pb-2 border-b border-gray-100">
-              <CardTitle className="flex items-center gap-2 text-blue-800 text-lg font-bold">
+              <CardTitle className="flex items-center gap-2 text-blue-800 dark:text-white text-lg font-bold">
                 <TrendingUp className="w-5 h-5 text-green-600" />
                 {t('main.recentLeaveStats')}
               </CardTitle>
-              <CardDescription className="text-blue-500/80 text-sm">
+              <CardDescription className="text-blue-500/80 dark:text-blue-200 text-sm">
                 {t('main.recentLeaveStatsDesc')}
               </CardDescription>
             </CardHeader>

@@ -818,7 +818,7 @@ const LeaveSystemSettings: React.FC = () => {
                       </thead>
                       <tbody>
                         {positions.map(pos => (
-                          <tr key={pos.id} className="hover:bg-blue-50">
+                          <tr key={pos.id} className="hover:bg-blue-50 dark:hover:bg-gray-700">
                             {inlineEdit && inlineEdit.id === pos.id ? (
                               <>
                                 <td className="p-3 font-medium">
@@ -853,8 +853,8 @@ const LeaveSystemSettings: React.FC = () => {
                               </>
                             ) : (
                               <>
-                                <td className="p-3 font-medium">{pos.position_name_en}</td>
-                                <td className="p-3 font-medium">{pos.position_name_th}</td>
+                                <td className="p-3 font-medium dark:text-gray-100">{pos.position_name_en}</td>
+                                <td className="p-3 font-medium dark:text-gray-100">{pos.position_name_th}</td>
                                 <td className="p-3 font-medium text-center">
                                   <label style={{ display: 'inline-block', position: 'relative', width: 40, height: 24 }}>
                                     <input
@@ -870,7 +870,7 @@ const LeaveSystemSettings: React.FC = () => {
                                   </label>
                                 </td>
                                 {filteredLeaveTypes.map(lt => (
-                                  <td key={lt.id} className="p-3">
+                                  <td key={lt.id} className="p-3 dark:text-gray-100">
                                     {pos.quotas.find((q: any) => q.leaveTypeId === lt.id)?.quota ?? ''}
                                   </td>
                                 ))}
@@ -977,8 +977,8 @@ const LeaveSystemSettings: React.FC = () => {
                         <tbody>
                           {positions.map(pos => (
                             <tr key={pos.id} className="hover:bg-blue-50 dark:hover:bg-gray-700">
-                              <td className="p-3 font-medium">{pos.position_name_en}</td>
-                              <td className="p-3 font-medium">{pos.position_name_th}</td>
+                              <td className="p-3 font-medium dark:text-gray-100">{pos.position_name_en}</td>
+                              <td className="p-3 font-medium dark:text-gray-100">{pos.position_name_th}</td>
                               <td className="p-3 font-medium text-center">
                                 <label style={{ display: 'inline-block', position: 'relative', width: 40, height: 24 }}>
                                   <input
@@ -1040,8 +1040,8 @@ const LeaveSystemSettings: React.FC = () => {
                               </>
                             ) : (
                               <>
-                                <td className="p-3 font-medium">{dep.department_name_en}</td>
-                                <td className="p-3 font-medium">{dep.department_name_th}</td>
+                                <td className="p-3 font-medium dark:text-gray-100">{dep.department_name_en}</td>
+                                <td className="p-3 font-medium dark:text-gray-100">{dep.department_name_th}</td>
                                 <td className="p-3 flex gap-2 justify-center">
                                   <Button variant="outline" onClick={() => startInlineDepartmentEdit(dep)}>{t('common.edit')}</Button>
                                   <Button variant="destructive" onClick={() => handleDeleteDepartment(dep.id)}>{t('common.delete')}</Button>
@@ -1155,8 +1155,8 @@ const LeaveSystemSettings: React.FC = () => {
                               </>
                             ) : (
                               <>
-                                <td className="p-3 font-medium">{lt.leave_type_en}</td>
-                                <td className="p-3 font-medium">{lt.leave_type_th}</td>
+                                <td className="p-3 font-medium dark:text-gray-100">{lt.leave_type_en}</td>
+                                <td className="p-3 font-medium dark:text-gray-100">{lt.leave_type_th}</td>
                                 <td className="p-3 font-medium text-center">
                                   <label style={{ display: 'inline-block', position: 'relative', width: 40, height: 24 }}>
                                     <input

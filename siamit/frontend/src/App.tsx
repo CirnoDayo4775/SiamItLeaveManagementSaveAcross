@@ -70,7 +70,7 @@ const AppContent = () => {
           <SidebarTrigger className="bg-white/80 rounded-full shadow p-2" />
         </div>
         {/* Global Language Switcher */}
-        <div className="fixed top-4 right-4 z-50">
+        <div className="fixed top-4 right-4 z-40">
           <LanguageSwitcher />
         </div>
         <AppSidebar />

@@ -669,10 +669,10 @@ const EmployeeManagement = () => {
                         {/* Desktop Table View */}
                         <div className="hidden md:block overflow-x-auto">
                           <table className="w-full min-w-[600px]">
-                            <thead className="sticky top-0 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 z-10">
+                            <thead className="sticky top-0 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 z-10">
                               <tr className="text-xs sm:text-sm">
                                 <th
-                                  className="px-3 py-2 text-left font-bold text-blue-900 cursor-pointer hover:bg-blue-100 transition-colors select-none"
+                                  className="px-3 py-2 text-left font-bold text-blue-900 dark:text-white cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors select-none"
                                   onClick={() => handleSort("full_name")}
                                 >
                                   <div className="flex items-center gap-1">
@@ -683,7 +683,7 @@ const EmployeeManagement = () => {
                                   </div>
                                 </th>
                                 <th
-                                  className="px-3 py-2 text-left font-bold text-blue-900 cursor-pointer hover:bg-blue-100 transition-colors select-none"
+                                  className="px-3 py-2 text-left font-bold text-blue-900 dark:text-white cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors select-none"
                                   onClick={() => handleSort("email")}
                                 >
                                   <div className="flex items-center gap-1">
@@ -694,7 +694,7 @@ const EmployeeManagement = () => {
                                   </div>
                                 </th>
                                 <th
-                                  className="px-3 py-2 text-left font-bold text-blue-900 cursor-pointer hover:bg-blue-100 transition-colors select-none"
+                                  className="px-3 py-2 text-left font-bold text-blue-900 dark:text-white cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors select-none"
                                   onClick={() => handleSort("position")}
                                 >
                                   <div className="flex items-center gap-1">
@@ -705,7 +705,7 @@ const EmployeeManagement = () => {
                                   </div>
                                 </th>
                                 <th
-                                  className="px-3 py-2 text-left font-bold text-blue-900 cursor-pointer hover:bg-blue-100 transition-colors select-none"
+                                  className="px-3 py-2 text-left font-bold text-blue-900 dark:text-white cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors select-none"
                                   onClick={() => handleSort("department")}
                                 >
                                   <div className="flex items-center gap-1">
@@ -716,7 +716,7 @@ const EmployeeManagement = () => {
                                   </div>
                                 </th>
                                 <th
-                                  className="px-3 py-2 text-left font-bold text-blue-900 cursor-pointer hover:bg-blue-100 transition-colors select-none"
+                                  className="px-3 py-2 text-left font-bold text-blue-900 dark:text-white cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors select-none"
                                   onClick={() => handleSort("role")}
                                 >
                                   <div className="flex items-center gap-1">
@@ -726,14 +726,14 @@ const EmployeeManagement = () => {
                                     )}
                                   </div>
                                 </th>
-                                <th className="px-3 py-2 text-center font-bold text-blue-900">{t('system.management')}</th>
+                                <th className="px-3 py-2 text-center font-bold text-blue-900 dark:text-white">{t('system.management')}</th>
                               </tr>
                             </thead>
                             <tbody>
                               {paginatedEmployees.map((employee, idx) => (
                                 <tr
                                   key={employee.id}
-                                  className="transition hover:bg-blue-50/60 group animate-fade-in-up text-xs sm:text-sm"
+                                  className="transition hover:bg-blue-50/60 dark:hover:bg-gray-700/60 group animate-fade-in-up text-xs sm:text-sm"
                                   style={{ animationDelay: `${idx * 60}ms` }}
                                 >
                                   <td className="px-3 py-2 whitespace-nowrap flex items-center gap-2">
@@ -750,11 +750,11 @@ const EmployeeManagement = () => {
                                         }}
                                       />
                                     ) : null}
-                                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 flex items-center justify-center text-blue-900 font-bold text-base shadow-md ${employee.avatar ? 'hidden' : ''}`}>
+                                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 dark:from-blue-800 dark:via-indigo-800 dark:to-purple-800 flex items-center justify-center text-blue-900 dark:text-white font-bold text-base shadow-md ${employee.avatar ? 'hidden' : ''}`}>
                                       {employee.full_name ? employee.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '?'}
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="font-semibold text-blue-900 text-sm">{employee.full_name}</span>
+                                      <span className="font-semibold text-blue-900 dark:text-white text-sm">{employee.full_name}</span>
                                       {/* แสดง "Me" badge สำหรับผู้ใช้ปัจจุบัน */}
                                       {user && employee.id === user.id && (
                                         <span className="text-xs px-2 py-0.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold shadow-sm animate-pulse">
@@ -763,11 +763,11 @@ const EmployeeManagement = () => {
                                       )}
                                     </div>
                                   </td>
-                                  <td className="px-3 py-2 text-blue-700 text-sm">{employee.email}</td>
-                                  <td className="px-3 py-2 text-blue-700 text-sm">
+                                  <td className="px-3 py-2 text-blue-700 dark:text-blue-200 text-sm">{employee.email}</td>
+                                  <td className="px-3 py-2 text-blue-700 dark:text-blue-200 text-sm">
                                     {getDisplayPositionName(employee)}
                                   </td>
-                                  <td className="px-3 py-2 text-blue-700 text-sm">
+                                  <td className="px-3 py-2 text-blue-700 dark:text-blue-200 text-sm">
                                     {getDisplayDepartmentName(employee)}
                                   </td>
                                   <td className="px-3 py-2">
