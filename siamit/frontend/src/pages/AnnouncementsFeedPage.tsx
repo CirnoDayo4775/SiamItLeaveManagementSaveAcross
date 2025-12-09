@@ -250,14 +250,14 @@ const AnnouncementsFeedPage = () => {
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl w-[95vw] sm:w-full">
                   <DialogHeader>
-                    <DialogTitle className="text-xl md:text-2xl font-bold text-blue-900 mb-2 flex items-center gap-2">
-                      <Plus className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                    <DialogTitle className="text-xl md:text-2xl font-bold text-blue-900 dark:text-white mb-2 flex items-center gap-2">
+                      <Plus className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400" />
                       {t('announcementsFeed.createPost')}
                     </DialogTitle>
                   </DialogHeader>
                   <form onSubmit={handleCreateAnnouncement} className="space-y-4 mt-4">
                     <div>
-                      <label className="block text-blue-800 font-semibold mb-2">
+                      <label className="block text-blue-800 dark:text-white font-semibold mb-2">
                         {t('companyNews.subject')}
                       </label>
                       <Input
@@ -270,7 +270,7 @@ const AnnouncementsFeedPage = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-blue-800 font-semibold mb-2">
+                      <label className="block text-blue-800 dark:text-white font-semibold mb-2">
                         {t('companyNews.detail')}
                       </label>
                       <Textarea
@@ -283,7 +283,7 @@ const AnnouncementsFeedPage = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-blue-800 font-semibold mb-2">
+                      <label className="block text-blue-800 dark:text-white font-semibold mb-2">
                         {t('announcementsFeed.attachedImage')}
                       </label>
                       <div className="space-y-3">

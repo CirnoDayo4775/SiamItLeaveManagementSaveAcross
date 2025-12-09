@@ -1482,7 +1482,7 @@ const LeaveHistory = () => {
                             size="sm"
                             variant="outline"
                             onClick={() => handleViewDetails(leave.id)}
-                            className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:bg-blue-50 hover:border-blue-300 btn-press hover-glow text-sm px-4 py-2"
+                            className="transition-all duration-300 transform hover:scale-105 hover:shadow-md hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-gray-700 dark:hover:border-gray-500 btn-press hover-glow text-sm px-4 py-2"
                           >
                             <Eye className="w-4 h-4 mr-1" />
                             {t('common.viewDetails')}

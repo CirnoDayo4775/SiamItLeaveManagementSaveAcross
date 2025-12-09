@@ -139,7 +139,7 @@ const NotificationBell = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="relative bg-white/60 backdrop-blur-md shadow-lg hover:scale-110 transition-all duration-200 rounded-xl border border-white/20"
+          className="relative bg-white/60 dark:bg-slate-800/80 backdrop-blur-md shadow-lg hover:scale-110 transition-all duration-200 rounded-xl border border-white/20 dark:border-slate-700"
         >
           <span className="relative">
             <Bell className="h-6 w-6 text-blue-500" />

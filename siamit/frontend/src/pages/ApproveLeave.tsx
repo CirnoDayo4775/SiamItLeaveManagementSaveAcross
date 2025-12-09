@@ -1155,7 +1155,7 @@ const ApproveLeave = () => {
                             >
                               <XCircle className="w-4 h-4 mr-1" />{t('admin.reject')}
                             </Button>
-                            <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetails(request)}>
+                            <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-800 dark:hover:text-blue-100 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetails(request)}>
                               <Eye className="w-4 h-4 mr-1" />{t('admin.viewDetails')}
                             </Button>
                           </div>
@@ -1272,7 +1272,7 @@ const ApproveLeave = () => {
                                 setPendingPage(1);
                               }}
                             >
-                              <SelectTrigger className="w-20 bg-white/80 backdrop-blur border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl h-9 transform hover:scale-105 hover:shadow-md">
+                              <SelectTrigger className="w-20 bg-white/80 dark:bg-slate-900 dark:text-white backdrop-blur border-blue-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-800 hover:border-blue-300 transition-all duration-300 rounded-xl h-9 transform hover:scale-105 hover:shadow-md">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="border-0 shadow-xl rounded-2xl">
@@ -1297,12 +1297,12 @@ const ApproveLeave = () => {
 
                 {/* Leave Type Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.3s' }}>
-                  <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.leaveType')}</label>
+                  <label className="block text-sm font-medium text-blue-900 dark:text-white mb-2 animate-fade-in-up">{t('leave.leaveType')}</label>
                   <Select
                     value={pendingHistoryFilterLeaveType || "all"}
                     onValueChange={(val) => setPendingHistoryFilterLeaveType(val === "all" ? "" : val)}
                   >
-                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[160px] dark:bg-slate-900 dark:text-white dark:border-slate-700 bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
                       <SelectValue placeholder={t('leave.allTypes', 'All Types')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -1315,12 +1315,12 @@ const ApproveLeave = () => {
                 </div>
                 {/* Month Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
-                  <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.month')}</label>
+                  <label className="block text-sm font-medium text-blue-900 dark:text-white mb-2 animate-fade-in-up">{t('common.month')}</label>
                   <Select
                     value={pendingFilterMonth ? pendingFilterMonth.toString() : "all"}
                     onValueChange={(val) => setPendingFilterMonth(val === "all" ? "" : Number(val))}
                   >
-                    <SelectTrigger className="w-full md:w-32 border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                    <SelectTrigger className="w-full md:w-32 border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white dark:border-slate-700 bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
                       <SelectValue placeholder={t('common.allMonths')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -1333,12 +1333,12 @@ const ApproveLeave = () => {
                 </div>
                 {/* Year Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.6s' }}>
-                  <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.year')}</label>
+                  <label className="block text-sm font-medium text-blue-900 dark:text-white mb-2 animate-fade-in-up">{t('common.year')}</label>
                   <input
                     type="number"
                     min={2000}
                     max={2100}
-                    className="w-full md:w-28 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
+                    className="w-full md:w-28 border border-blue-200 rounded-xl px-3 py-2 dark:bg-slate-900 dark:text-white dark:border-slate-700 bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press"
                     value={pendingFilterYear}
                     onChange={e => setPendingFilterYear(e.target.value ? Number(e.target.value) : '')}
                     placeholder="YYYY"
@@ -1346,12 +1346,12 @@ const ApproveLeave = () => {
                 </div>
                 {/* Backdated Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
-                  <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('leave.backdatedFilter')}</label>
+                  <label className="block text-sm font-medium text-blue-900 dark:text-white mb-2 animate-fade-in-up">{t('leave.backdatedFilter')}</label>
                   <Select
                     value={pendingHistoryBackdatedFilter}
                     onValueChange={setPendingHistoryBackdatedFilter}
                   >
-                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[140px] dark:bg-slate-900 dark:text-white dark:border-slate-700 bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1363,12 +1363,12 @@ const ApproveLeave = () => {
                 </div>
                 {/* Status Filter */}
                 <div className="w-full md:w-auto animate-slide-in-left" style={{ animationDelay: '0.8s' }}>
-                  <label className="block text-sm font-medium text-blue-900 dark:text-blue-100 mb-2 animate-fade-in-up">{t('common.status')}</label>
+                  <label className="block text-sm font-medium text-blue-900 dark:text-white mb-2 animate-fade-in-up">{t('common.status')}</label>
                   <Select
                     value={pendingHistoryStatusFilter}
                     onValueChange={setPendingHistoryStatusFilter}
                   >
-                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[120px] dark:bg-slate-900 dark:text-white bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
+                    <SelectTrigger className="w-full md:w-auto border-blue-200 rounded-xl px-3 py-2 min-w-[120px] dark:bg-slate-900 dark:text-white dark:border-slate-700 bg-white/80 backdrop-blur hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 animate-bounce-in btn-press">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1467,7 +1467,7 @@ const ApproveLeave = () => {
                             </div>
                             {/* ปุ่มดูรายละเอียดและลบ */}
                             <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0 mt-2 lg:mt-0 w-full lg:w-auto">
-                              <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetailsWithFetch(request)}>
+                              <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full px-4 py-2 font-bold border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-800 dark:hover:text-blue-100 shadow animate-bounce-in btn-press hover-glow" onClick={() => handleViewDetailsWithFetch(request)}>
                                 <Eye className="w-4 h-4 mr-1" />{t('admin.viewDetails')}
                               </Button>
                               {user?.role === 'superadmin' && (
@@ -1590,7 +1590,7 @@ const ApproveLeave = () => {
                                 setHistoryPage(1);
                               }}
                             >
-                              <SelectTrigger className="w-20 bg-white/80 backdrop-blur border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl h-9 transform hover:scale-105 hover:shadow-md">
+                              <SelectTrigger className="w-20 bg-white/80 dark:bg-slate-900 dark:text-white backdrop-blur border-blue-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-800 hover:border-blue-300 transition-all duration-300 rounded-xl h-9 transform hover:scale-105 hover:shadow-md">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="border-0 shadow-xl rounded-2xl">

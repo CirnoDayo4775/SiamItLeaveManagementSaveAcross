@@ -16,10 +16,10 @@ import { logger } from '@/lib/logger';
 
 interface SessionExpiredDialogProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
 }
 
-export default function SessionExpiredDialog({ open, onOpenChange }: SessionExpiredDialogProps) {
+export default function SessionExpiredDialog({ open, onClose }: SessionExpiredDialogProps) {
   const { t } = useTranslation();
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -27,20 +27,27 @@ export default function SessionExpiredDialog({ open, onOpenChange }: SessionExpi
   const handleLogout = async () => {
     try {
       await logout();
+      onClose();
       // Redirect to root (login page for unauthenticated users)
       navigate('/', { replace: true });
-      onOpenChange(false);
     } catch (error) {
       if (import.meta.env.DEV) {
         logger.error('Logout error:', error);
       }
       // Force redirect even if logout fails
       navigate('/', { replace: true });
+      onClose();
+    }
+  };
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      onClose();
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-3">

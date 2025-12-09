@@ -2,6 +2,7 @@ import React, { Component, ReactNode, Suspense } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import LoadingSpinner from './LoadingSpinner';
 import { logger } from '@/lib/logger';
+import { useNavigate } from 'react-router-dom';
 
 interface LazyErrorBoundaryState {
     hasError: boolean;
@@ -11,6 +12,7 @@ interface LazyErrorBoundaryState {
 interface LazyErrorBoundaryProps {
     children: ReactNode;
     fallback?: ReactNode;
+    onBack?: () => void;
 }
 
 /**
@@ -84,7 +86,7 @@ class LazyErrorBoundary extends Component<LazyErrorBoundaryProps, LazyErrorBound
 
                                 <div className="flex gap-3 w-full">
                                     <button
-                                        onClick={() => window.history.back()}
+                                        onClick={() => this.props.onBack ? this.props.onBack() : window.history.back()}
                                         className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded-xl transition-colors"
                                     >
                                         ย้อนกลับ
@@ -117,8 +119,18 @@ interface LazyLoadWrapperProps {
 }
 
 export function LazyLoadWrapper({ children, fallback, errorFallback }: LazyLoadWrapperProps) {
+    const navigate = useNavigate();
+
+    const handleBack = () => {
+        if (window.history.state && window.history.state.idx > 0) {
+            navigate(-1);
+        } else {
+            navigate('/announcements', { replace: true });
+        }
+    };
+
     return (
-        <LazyErrorBoundary fallback={errorFallback}>
+        <LazyErrorBoundary fallback={errorFallback} onBack={handleBack}>
             <Suspense fallback={fallback || <LoadingSpinner />}>
                 {children}
             </Suspense>

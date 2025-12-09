@@ -237,7 +237,7 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
           {leaveDetail ? (
             <div className="space-y-6">
               {/* Header Section */}
-              <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-50 to-indigo-50">
+              <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -246,8 +246,8 @@ export const LeaveDetailDialog = ({ open, onOpenChange, leaveRequest }: LeaveDet
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-gray-500">{t('history.submittedOn')}</div>
-                      <div className="text-lg font-semibold text-blue-600">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('history.submittedOn')}</div>
+                      <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
                         {formatDateLocalized(leaveDetail.createdAt || leaveDetail.submittedDate || '', i18n.language)}
                       </div>
                     </div>

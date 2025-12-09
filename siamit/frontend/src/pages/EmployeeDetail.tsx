@@ -498,7 +498,7 @@ const EmployeeDetail = () => {
         <div className="flex h-14 items-center px-3 md:px-4 gap-2 md:gap-3">
           <SidebarTrigger />
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/admin/employees')}
             className="bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 shadow-lg backdrop-blur-sm p-1.5 md:p-2 rounded-full transition-all duration-200"
           >
             <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
@@ -853,10 +853,10 @@ const EmployeeDetail = () => {
             <CardContent className="p-0">
               {/* Filter Section */}
               <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-3">
-                <div className="grid grid-cols-8 gap-2 items-end">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 items-end">
                   {/* Leave Type Filter */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-white mb-1">
                       {t('leave.type')}
                     </label>
                     <select
@@ -875,7 +875,7 @@ const EmployeeDetail = () => {
 
                   {/* Month Filter */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-white mb-1">
                       {t('common.month')}
                     </label>
                     <select
@@ -901,11 +901,11 @@ const EmployeeDetail = () => {
 
                   {/* Year Filter */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-white mb-1">
                       {t('common.year')}
                     </label>
                     <select
-                      className="w-full py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full py-1.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       value={pendingFilterYear}
                       onChange={(e) => setPendingFilterYear(e.target.value)}
                     >
@@ -920,11 +920,11 @@ const EmployeeDetail = () => {
 
                   {/* Status Filter */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-white mb-1">
                       {t('common.status')}
                     </label>
                     <select
-                      className="w-full py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full py-1.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       value={pendingFilterStatus}
                       onChange={(e) => setPendingFilterStatus(e.target.value)}
                     >
@@ -937,11 +937,11 @@ const EmployeeDetail = () => {
 
                   {/* Backdated Filter */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-white mb-1">
                       {t('leave.backdatedOnly')}
                     </label>
                     <select
-                      className="w-full py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full py-1.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       value={pendingFilterBackdated}
                       onChange={(e) => setPendingFilterBackdated(e.target.value)}
                     >

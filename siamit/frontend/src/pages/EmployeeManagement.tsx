@@ -457,7 +457,7 @@ const EmployeeManagement = () => {
               <div className="p-4 sm:p-6 pb-2 flex-shrink-0">
                 <div className="grid grid-cols-1 sm:grid-cols-3 md:flex md:flex-row gap-3 items-end">
                   <div className="flex flex-col w-full md:w-auto">
-                    <label className="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1" htmlFor="position-filter">{t('auth.position')}</label>
+                    <label className="text-xs text-gray-500 dark:text-gray-300 font-semibold mb-1" htmlFor="position-filter">{t('auth.position')}</label>
                     <select
                       id="position-filter"
                       className="rounded-lg border border-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
@@ -475,7 +475,7 @@ const EmployeeManagement = () => {
                     </select>
                   </div>
                   <div className="flex flex-col w-full md:w-auto">
-                    <label className="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1" htmlFor="department-filter">{t('auth.department')}</label>
+                    <label className="text-xs text-gray-500 dark:text-gray-300 font-semibold mb-1" htmlFor="department-filter">{t('auth.department')}</label>
                     <select
                       id="department-filter"
                       className="rounded-lg border border-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
@@ -493,7 +493,7 @@ const EmployeeManagement = () => {
                     </select>
                   </div>
                   <div className="flex flex-col w-full md:w-auto">
-                    <label className="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1" htmlFor="role-filter">{t('common.status')}</label>
+                    <label className="text-xs text-gray-500 dark:text-gray-300 font-semibold mb-1" htmlFor="role-filter">{t('common.status')}</label>
                     <select
                       id="role-filter"
                       className="rounded-lg border border-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white shadow-sm w-full md:w-auto"
