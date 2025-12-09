@@ -91,59 +91,35 @@ class LeaveQuotaCleanupService {
    * Find all orphaned leave quota records
    * @returns {Promise<Array>} Array of orphaned leave quota records
    */
+  // ในไฟล์ leaveQuotaCleanupService.js
+// แก้ไขฟังก์ชัน findOrphanedLeaveQuotas
+
   async findOrphanedLeaveQuotas() {
     try {
       const leaveQuotaRepo = this.AppDataSource.getRepository('LeaveQuota');
-      const leaveTypeRepo = this.AppDataSource.getRepository('LeaveType');
       
-      // Get all leave quota records
-      const allLeaveQuotas = await leaveQuotaRepo.find();
+      // --- วิธีแก้: ใช้ QueryBuilder หาเฉพาะตัวที่ไม่มี LeaveType จริงๆ ---
+      // SELECT quota.* FROM leave_quota quota
+      // LEFT JOIN leave_type lt ON quota.leaveTypeId = lt.id
+      // WHERE lt.id IS NULL OR lt.deleted_at IS NOT NULL OR lt.is_active = 0
       
-      // Get all valid leave types (active and not soft-deleted)
-      const validLeaveTypes = await leaveTypeRepo.find({
-        where: {
-          deleted_at: IsNull(),
-          is_active: true
+      const orphanedQuotas = await leaveQuotaRepo.createQueryBuilder('quota')
+        .leftJoinAndSelect('LeaveType', 'lt', 'lt.id = quota.leaveTypeId')
+        .where('lt.id IS NULL') // หาตัวที่ไม่มี LeaveType อยู่จริง
+        .orWhere('lt.deleted_at IS NOT NULL') // หรือถูกลบไปแล้ว
+        .orWhere('lt.is_active = :isActive', { isActive: false }) // หรือไม่ active
+        .getMany();
+
+      // จัดรูปแบบข้อมูลให้เหมือนเดิมเพื่อให้ code ส่วนอื่นทำงานต่อได้
+      return orphanedQuotas.map(quota => ({
+        ...quota,
+        leaveTypeInfo: {
+          nameEn: 'Orphaned/Invalid',
+          nameTh: 'ไม่พบข้อมูลประเภทการลา',
+          status: 'Invalid'
         }
-      });
-      
-      // Create set for faster lookup
-      const validLeaveTypeIds = new Set(validLeaveTypes.map(lt => lt.id));
-      
-      // Find orphaned records
-      const orphanedQuotas = [];
-      
-      for (const quota of allLeaveQuotas) {
-        const isLeaveTypeValid = validLeaveTypeIds.has(quota.leaveTypeId);
-        
-        if (!isLeaveTypeValid) {
-          // Get detailed leave type info
-          const leaveType = await leaveTypeRepo.findOne({
-            where: { id: quota.leaveTypeId }
-          });
-          
-          const leaveTypeInfo = leaveType ? {
-            nameEn: leaveType.leave_type_en,
-            nameTh: leaveType.leave_type_th,
-            deletedAt: leaveType.deleted_at,
-            isActive: leaveType.is_active,
-            status: leaveType.deleted_at ? 'Soft-deleted' : (leaveType.is_active ? 'Active' : 'Inactive')
-          } : {
-            nameEn: 'Unknown',
-            nameTh: 'Unknown',
-            deletedAt: null,
-            isActive: false,
-            status: 'Not Found'
-          };
-          
-          orphanedQuotas.push({
-            ...quota,
-            leaveTypeInfo
-          });
-        }
-      }
-      
-      return orphanedQuotas;
+      }));
+      // -----------------------------------------------------------
       
     } catch (error) {
       console.error('Error finding orphaned leave quotas:', error);

@@ -248,8 +248,11 @@ module.exports = (AppDataSource) => {
               if (l.startTime && l.endTime) {
                 const [sh, sm] = l.startTime.split(':').map(Number);
                 const [eh, em] = l.endTime.split(':').map(Number);
-                const diff = ((eh*60+em) - (sh*60+sm)) / 60;
-                usedHours += Math.floor(Math.max(0, diff));
+            const diff = ((eh*60+em) - (sh*60+sm)) / 60;
+// FIX: ลบ Math.floor ออก เพื่อเก็บค่าทศนิยมที่แท้จริง
+usedHours += Math.max(0, diff); 
+// หากต้องการจำกัดทศนิยมในการคำนวณ ให้ใช้
+// usedHours += parseFloat(Math.max(0, diff).toFixed(2));
               } else if (l.startDate && l.endDate) {
                 usedDays += Math.max(0, calculateDaysBetween(new Date(l.startDate), new Date(l.endDate)));
               }

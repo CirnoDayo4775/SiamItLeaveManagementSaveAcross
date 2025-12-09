@@ -35,7 +35,11 @@ const comparePassword = async (password, hashedPassword) => {
  * @returns {string} JWT token
  */
 const generateToken = (payload, secret = config.server.jwtSecret, expiresIn = config.server.jwtExpiresIn) => {
-  return jwt.sign(payload, secret, { expiresIn });
+  if (!secret) throw new Error('JWT Secret is missing in configuration');
+  return jwt.sign(payload, secret, { 
+    expiresIn,
+    algorithm: 'HS256' // FIX: ระบุ Algorithm ตอนสร้าง
+  });
 };
 
 /**
@@ -45,9 +49,12 @@ const generateToken = (payload, secret = config.server.jwtSecret, expiresIn = co
  * @returns {Object} Decoded token payload
  */
 const verifyToken = (token, secret = config.server.jwtSecret) => {
-  return jwt.verify(token, secret);
+  if (!secret) throw new Error('JWT Secret is missing in configuration');
+  // หมายเหตุ: ฟังก์ชันนี้จะ throw error ถ้า token ผิด (ต้อง try-catch ฝั่งคนเรียกใช้)
+  return jwt.verify(token, secret, {
+    algorithms: ['HS256'] // FIX: ป้องกัน Algorithm Confusion Attack
+  });
 };
-
 /**
  * Generate user token with standard payload
  * @param {Object} user - User object
@@ -86,10 +93,10 @@ const extractTokenFromHeader = (authHeader) => {
  * @returns {boolean} True if valid email format
  */
 const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Regex ที่รองรับมาตรฐานทั่วไปได้ดีกว่า
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   return emailRegex.test(email);
 };
-
 /**
  * Validate UUID format
  * @param {string} uuid - UUID to validate

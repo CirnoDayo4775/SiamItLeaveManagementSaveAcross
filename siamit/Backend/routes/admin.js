@@ -11,9 +11,9 @@ const dashboardIndexController = require('../api/DashboardIndexController');
 const announcementsController = require('../api/AnnouncementsController');
 const customHolidayController = require('../api/CustomHolidayController');
 const notificationBellController = require('../api/NotificationBellController');
-
+const authMiddleware = require('../middleware/authMiddleware');
 const initializeAdminRoutes = (AppDataSource) => {
-  // Position management
+  router.use(authMiddleware);
   router.use('/', positionController(AppDataSource));
   
   // Department management

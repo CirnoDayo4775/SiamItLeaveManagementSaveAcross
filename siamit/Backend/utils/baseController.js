@@ -102,12 +102,22 @@ class BaseController {
    * @param {Object} data - Update data
    * @returns {Promise<Object>} Updated record
    */
+// ในไฟล์ baseController.js
+// แก้ไขฟังก์ชัน update
+
   async update(AppDataSource, id, data) {
     const repo = this.getRepository(AppDataSource);
     const entity = await repo.findOneBy({ id });
     if (!entity) {
       throw new Error('Record not found');
     }
+
+    // --- ส่วนที่เพิ่ม: ป้องกันการแก้ไข Field สำคัญ (Security Fix) ---
+    // ลบ key ที่ห้ามแก้ไขออกจาก data
+    const restrictedFields = ['id', 'password', 'role', 'token', 'createdAt', 'repid'];
+    restrictedFields.forEach(field => delete data[field]);
+    // -----------------------------------------------------------
+
     Object.assign(entity, data);
     return await repo.save(entity);
   }

@@ -76,7 +76,7 @@ class LineLoginController {
 
     } catch (error) {
       console.error('Error generating LINE login URL:', error);
-      res.status(500).json({ success: false, error: error.message });
+   res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
   }
 
@@ -247,7 +247,8 @@ class LineLoginController {
 
       res.json({ success: true, message: 'LINE account unlinked successfully' });
     } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+      console.error('Unlink Error:', error.message);
+   res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
   }
 }

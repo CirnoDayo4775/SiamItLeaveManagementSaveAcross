@@ -224,7 +224,7 @@ const startServer = async () => {
     app.use('/api', routes);
 
     // 3. Start Scheduler
-    scheduler.registerScheduledJobs(config);
+  scheduler.registerScheduledJobs(config, AppDataSource);
     scheduler.scheduleLeaveTypeCleanup(AppDataSource);
 
     // 4. Start HTTP Server

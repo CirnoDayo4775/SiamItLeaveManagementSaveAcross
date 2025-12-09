@@ -1,20 +1,23 @@
-const axios = require('axios');
+// const axios = require('axios'); // ไม่ต้องใช้ axios แล้ว
 const cron = require('node-cron');
 const LeaveTypeCleanupService = require('./leaveTypeCleanupService');
 const LeaveQuotaCleanupService = require('./leaveQuotaCleanupService');
+// Import Service ที่เราสร้าง
+const { executeResetLogic } = require('./utils/leaveResetService');
 
 /**
  * Register all scheduled jobs for the backend application.
  * - Yearly reset of leave usage on Jan 1st 00:05 Asia/Bangkok
- *   Calls POST /api/leave-quota/reset with { force: false, strategy: 'zero' }
- *   and only affects positions with new_year_quota = 0.
+ * Calls executeResetLogic directly
  *
- * @param {object} config - Application configuration from ./config
+ * @param {object} config - Application configuration
+ * @param {object} AppDataSource - TypeORM Data Source (เพิ่ม parameter นี้)
  */
-function registerScheduledJobs(config) {
+function registerScheduledJobs(config, AppDataSource) { // <--- 1. รับ AppDataSource เข้ามา
   try {
     const isCronEnabled = (process.env.ENABLE_YEARLY_RESET_CRON || 'true').toLowerCase() !== 'false';
     const cronTimezone = process.env.CRON_TZ || 'Asia/Bangkok';
+    
     if (!isCronEnabled) {
       console.log('[CRON] Yearly reset job is disabled via ENABLE_YEARLY_RESET_CRON=false');
       return;
@@ -23,9 +26,13 @@ function registerScheduledJobs(config) {
     // Run at 00:05 on January 1st every year
     cron.schedule('5 0 1 1 *', async () => {
       try {
-        const resetUrl = `${config.server.apiBaseUrl}/api/leave-quota-reset/reset`;
-        const response = await axios.post(resetUrl, { force: false, strategy: 'zero' }, { timeout: 60000 });
-        console.log('[CRON] Yearly leave reset executed:', response.data);
+        console.log('[CRON] Starting yearly leave reset (Direct Function Call)...');
+        
+        // --- 2. เรียกใช้ Logic โดยตรงตรงนี้ (แทน axios) ---
+        const result = await executeResetLogic(AppDataSource, { force: false, strategy: 'zero' });
+        // -------------------------------------------------
+
+        console.log('[CRON] Yearly leave reset executed:', result);
       } catch (err) {
         console.error('[CRON] Yearly leave reset failed:', err?.message || err);
       }
@@ -39,9 +46,7 @@ function registerScheduledJobs(config) {
 
 /**
  * Schedule leave type cleanup job
- * Runs daily at 2 AM to clean up orphaned soft-deleted leave types
- * and automatically cleans up orphaned leave quota records afterward
- * @param {Object} AppDataSource - Database connection
+ * ... (ส่วนนี้เหมือนเดิม) ...
  */
 function scheduleLeaveTypeCleanup(AppDataSource) {
   try {
@@ -70,15 +75,6 @@ function scheduleLeaveTypeCleanup(AppDataSource) {
           errors: leaveTypeResults.errors.length
         });
 
-        // Log details for monitoring
-        if (leaveTypeResults.deleted.length > 0) {
-          console.log('🗑️ Deleted leave types:', leaveTypeResults.deleted);
-        }
-        
-        if (leaveTypeResults.cannotDelete.length > 0) {
-          console.log('⚠️ Cannot delete leave types:', leaveTypeResults.cannotDelete);
-        }
-
         // Step 2: Clean up orphaned leave quota records (if enabled)
         if (isQuotaCleanupEnabled) {
           console.log('🔄 Starting scheduled leave quota cleanup...');
@@ -92,24 +88,6 @@ function scheduleLeaveTypeCleanup(AppDataSource) {
             failed: leaveQuotaResults.failed.length,
             totalQuotaRemoved: leaveQuotaResults.totalQuotaRemoved
           });
-
-          // Log details for monitoring
-          if (leaveQuotaResults.deleted.length > 0) {
-            console.log('🗑️ Deleted leave quota records:', leaveQuotaResults.deleted.map(d => ({
-              id: d.id,
-              leaveType: d.leaveTypeName,
-              quota: d.quota,
-              status: d.status
-            })));
-          }
-          
-          if (leaveQuotaResults.failed.length > 0) {
-            console.log('❌ Failed leave quota deletions:', leaveQuotaResults.failed.map(f => ({
-              id: f.id,
-              leaveType: f.leaveTypeName,
-              error: f.error
-            })));
-          }
         } else {
           console.log('[CRON] Leave quota cleanup is disabled via ENABLE_LEAVE_QUOTA_CLEANUP_CRON=false');
         }
@@ -126,13 +104,9 @@ function scheduleLeaveTypeCleanup(AppDataSource) {
 
     const quotaStatus = isQuotaCleanupEnabled ? 'enabled' : 'disabled';
     console.log(`[CRON] Leave type cleanup job scheduled at 02:00 daily (${cronTimezone}). Leave quota cleanup: ${quotaStatus}.`);
-    console.log(`[CRON] Set ENABLE_LEAVE_TYPE_CLEANUP_CRON=false to disable leave type cleanup.`);
-    console.log(`[CRON] Set ENABLE_LEAVE_QUOTA_CLEANUP_CRON=false to disable leave quota cleanup.`);
   } catch (err) {
     console.error('[CRON] Failed to schedule leave type cleanup job:', err?.message || err);
   }
 }
 
 module.exports = { registerScheduledJobs, scheduleLeaveTypeCleanup };
-
-

@@ -8,9 +8,9 @@ const leaveQuotaController = require('../api/LeaveQuotaController');
 const typeLeaveController = require('../api/TpyeLeaveController');
 const leaveUsedController = require('../api/LeaveUsedController');
 const leaveQuotaResetController = require('../api/LeaveQuotaResetController');
-
+const authMiddleware = require('../middleware/authMiddleware');
 const initializeLeaveRoutes = (AppDataSource) => {
-  // Leave request routes
+router.use(authMiddleware);
   router.use('/leave-request', leaveRequestController(AppDataSource));
   
   // Leave history routes

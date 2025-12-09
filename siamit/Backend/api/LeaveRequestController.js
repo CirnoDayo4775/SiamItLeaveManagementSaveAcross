@@ -261,7 +261,7 @@ module.exports = (AppDataSource) => {
   // --- Routes ---
 
   // POST /api/leave-request
-  router.post('/',
+ router.post('/',
     (req, res, next) => {
       leaveAttachmentsUpload.array('attachments', 10)(req, res, (err) => {
         if (err) return handleUploadError(err, req, res, next);
@@ -269,36 +269,93 @@ module.exports = (AppDataSource) => {
       });
     },
     async (req, res) => {
+      // ใช้ QueryRunner เพื่อทำ Transaction (สำคัญมากสำหรับการตัดโควต้า)
+      const queryRunner = AppDataSource.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      const uploadedFiles = req.files || [];
+
       try {
-        // 1. Auth & Data Prep
+        // --- 1. Auth & Data Prep (Strict Check) ---
         let userId = null;
         const authHeader = req.headers.authorization;
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-          try {
-            userId = verifyToken(authHeader.split(' ')[1]).userId;
-          } catch (err) { return sendUnauthorized(res, 'Invalid token'); }
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+           return sendUnauthorized(res, 'Authorization token is required');
         }
 
-        const user = userId ? await userRepo.findOneBy({ id: userId }) : null;
-        const employeeType = user ? user.position : null;
+        try {
+           userId = verifyToken(authHeader.split(' ')[1]).userId;
+        } catch (err) { 
+           return sendUnauthorized(res, 'Invalid token'); 
+        }
 
-        const { leaveType, startDate, endDate, startTime, endTime, reason, supervisor, contact, durationType, allowBackdated } = req.body;
-
-        // 2. Resolve Leave Type & Quota Validation
-        const leaveTypeEntity = await resolveLeaveType(leaveType);
+        // ดึงข้อมูล User ผ่าน Transaction Manager
+        const user = await queryRunner.manager.findOne('User', { where: { id: userId } });
+        if (!user) throw new Error('User not found');
         
-        if (leaveTypeEntity && leaveTypeEntity.leave_type_en !== 'Emergency') {
-          const quotaRow = await leaveQuotaRepo.findOne({ where: { positionId: employeeType, leaveTypeId: leaveTypeEntity.id } });
+        const employeeType = user.position;
+        const { leaveType, startDate, endDate, startTime, endTime, reason, supervisor, contact, durationType } = req.body;
+
+        // --- 2. Calculate Duration (คำนวณวัน/ชั่วโมงที่ขอก่อน เพื่อไปเช็คโควต้า) ---
+        let reqDays = 0;
+        let reqHours = 0;
+
+        if (durationType === 'hour' && startTime && endTime) {
+           // คำนวณชั่วโมง
+           const [sh, sm] = startTime.split(':').map(Number);
+           const [eh, em] = endTime.split(':').map(Number);
+           let diff = (eh * 60 + em) - (sh * 60 + sm);
+           if (diff < 0) diff += 24 * 60; // กรณีข้ามเที่ยงคืน (ถ้ามี)
+           reqHours = diff / 60;
+        } else {
+           // คำนวณวัน
+           const start = new Date(startDate);
+           const end = new Date(endDate);
+           reqDays = calculateDaysBetween(start, end); // สมมติว่ามี function นี้ใน utils
+           if (reqDays <= 0) reqDays = 1; // ลาอย่างน้อย 1 วัน
+        }
+
+        // --- 3. Resolve Leave Type & Quota Validation (Critical) ---
+        const leaveTypeEntity = await resolveLeaveType(leaveType);
+        if (!leaveTypeEntity) throw new Error('Invalid Leave Type');
+
+        // ข้ามการเช็คโควต้าถ้าเป็น "Emergency" (หรือตาม Business Logic)
+        if (leaveTypeEntity.leave_type_en !== 'Emergency') {
+          // 3.1 ดึง Quota (Lock row เพื่อป้องกันการแย่งกันอ่านค่า)
+          const quotaRow = await queryRunner.manager.getRepository('LeaveQuota')
+            .createQueryBuilder('quota')
+            .setLock('pessimistic_write') // Lock จนกว่าจะจบ Transaction
+            .where('quota.positionId = :pid', { pid: employeeType })
+            .andWhere('quota.leaveTypeId = :ltid', { ltid: leaveTypeEntity.id })
+            .getOne();
+
           if (!quotaRow) return sendValidationError(res, 'Leave quota not found for this position.');
 
-          // Calculate usage (simplified for brevity - in production, keep the detailed calculation logic)
-          // ... (Existing quota calculation logic should be here, kept it conceptual for brevity) ...
+          // 3.2 ดึงข้อมูลที่ใช้ไปแล้ว (LeaveUsed)
+          const usedRow = await queryRunner.manager.findOne('LeaveUsed', { 
+            where: { user_id: userId, leave_type_id: leaveTypeEntity.id } 
+          });
+
+          const currentUsedDays = usedRow ? usedRow.days : 0;
+          const currentUsedHours = usedRow ? usedRow.hour : 0;
+
+          // 3.3 ตรวจสอบว่าพอหรือไม่ (Logic อย่างง่าย: แปลงทุกอย่างเป็นชั่วโมงหรือวันแล้วเทียบ)
+          // สมมติ 1 วัน = 8 ชั่วโมง (ดึงจาก config จะดีที่สุด)
+          const WORK_HOURS = config.business.workingHoursPerDay || 8;
+          
+          const totalQuotaUnits = (quotaRow.quota || 0) * WORK_HOURS; // แปลงเป็นหน่วยย่อยสุด (ชั่วโมง)
+          const totalUsedUnits = (currentUsedDays * WORK_HOURS) + currentUsedHours;
+          const totalRequestUnits = (reqDays * WORK_HOURS) + reqHours;
+
+          if (totalUsedUnits + totalRequestUnits > totalQuotaUnits) {
+             throw new Error(`Quota exceeded. Remaining: ${((totalQuotaUnits - totalUsedUnits)/WORK_HOURS).toFixed(2)} days.`);
+          }
         }
 
-        // 3. Time & Backdated Validation
+        // --- 4. Time & Backdated Validation ---
         if (startTime && endTime) {
            if (startTime === endTime) return sendValidationError(res, 'Start and end time cannot be same');
-           // Validation helper for time range
            const toMins = (t) => { const [h,m] = t.split(':').map(Number); return h*60+m; };
            const startM = toMins(startTime), endM = toMins(endTime);
            const workStart = config.business.workingStartHour * 60;
@@ -313,17 +370,22 @@ module.exports = (AppDataSource) => {
           if (start && start < today) backdated = 1;
         }
 
-        const isBackdatedAllowed = (allowBackdated === '1' || allowBackdated === 1 || allowBackdated === 'allow');
+        // FIX: ตัดการรับค่า allowBackdated จาก req.body เพื่อความปลอดภัย
+        // ควรเช็คจาก Config หรือ Role ของ User เท่านั้น
+        const isBackdatedAllowed = false; // หรือ config.allowBackdated
         if (!isBackdatedAllowed && backdated === 1) {
-          return sendValidationError(res, 'Backdated leave is not allowed');
+           // ยกเว้นกรณีฉุกเฉิน หรือเงื่อนไขพิเศษ
+           if (leaveTypeEntity.leave_type_en !== 'Emergency') {
+              return sendValidationError(res, 'Backdated leave is not allowed');
+           }
         }
 
-        // 4. Save
-        const attachmentsArr = req.files ? req.files.map(f => f.filename) : [];
+        // --- 5. Save ---
+        const attachmentsArr = uploadedFiles.map(f => f.filename);
         const leaveData = {
           Repid: userId,
           employeeType,
-          leaveType, // Input string/id
+          leaveType: leaveTypeEntity.id, // Save ID strictly
           startDate, endDate,
           startTime: durationType === 'hour' ? startTime : null,
           endTime: durationType === 'hour' ? endTime : null,
@@ -333,14 +395,17 @@ module.exports = (AppDataSource) => {
           backdated
         };
 
-        const savedLeave = await leaveRepo.save(leaveRepo.create(leaveData));
+        const savedLeave = await queryRunner.manager.save('LeaveRequest', leaveData);
 
-        // 5. Socket Notification
+        // Commit Transaction (บันทึกจริง)
+        await queryRunner.commitTransaction();
+
+        // --- 6. Socket Notification (ทำหลังจาก Commit สำเร็จ) ---
         if (global.io) {
-          const ltName = leaveTypeEntity ? (leaveTypeEntity.leave_type_th || leaveTypeEntity.leave_type_en) : leaveType;
+          const ltName = leaveTypeEntity.leave_type_th || leaveTypeEntity.leave_type_en;
           global.io.to('admin_room').emit('newLeaveRequest', {
             requestId: savedLeave.id,
-            userName: user ? user.name : 'Unknown',
+            userName: user.name,
             leaveType: ltName,
             startDate: savedLeave.startDate,
             endDate: savedLeave.endDate,
@@ -350,8 +415,26 @@ module.exports = (AppDataSource) => {
         }
 
         res.status(201).json({ status: 'success', data: savedLeave, message: 'Leave request created' });
+
       } catch (err) {
-        res.status(500).json({ status: 'error', message: err.message });
+        // Rollback Transaction (ยกเลิก Database)
+        await queryRunner.rollbackTransaction();
+
+        // Cleanup: ลบไฟล์ที่อัปโหลดไปแล้วทิ้ง เพราะ Save ไม่สำเร็จ
+        if (uploadedFiles.length > 0) {
+           uploadedFiles.forEach(f => {
+              const fs = require('fs');
+              const path = require('path');
+              try { fs.unlinkSync(f.path); } catch(e) {}
+           });
+        }
+
+        console.error('Create Leave Error:', err);
+        // Security: ส่ง Generic Error หรือ Error ที่ Safe
+        const statusCode = err.message.includes('Quota') ? 400 : 500;
+        res.status(statusCode).json({ status: 'error', message: err.message });
+      } finally {
+        await queryRunner.release();
       }
     }
   );
@@ -546,26 +629,51 @@ module.exports = (AppDataSource) => {
   router.put('/:id/status', async (req, res) => {
     try {
       const { id } = req.params;
-      const { status, statusby, rejectedReason } = req.body;
-      let approverId = statusby;
+      // FIX 1: ตัด statusby ออกจาก body ไม่ให้ส่งมาหลอกระบบ
+      const { status, rejectedReason } = req.body; 
+      
+      let approverId;
 
-      // Extract approver from token if not provided
-      if (!approverId && req.headers.authorization) {
+      // FIX 1 (ต่อ): บังคับดึง ID จาก Token เท่านั้น
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
         try {
-          approverId = verifyToken(req.headers.authorization.split(' ')[1]).userId;
-        } catch (e) { return sendUnauthorized(res, 'Invalid Token'); }
+          const decoded = verifyToken(authHeader.split(' ')[1]);
+          approverId = decoded.userId;
+          // (Optional) ตรงนี้คุณควรเช็ค Role ด้วยว่า approverId เป็น Admin หรือ Supervisor หรือไม่
+        } catch (e) { 
+          return sendUnauthorized(res, 'Invalid Token'); 
+        }
+      } else {
+        return sendUnauthorized(res, 'Authorization token is required');
+      }
+
+      // FIX 2: Validate ค่า status ป้องกันการส่งค่ามั่วๆ
+      if (!['approved', 'rejected'].includes(status)) {
+        return res.status(400).json({ success: false, message: 'Invalid status. Must be approved or rejected.' });
       }
 
       const leave = await leaveRepo.findOneBy({ id });
-      if (!leave) return res.status(404).json({ success: false, message: 'Not found' });
+      if (!leave) return res.status(404).json({ success: false, message: 'Leave request not found' });
 
+      // FIX 3: ป้องกันการอนุมัติให้ตัวเอง (Self-Approval Prevention)
+      if (leave.Repid === approverId) {
+        return res.status(403).json({ success: false, message: 'You cannot approve/reject your own leave request.' });
+      }
+
+      // ตรวจสอบว่าใบลาถูกดำเนินการไปแล้วหรือยัง (Optional but recommended)
+      if (leave.status === 'approved' || leave.status === 'rejected') {
+         return res.status(400).json({ success: false, message: 'This request has already been processed.' });
+      }
+
+      // --- Logic การบันทึก (เหมือนเดิม) ---
       leave.status = status;
       leave.statusBy = approverId;
       leave.statusChangeTime = new Date();
       
       if (status === 'approved') {
         leave.approvedTime = new Date();
-        await updateLeaveUsed(leave);
+        await updateLeaveUsed(leave); // ฟังก์ชันคำนวณโควต้า
       } else if (status === 'rejected') {
         leave.rejectedTime = new Date();
         leave.rejectedReason = rejectedReason;
@@ -573,12 +681,14 @@ module.exports = (AppDataSource) => {
 
       await leaveRepo.save(leave);
 
-      // Notifications
+      // --- Notifications (เหมือนเดิม) ---
       if (global.io) {
         const msg = status === 'approved' ? 'Your leave request has been approved' : 'Your leave request has been rejected';
+        // แจ้งเตือน User เจ้าของใบลา
         global.io.to(`user_${leave.Repid}`).emit('leaveRequestUpdated', {
           requestId: leave.id, status, statusBy: approverId, employeeId: leave.Repid, message: msg
         });
+        // แจ้งเตือน Admin Room
         global.io.to('admin_room').emit('leaveRequestStatusChanged', {
           requestId: leave.id, status, employeeId: leave.Repid, statusBy: approverId
         });
@@ -586,11 +696,15 @@ module.exports = (AppDataSource) => {
 
       // LINE Notification
       const approver = await userRepo.findOneBy({ id: approverId });
+      // ส่งการแจ้งเตือนกลับหา User ว่าได้รับการอนุมัติ/ปฏิเสธแล้ว
       await sendLineNotification(leave, status, approver ? approver.name : 'System', rejectedReason);
 
       res.json({ success: true, data: leave });
+
     } catch (err) {
-      res.status(500).json({ success: false, message: err.message });
+      // FIX 4: Log Error จริงไว้ดูเอง แต่ส่งข้อความทั่วไปให้ User เพื่อความปลอดภัย
+      console.error('Error in update status:', err); 
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   });
 

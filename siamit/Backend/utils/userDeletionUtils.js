@@ -6,34 +6,37 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('../config');
-const { parseAttachments } = require('./leaveUtils');
 
 /**
- * Delete all files and data related to a user
+ * Soft Delete user data (Anonymize & Deactivate)
+ * Keeps the record in DB to preserve Referential Integrity for Leave Requests
  * @param {Object} AppDataSource - Database connection
  * @param {string} userId - User ID to delete
  * @param {string} userRole - User role ('user', 'admin', 'superadmin')
  * @returns {Promise<Object>} Deletion summary
  */
 async function deleteUserData(AppDataSource, userId, userRole) {
-  const processRepo = AppDataSource.getRepository('User');
-  const leaveRequestRepo = AppDataSource.getRepository('LeaveRequest');
-  const leaveUsedRepo = AppDataSource.getRepository('LeaveUsed');
+  const userRepo = AppDataSource.getRepository('User');
+  // เราไม่เรียก LeaveUsedRepo มาลบแล้ว เพราะต้องการเก็บประวัติการลาไว้ (Soft Delete)
   
   const deletionSummary = {
     avatarDeleted: false,
-    leaveRequestsDeleted: 0,
-    leaveAttachmentsDeleted: 0,
-    leaveUsageRecordsDeleted: 0,
+    userSoftDeleted: false,
     errors: []
   };
 
   try {
-    // Get user info for avatar cleanup from unified users table
-    const user = await processRepo.findOneBy({ id: userId });
+    // 1. หา User
+    const user = await userRepo.findOneBy({ id: userId });
+    
+    if (!user) {
+        // ถ้าไม่เจอ User ก็จบการทำงาน (หรือจะ Throw Error ก็ได้ตาม Flow เดิม)
+        console.warn(`User ${userId} not found for deletion.`);
+        return deletionSummary;
+    }
 
-    // HARD DELETE avatar file if exists
-    if (user && user.avatar_url) {
+    // 2. HARD DELETE ไฟล์ Avatar จริงๆ (เพื่อประหยัดพื้นที่ Server)
+    if (user.avatar_url) {
       try {
         const avatarPath = path.join(config.getAvatarsUploadPath(), path.basename(user.avatar_url));
         
@@ -46,8 +49,6 @@ async function deleteUserData(AppDataSource, userId, userRole) {
             deletionSummary.avatarDeleted = true;
             console.log(`✅ HARD DELETED avatar: ${path.basename(user.avatar_url)}`);
           } else {
-            console.error(`❌ FAILED to delete avatar: ${path.basename(user.avatar_url)} - file still exists`);
-            
             // Try alternative deletion method
             try {
               fs.rmSync(avatarPath, { force: true });
@@ -59,38 +60,41 @@ async function deleteUserData(AppDataSource, userId, userRole) {
             }
           }
         } else {
-          console.log(`⚠️  Avatar file not found (already deleted?): ${path.basename(user.avatar_url)}`);
+          console.log(`⚠️ Avatar file not found (already deleted?): ${path.basename(user.avatar_url)}`);
         }
       } catch (avatarError) {
         console.error('❌ Error deleting avatar file:', avatarError);
         deletionSummary.errors.push(`Avatar deletion error: ${avatarError.message}`);
-        
-        // Try alternative deletion method
-        try {
-          const avatarPath = path.join(config.getAvatarsUploadPath(), path.basename(user.avatar_url));
-          fs.rmSync(avatarPath, { force: true });
-          deletionSummary.avatarDeleted = true;
-          console.log(`✅ Force deleted avatar: ${path.basename(user.avatar_url)}`);
-        } catch (forceDeleteError) {
-          console.error(`❌ Force delete also failed for avatar: ${path.basename(user.avatar_url)}:`, forceDeleteError.message);
-          deletionSummary.errors.push(`Avatar force delete error: ${forceDeleteError.message}`);
-        }
       }
     }
 
-    // Skip deleting leave requests - keep them in the system
-    const leaveRequests = await leaveRequestRepo.findBy({ Repid: userId });
-    deletionSummary.leaveRequestsDeleted = 0; // No leave requests deleted
-    console.log(`Preserved ${leaveRequests.length} leave requests for ${userRole} ${userId} - not deleting them`);
+    // 3. Soft Delete Logic (เปลี่ยนข้อมูลให้เป็น Anonymous และ Deactivate)
+    // ใช้ timestamp ช่วยเพื่อให้ Email ไม่ซ้ำ (Unique Constraint)
+    const timestamp = new Date().getTime();
+    
+    // อัปเดตข้อมูลเพื่อลบตัวตน (Anonymize)
+    // หมายเหตุ: ใช้ Property Name ตามที่เห็นใน Controller อื่นๆ (Email, Password ตัวใหญ่)
+    user.name = `Deleted User (${userId.substring(0, 8)})`;
+    if (user.Email !== undefined) user.Email = `deleted_${userId}_${timestamp}@deleted.com`;
+    else user.email = `deleted_${userId}_${timestamp}@deleted.com`; // เผื่อกรณีชื่อ field ต่างกัน
+    
+    if (user.Password !== undefined) user.Password = 'DELETED_USER';
+    else user.password = 'DELETED_USER';
 
-    // Delete leave usage records
-    const leaveUsedRecords = await leaveUsedRepo.findBy({ user_id: userId });
-    await leaveUsedRepo.delete({ user_id: userId });
-    deletionSummary.leaveUsageRecordsDeleted = leaveUsedRecords.length;
-    console.log(`Deleted ${leaveUsedRecords.length} leave usage records for ${userRole} ${userId}`);
+    user.token = null;
+    user.avatar_url = null;
+    user.lineUserId = null; // ตัดการเชื่อมต่อ LINE (ถ้ามี)
+    
+    // ตั้งค่า Status
+    // หาก Entity User ของคุณไม่มี field 'is_active' อาจต้องเพิ่มใน Entity หรือข้ามบรรทัดนี้ไป
+    user.is_active = false; 
+    user.Role = 'deleted'; // เปลี่ยน Role เพื่อไม่ให้ Login ได้ หรือเพื่อให้รู้ว่าถูกลบแล้ว
 
-    // Delete from unified users table
-    await processRepo.delete({ id: userId });
+    // 4. บันทึกการเปลี่ยนแปลง (Save instead of Delete)
+    await userRepo.save(user);
+    
+    deletionSummary.userSoftDeleted = true;
+    console.log(`✅ Soft deleted user ${userId}. Data preserved but user deactivated.`);
 
   } catch (error) {
     console.error(`Error in deleteUserData for ${userRole} ${userId}:`, error);
@@ -105,23 +109,24 @@ async function deleteUserData(AppDataSource, userId, userRole) {
  * @param {Object} AppDataSource - Database connection
  * @param {string} userId - User ID to delete
  * @param {string} userRole - User role ('user', 'admin', 'superadmin')
- * @param {Object} userRepo - User repository (User, Admin, or SuperAdmin)
+ * @param {Object} userRepo - User repository (passed for compatibility, but function uses AppDataSource)
  * @returns {Promise<Object>} Deletion result
  */
 async function deleteUserComprehensive(AppDataSource, userId, userRole, userRepo) {
   try {
-    // Check if user exists
+    // Check if user exists (Optional here as deleteUserData handles it, but good for returning specific error)
+    // Note: userRepo passed might be specific, but for soft delete we check mainly via ID
     const user = await userRepo.findOneBy({ id: userId });
     if (!user) {
       throw new Error(`${userRole} not found`);
     }
 
-    // Delete all related data and files (including user record)
+    // Perform Soft Delete
     const deletionSummary = await deleteUserData(AppDataSource, userId, userRole);
 
     return {
       success: true,
-      message: `${userRole} deleted successfully (leave requests preserved)`,
+      message: `${userRole} soft deleted successfully (History preserved)`,
       deletionSummary
     };
 

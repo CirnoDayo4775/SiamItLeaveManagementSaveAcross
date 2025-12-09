@@ -11,7 +11,7 @@ const initializeLineRoutes = (AppDataSource) => {
   router.post('/line/webhook', LineController.webhook);
   
   // LINE notification sending
-  router.post('/line/send-notification', async (req, res) => {
+router.post('/line/send-notification', authMiddleware, async (req, res) => {
     const { userId, message } = req.body;
     const result = await LineController.sendNotification(userId, message);
     res.json(result);
