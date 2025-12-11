@@ -218,7 +218,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { role: userInfo.role, id: userInfo.id };
   };
 
-  const signup = async (email: string, password: string, userData: Partial<User>) => {
+const signup = async (email: string, password: string, userData: any) => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
     const token = currentUser?.token;
 
@@ -229,21 +229,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        name: userData.full_name,
-        position: userData.position,
-        department: userData.department,
         email: email,
         password: password,
-        Role: userData.role || 'employee',
+        name: userData.full_name,
+        department: userData.department,
+        position: userData.position,
+        role: userData.role || 'employee', 
+        gender: userData.gender,
+        dob: userData.dob,
+        phone_number: userData.phone_number,
+        start_work: userData.start_work,
+        end_work: userData.end_work,
       }),
     });
-    const data = await response.json();
+
+    const data = await response.json(); // ตัวแปร data นี้คือ JSON ทั้งก้อนที่รับมา
 
     if (!response.ok) {
-      throw new Error(data.message || 'Registration failed');
+      // 🔍 แก้ไขจุดนี้: เช็คให้ครอบคลุมทั้ง errors ชั้นนอก และ errors ในชั้น data
+      const errorMessage = 
+        // 1. ลองหาใน data.data.errors (ตามโครงสร้างที่คุณส่งมา)
+        (data.data && Array.isArray(data.data.errors) && data.data.errors.length > 0 ? data.data.errors[0] : null) ||
+        // 2. หรือถ้ามันอยู่ที่ชั้นนอก data.errors
+        (data.errors && Array.isArray(data.errors) && data.errors.length > 0 ? data.errors[0] : null) ||
+        // 3. ถ้าไม่มีเลย ให้ใช้ message ปกติ
+        data.message || 
+        'Registration failed';
+
+      throw new Error(errorMessage);
     }
   };
-
   const logout = () => {
     setUser(null);
     localStorage.removeItem('currentUser');

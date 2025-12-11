@@ -35,17 +35,8 @@ const config = {
       process.env.CORS_ORIGINS.split(',') : 
       [
         'http://localhost:8081',
-        'http://192.168.50.64:8081',
-        'http://192.168.50.125:8081',
-        'http://192.168.50.90:8081',
-        'http://192.168.50.54:8081',
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://localhost:8080',
-        'http://localhost:8001',
-        // Common Vite dev servers
         'http://localhost:5173',
-        'http://127.0.0.1:5173'
+           'https://leave-management.flowmisite.com/',
       ]
   },
 

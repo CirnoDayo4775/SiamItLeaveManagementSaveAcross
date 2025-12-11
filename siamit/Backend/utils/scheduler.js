@@ -3,7 +3,7 @@ const cron = require('node-cron');
 const LeaveTypeCleanupService = require('./leaveTypeCleanupService');
 const LeaveQuotaCleanupService = require('./leaveQuotaCleanupService');
 // Import Service ที่เราสร้าง
-const { executeResetLogic } = require('./utils/leaveResetService');
+const { executeResetLogic } = require('./leaveResetService');
 
 /**
  * Register all scheduled jobs for the backend application.

@@ -32,6 +32,13 @@ interface NewsItem {
   attachments?: any[];
 }
 
+const formatTime = (date: Date, language: string) => {
+  return date.toLocaleTimeString(language === 'th' ? 'th-TH' : 'en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 export default function ManagePost() {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();

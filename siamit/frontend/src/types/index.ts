@@ -7,6 +7,11 @@ export interface User {
   position: string;
   avatar?: string;
   role: Role;
+  gender?: 'male' | 'female' | 'other' | null;
+  dob?: string | Date | null;
+  phone_number?: string | null;
+  start_work?: string | Date | null;
+  end_work?: string | Date | null;
 }
 
 // Position Types

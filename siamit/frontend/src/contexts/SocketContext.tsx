@@ -53,7 +53,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     const newSocket = io(API_BASE_URL, {
-      transports: ['websocket', 'polling'],
+      transports: ['polling'],
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 5,
@@ -66,6 +66,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
 
     newSocket.on('connect', () => {
+      console.log('connec success');
       setIsConnected(true);
 
       // Join user room
